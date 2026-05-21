@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+
+# Claude Code config — kept local, not part of the public repository
+CLAUDE.md
+.claude/
+
+# Kotlin / Gradle / KMP
+.gradle/
+build/
+local.properties
+captures/
+*.hprof
+
+# Xcode / iOS
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.swiftpm/
+Pods/
+
+# IDE
+.idea/
+*.iml
+
+# Secrets / environment
+.env
+*.env
+secrets.properties
