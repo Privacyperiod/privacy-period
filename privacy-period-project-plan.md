@@ -75,7 +75,7 @@ privacy-period/
 │   ├── src/
 │   │   ├── commonMain/
 │   │   │   ├── kotlin/
-│   │   │   │   └── dev/privacyperiod/
+│   │   │   │   └── org/privacyperiod/
 │   │   │   │       ├── data/
 │   │   │   │       │   ├── model/         # CycleEntry, MoodEntry, SymptomEntry, etc.
 │   │   │   │       │   ├── repository/    # Repository interfaces
@@ -88,7 +88,7 @@ privacy-period/
 │   │   │   │       └── util/              # Date utilities, extensions
 │   │   ├── iosMain/               # iOS-specific KMP implementations
 │   │   │   └── kotlin/
-│   │   │       └── dev/privacyperiod/
+│   │   │       └── org/privacyperiod/
 │   │   │           ├── crypto/    # Keychain-backed key storage
 │   │   │           └── db/        # iOS SQLDelight driver
 │   │   ├── androidMain/           # Android-specific (Phase 2)
@@ -230,7 +230,7 @@ No “clever” code without an explanatory comment. Prefer readable over terse.
   - Establish key naming convention: `feature.component.description` (e.g., `onboarding.welcome.title`)
   - Add English as base language; scaffold structure for additional languages
 - [ ] Set minimum iOS deployment target (iOS 16 recommended — SwiftUI maturity, broad device support)
-- [ ] Configure app bundle ID: `dev.privacyperiod.app`
+- [ ] Configure app bundle ID: `org.privacyperiod.app`
 - [ ] Set up DocC documentation target
 - [ ] Add GitHub Actions workflow: `ios-ci.yml`
   - Triggers: push to `main`, all PRs
