@@ -19,6 +19,9 @@ xcuserdata/
 .swiftpm/
 Pods/
 
+# Generated Xcode project — regenerate with `xcodegen generate` in iosApp/
+*.xcodeproj/
+
 # IDE
 .idea/
 *.iml

@@ -1,0 +1,27 @@
+# SwiftLint configuration for the Privacy Period iOS app.
+# Enforces the Swift coding standards described in CONTRIBUTING.md.
+
+included:
+  - PrivacyPeriod
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - force_unwrapping
+  - sorted_imports
+  - vertical_whitespace_closing_braces
+
+# Force operations are banned project-wide (no force-unwrap / force-try / force-cast).
+force_cast: error
+force_try: error
+force_unwrapping:
+  severity: error
+
+line_length:
+  warning: 120
+  error: 160
+
+identifier_name:
+  min_length:
+    warning: 2
