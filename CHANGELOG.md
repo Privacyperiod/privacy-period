@@ -12,3 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repository bootstrap: project plan, agentic-instructions, AGPL-3.0 license,
   README, contributing guide, code of conduct, security policy, and issue/PR
   templates.
+- Kotlin Multiplatform shared module with the initial SQLDelight schema
+  (`cycle_entries`, `mood_entries`, `symptom_entries`, `symptom_definitions`,
+  `birth_control_entries`, `app_settings`), pinned dependency versions via a
+  Gradle version catalog, ktlint and Detekt static analysis, and cross-platform
+  schema tests covering creation and round-trip persistence.
