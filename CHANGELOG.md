@@ -17,3 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `birth_control_entries`, `app_settings`), pinned dependency versions via a
   Gradle version catalog, ktlint and Detekt static analysis, and cross-platform
   schema tests covering creation and round-trip persistence.
+- iOS app scaffold: a SwiftUI `PrivacyPeriod` app (bundle id `org.privacyperiod.app`,
+  iOS 16+) generated with XcodeGen, linking the Kotlin Multiplatform `shared`
+  module as a framework via a Gradle build phase. Includes SwiftLint, a
+  `Localizable.xcstrings` string catalog, a DocC catalog, and an iOS CI workflow.
