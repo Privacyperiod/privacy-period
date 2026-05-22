@@ -1,0 +1,30 @@
+{
+  "sourceLanguage" : "en",
+  "version" : "1.0",
+  "strings" : {
+    "app.name" : {
+      "comment" : "The application's display name shown on the main screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Period"
+          }
+        }
+      }
+    },
+    "diagnostics.schema_version_label" : {
+      "comment" : "Label for the on-device database schema version (diagnostic only).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On-device database schema version"
+          }
+        }
+      }
+    }
+  }
+}
