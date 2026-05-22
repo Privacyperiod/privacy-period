@@ -39,29 +39,9 @@ targets:
         # Emit localized-string keys so the String Catalog stays the single
         # source of truth for user-facing text.
         SWIFT_EMIT_LOC_STRINGS: "YES"
-        # The Kotlin framework is produced by the Gradle script phase below into
-        # this per-configuration / per-SDK directory.
-        FRAMEWORK_SEARCH_PATHS:
-          - $(inherited)
-          - $(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
-        OTHER_LDFLAGS:
-          - $(inherited)
-          - -framework
-          - Shared
-    preBuildScripts:
-      - name: Compile Kotlin Framework
-        basedOnDependencyAnalysis: false
-        script: |
-          set -e
-          cd "$SRCROOT/.."
-          if [ -z "$JAVA_HOME" ]; then
-            if /usr/libexec/java_home >/dev/null 2>&1; then
-              export JAVA_HOME="$(/usr/libexec/java_home)"
-            elif [ -d "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home" ]; then
-              export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
-            fi
-          fi
-          ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+        # The shared Kotlin framework and SQLCipher are supplied by CocoaPods
+        # (see iosApp/Podfile). The shared pod's own script phase builds the
+        # framework via Gradle, so no manual embed step is needed here.
 
 schemes:
   PrivacyPeriod:
