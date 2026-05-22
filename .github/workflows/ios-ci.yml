@@ -25,25 +25,28 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Shared module — lint, static analysis, and tests
-        run: ./gradlew :shared:jvmTest ktlintCheck detekt --stacktrace
-
       - name: Install iOS tooling
-        run: brew install xcodegen swiftlint
+        run: brew install xcodegen swiftlint cocoapods
+
+      - name: Shared module — lint, static analysis, and tests (incl. encrypted DB on iOS)
+        run: ./gradlew :shared:jvmTest :shared:iosSimulatorArm64Test ktlintCheck detekt --stacktrace
 
       - name: SwiftLint
         working-directory: iosApp
         run: swiftlint lint --strict
 
-      - name: Generate Xcode project
+      - name: Generate Xcode project and install pods
         working-directory: iosApp
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          ../gradlew :shared:podspec :shared:generateDummyFramework
+          pod install
 
       - name: Build iOS app
         working-directory: iosApp
         run: |
           xcodebuild build \
-            -project PrivacyPeriod.xcodeproj \
+            -workspace PrivacyPeriod.xcworkspace \
             -scheme PrivacyPeriod \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
