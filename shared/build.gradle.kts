@@ -3,6 +3,9 @@
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    // Applied without a version: it ships with the Kotlin Gradle plugin already on
+    // the classpath, so requesting a version here would be rejected.
+    kotlin("native.cocoapods")
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -16,26 +19,28 @@ kotlin {
     // the JVM — iOS (and later Android) are the real targets.
     jvm()
 
-    // Bundle the iOS targets into a single "Shared" framework that the SwiftUI
-    // app links against. Static linking folds the symbols into the app binary
-    // and avoids shipping a separate dynamic framework.
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    // SQLCipher is supplied to the native targets via CocoaPods so the database is
+    // encrypted at rest. The plugin links it into both the app framework and the
+    // unit-test binary, so encryption is verifiable directly in iOS tests.
+    cocoapods {
+        summary = "Privacy Period shared module"
+        homepage = "https://github.com/Privacyperiod/privacy-period"
+        version = "0.1.0"
+        ios.deploymentTarget = "16.0"
+        framework {
             baseName = "Shared"
             isStatic = true
         }
-        // The production framework deliberately does not link system SQLite
-        // (linkSqlite = false below); the app provides SQLCipher instead. The unit
-        // -test binary has no SQLCipher to link, so it links system SQLite to run
-        // the schema tests with the in-memory driver. Encrypted-database behaviour
-        // is verified in the app, where SQLCipher is present.
-        iosTarget.binaries
-            .withType(org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable::class.java)
-            .configureEach { linkerOpts("-lsqlite3") }
+        // linkOnly: link SQLCipher's SQLite symbols without generating Kotlin
+        // bindings — SQLiter calls them; we never reference SQLCipher from Kotlin.
+        pod("SQLCipher") {
+            version = "~> 4.5"
+            linkOnly = true
+        }
     }
 
     sourceSets {
