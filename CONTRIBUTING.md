@@ -27,18 +27,22 @@ have an issue template.
 
 ## Development setup
 
-- **iOS:** Xcode (latest stable). The app consumes the KMP `shared/` module via
-  Swift Package Manager.
-- **Shared module:** a JDK + Gradle. The `shared/` module holds all data models,
-  algorithms, database queries, and encryption logic.
-
-> More detailed setup steps will be added as the first targets land.
+- **iOS:** Xcode 16+, plus XcodeGen and SwiftLint (`brew install xcodegen swiftlint`).
+  The `.xcodeproj` is generated from `iosApp/project.yml` and is git-ignored, so
+  run `xcodegen generate` inside `iosApp/` after cloning or after editing the spec.
+  The app links the KMP `shared/` module as a `Shared` framework that a Gradle
+  build phase compiles automatically during the Xcode build — no manual framework
+  step is needed.
+- **Shared module:** a JDK 21 and the bundled Gradle wrapper (`./gradlew`). The
+  `shared/` module holds all data models, algorithms, database queries, and
+  encryption logic.
 
 ## Running tests
 
-- **Shared (KMP):** `./gradlew :shared:allTests` (unit tests live in `commonTest`).
-- **iOS:** run the test targets from Xcode, or `xcodebuild test` against the app
-  scheme.
+- **Shared (KMP):** `./gradlew :shared:allTests` (unit tests live in `commonTest`;
+  they run on both the JVM and the iOS simulator).
+- **iOS:** `xcodegen generate` in `iosApp/`, then build/test the `PrivacyPeriod`
+  scheme from Xcode or with `xcodebuild`.
 
 Tests must pass before a change is considered complete. New logic ships **with**
 its tests, not after.
