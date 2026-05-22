@@ -28,6 +28,14 @@ kotlin {
             baseName = "Shared"
             isStatic = true
         }
+        // The production framework deliberately does not link system SQLite
+        // (linkSqlite = false below); the app provides SQLCipher instead. The unit
+        // -test binary has no SQLCipher to link, so it links system SQLite to run
+        // the schema tests with the in-memory driver. Encrypted-database behaviour
+        // is verified in the app, where SQLCipher is present.
+        iosTarget.binaries
+            .withType(org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable::class.java)
+            .configureEach { linkerOpts("-lsqlite3") }
     }
 
     sourceSets {
@@ -47,6 +55,9 @@ kotlin {
 }
 
 sqldelight {
+    // Don't link system SQLite into the native framework; the iOS app supplies
+    // SQLCipher (via Swift Package Manager) so the database is encrypted at rest.
+    linkSqlite.set(false)
     databases {
         create("PrivacyPeriodDatabase") {
             packageName.set("org.privacyperiod.data.db")
