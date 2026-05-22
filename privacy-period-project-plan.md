@@ -43,7 +43,7 @@ These principles are not aspirational — they are constraints that govern every
 |Build system         |Gradle (KMP) + Xcode                     |Standard for this stack                                  |
 |CI/CD                |GitHub Actions                           |Lint, test, build on every PR                            |
 |Localization         |iOS: Localizable.strings + StringCatalogs|i18n scaffolded from first screen                        |
-|Dependency management|Swift Package Manager (iOS), Gradle (KMP)|No CocoaPods                                             |
+|Dependency management|CocoaPods (iOS) + Gradle (KMP)            |CocoaPods adopted 2026-05-22 for SQLCipher (the encrypted-database dependency); SPM was infeasible on Xcode 16 — no trusted SQLCipher SPM package exposes the C symbols SQLiter needs, and the source-built option needs SPM traits (Xcode 16.3+). See `docs/encryption.md`.|
 |Documentation        |KDoc (Kotlin), DocC (Swift)              |Enforced in code review / PR template                    |
 
 -----
@@ -223,7 +223,7 @@ No “clever” code without an explanatory comment. Prefer readable over terse.
 ### Milestone 1.3 — iOS Project Setup
 
 - [ ] Create Xcode project: `PrivacyPeriod`
-- [ ] Configure Swift Package Manager — add KMP shared module as local package
+- [x] Configure dependency consumption — the iOS app consumes the KMP shared module as a local **CocoaPods** pod (Podfile + generated podspec). *(Originally planned as Swift Package Manager; CocoaPods was adopted 2026-05-22 to integrate SQLCipher — see the dependency-management note above.)*
 - [ ] Configure SwiftLint with project ruleset (`.swiftlint.yml` committed to repo)
 - [ ] Set up i18n infrastructure:
   - Create `Localizable.xcstrings` String Catalog
