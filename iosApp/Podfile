@@ -1,0 +1,18 @@
+# CocoaPods dependencies for the Privacy Period iOS app.
+#
+# The shared Kotlin Multiplatform module is consumed as a local pod; it pulls in
+# SQLCipher transitively (declared in its generated podspec), which provides the
+# encrypted SQLite the database driver needs.
+#
+# Setup (also run by CI): from the repo root,
+#   cd iosApp && xcodegen generate
+#   ./gradlew :shared:podspec :shared:generateDummyFramework
+#   cd iosApp && pod install
+# then open/build PrivacyPeriod.xcworkspace.
+
+platform :ios, '16.0'
+
+target 'PrivacyPeriod' do
+  use_frameworks!
+  pod 'shared', :path => '../shared'
+end
