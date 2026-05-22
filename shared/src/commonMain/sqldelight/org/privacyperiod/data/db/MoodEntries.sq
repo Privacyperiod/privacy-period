@@ -1,0 +1,32 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A daily mood and energy check-in.
+ *
+ * The intended usage is one entry per calendar day. The date is ISO-8601
+ * (YYYY-MM-DD); the scores are small integers on a fixed scale whose meaning is
+ * owned by the UI layer (this table stores only the raw values).
+ */
+CREATE TABLE mood_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- ISO-8601 date (YYYY-MM-DD) the check-in applies to.
+    date TEXT NOT NULL,
+    -- Mood rating on the app's fixed scale.
+    mood_score INTEGER NOT NULL,
+    -- Energy rating on the app's fixed scale.
+    energy_score INTEGER NOT NULL,
+    -- Optional free-text note entered by the user.
+    notes TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL
+);
+
+selectAllMoodEntries:
+SELECT *
+FROM mood_entries
+ORDER BY date;
+
+insertMoodEntry:
+INSERT INTO mood_entries(date, mood_score, energy_score, notes, created_at)
+VALUES (?, ?, ?, ?, ?);

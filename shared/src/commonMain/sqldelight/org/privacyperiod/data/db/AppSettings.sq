@@ -1,0 +1,23 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A simple key/value store for non-sensitive app preferences.
+ *
+ * Security-sensitive material — above all, encryption keys — is never stored
+ * here. Keys live only in the platform secure storage (iOS Keychain / Android
+ * Keystore). This table is for ordinary settings such as the chosen language.
+ */
+CREATE TABLE app_settings (
+    key TEXT NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+selectAllAppSettings:
+SELECT *
+FROM app_settings
+ORDER BY key;
+
+upsertAppSetting:
+INSERT OR REPLACE INTO app_settings(key, value)
+VALUES (?, ?);

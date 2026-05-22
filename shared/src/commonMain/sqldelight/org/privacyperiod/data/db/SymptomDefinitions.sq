@@ -1,0 +1,28 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * The catalogue of symptoms a user can log.
+ *
+ * The app ships with a predefined set and the user may add their own. name_key
+ * is an internationalisation key (never a display string) so symptom names
+ * localise correctly; is_custom records whether the row is user-created.
+ */
+CREATE TABLE symptom_definitions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- i18n key the UI resolves to a localised name, e.g. "symptom.cramps".
+    name_key TEXT NOT NULL,
+    -- Grouping key for the symptom, e.g. "physical" or "emotional".
+    category TEXT NOT NULL,
+    -- 1 if the user created this symptom, 0 if it is a built-in definition.
+    is_custom INTEGER NOT NULL
+);
+
+selectAllSymptomDefinitions:
+SELECT *
+FROM symptom_definitions
+ORDER BY name_key;
+
+insertSymptomDefinition:
+INSERT INTO symptom_definitions(name_key, category, is_custom)
+VALUES (?, ?, ?);

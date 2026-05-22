@@ -1,0 +1,30 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A single logged occurrence of a symptom on a given day.
+ *
+ * Each row references a definition in symptom_definitions. The date is ISO-8601
+ * (YYYY-MM-DD) and severity is a small integer on the UI's fixed scale.
+ */
+CREATE TABLE symptom_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- ISO-8601 date (YYYY-MM-DD) the symptom was logged for.
+    date TEXT NOT NULL,
+    -- Foreign key into symptom_definitions identifying which symptom this is.
+    symptom_id INTEGER NOT NULL,
+    -- Severity on the app's fixed scale.
+    severity INTEGER NOT NULL,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(symptom_id) REFERENCES symptom_definitions(id)
+);
+
+selectAllSymptomEntries:
+SELECT *
+FROM symptom_entries
+ORDER BY date;
+
+insertSymptomEntry:
+INSERT INTO symptom_entries(date, symptom_id, severity, created_at)
+VALUES (?, ?, ?, ?);
