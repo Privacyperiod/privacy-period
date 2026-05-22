@@ -1,0 +1,8 @@
+# Detekt configuration for Privacy Period.
+#
+# Layered on top of Detekt's bundled defaults (buildUponDefaultConfig = true in
+# the module build script), so only deliberate overrides belong here.
+
+config:
+  validation: true
+  warningsAsErrors: false

@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+# expect/actual declarations use platform-suffixed filenames (e.g. Foo.ios.kt)
+# that do not match their single top-level declaration; the filename rule fights
+# this established Kotlin Multiplatform convention.
+ktlint_standard_filename = disabled
+# Trailing commas are left optional to avoid churn; either style is accepted.
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+
+[*.sq]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.{yml,yaml,toml,json}]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
