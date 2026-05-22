@@ -11,7 +11,7 @@ follow the workflow below.
 - **Offline-first / zero-knowledge.** Every feature must work fully offline.
   No accounts, no emails, no phone numbers. No data leaves the device unless the
   user explicitly exports or backs it up (and it is encrypted first).
-- **Encryption is mandatory.** User data is encrypted at rest (AES-256-GCM);
+- **Encryption is mandatory.** User data is encrypted at rest (AES-256 authenticated encryption);
   keys live only in the iOS Keychain / Android Keystore. Never log or expose keys.
 - **No medical claims.** Factual summaries of the user's own data only — never
   diagnostic, prescriptive, or interpretive language.

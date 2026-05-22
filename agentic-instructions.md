@@ -46,7 +46,7 @@ implementation, dependency — must satisfy all of them.
 
 ### 3. Encryption is Mandatory
 
-- All persisted user data must be encrypted at rest using AES-256-GCM.
+- All persisted user data must be encrypted at rest using AES-256 authenticated encryption.
 - Encryption keys must be stored in iOS Keychain (iOS) or Android Keystore
   (Android) with `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` or equivalent.
 - Never store encryption keys in UserDefaults, SharedPreferences, plain files,

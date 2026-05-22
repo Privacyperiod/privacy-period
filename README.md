@@ -12,7 +12,7 @@ data stored **only on your device**, encrypted, and never shared.
 
 - A simple, fast period, mood, and symptom tracker.
 - **Offline by design** — every feature works with no network connection.
-- **Encrypted on device** — your data is stored with AES-256-GCM; the key never
+- **Encrypted on device** — your data is stored with AES-256 authenticated encryption; the key never
   leaves your device's secure hardware (iOS Keychain / Android Keystore).
 - **No account. No email. No phone number.** The only identity is a random ID
   generated on your device that never leaves it.
@@ -39,7 +39,7 @@ in the loop at all. The source is open so this can be independently verified —
 - **iOS:** Swift / SwiftUI
 - **Android (Phase 2):** Kotlin / Jetpack Compose
 - **Database:** SQLDelight (encrypted at rest)
-- **Encryption:** AES-256-GCM, keys in iOS Keychain / Android Keystore
+- **Encryption:** AES-256 authenticated encryption, keys in iOS Keychain / Android Keystore
 
 ## Building from source
 

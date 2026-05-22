@@ -29,7 +29,7 @@ handling, please flag it as high severity.
 
 Security-relevant areas include, but are not limited to:
 
-- Encryption and key storage (AES-256-GCM; Keychain / Keystore handling)
+- Encryption and key storage (AES-256 authenticated encryption; Keychain / Keystore handling)
 - Any path where user data could leave the device unencrypted
 - Local data export / backup / restore
 - App lock (biometric / PIN) bypasses

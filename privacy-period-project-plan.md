@@ -38,7 +38,7 @@ These principles are not aspirational — they are constraints that govern every
 |iOS UI               |Swift / SwiftUI                          |Native feel, full platform integration                   |
 |Android UI (Phase 2) |Kotlin / Jetpack Compose                 |Shares all KMP logic                                     |
 |Local database       |SQLDelight                               |KMP-compatible, type-safe SQL, shared schema             |
-|Encryption           |AES-256-GCM                              |Key stored in iOS Keychain / Android Keystore            |
+|Encryption           |AES-256 authenticated encryption         |Key stored in iOS Keychain / Android Keystore            |
 |Local backup         |Encrypted file export                    |User-initiated, encrypted before leaving the app         |
 |Build system         |Gradle (KMP) + Xcode                     |Standard for this stack                                  |
 |CI/CD                |GitHub Actions                           |Lint, test, build on every PR                            |
