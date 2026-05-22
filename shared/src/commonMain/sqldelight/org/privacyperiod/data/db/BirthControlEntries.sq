@@ -1,0 +1,30 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A birth-control event such as taking a pill or applying a patch.
+ *
+ * This table stores only timing and the user's own notes — never prescription
+ * details or any clinical data. taken_at is an ISO-8601 timestamp and type is a
+ * token such as PILL, PATCH, RING, IUD, IMPLANT, or OTHER.
+ */
+CREATE TABLE birth_control_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- Birth-control type token, e.g. PILL or PATCH.
+    type TEXT NOT NULL,
+    -- ISO-8601 timestamp the event occurred at.
+    taken_at TEXT NOT NULL,
+    -- Optional free-text note, e.g. context for a missed dose.
+    notes TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL
+);
+
+selectAllBirthControlEntries:
+SELECT *
+FROM birth_control_entries
+ORDER BY taken_at;
+
+insertBirthControlEntry:
+INSERT INTO birth_control_entries(type, taken_at, notes, created_at)
+VALUES (?, ?, ?, ?);
