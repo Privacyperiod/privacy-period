@@ -21,8 +21,12 @@ import org.privacyperiod.crypto.KeyStorage
  * factory only supplies the key and opens the database.
  *
  * @property keyStorage Source of the database key (the Keychain in production).
+ * @property databaseName File name for the database; overridable in tests.
  */
-public class DatabaseDriverFactory(private val keyStorage: KeyStorage) {
+public class DatabaseDriverFactory(
+    private val keyStorage: KeyStorage,
+    private val databaseName: String = DEFAULT_DATABASE_NAME,
+) {
     /**
      * Opens the encrypted database, creating it on first use, and returns a ready
      * [SqlDriver]. The caller owns the driver and must close it when done.
@@ -31,7 +35,7 @@ public class DatabaseDriverFactory(private val keyStorage: KeyStorage) {
         val key = keyStorage.getOrCreateDatabaseKey().toHexString()
         return NativeSqliteDriver(
             schema = PrivacyPeriodDatabase.Schema,
-            name = DATABASE_NAME,
+            name = databaseName,
             onConfiguration = { configuration ->
                 configuration.copy(encryptionConfig = DatabaseConfiguration.Encryption(key = key))
             },
@@ -47,7 +51,7 @@ public class DatabaseDriverFactory(private val keyStorage: KeyStorage) {
         }
 
     private companion object {
-        const val DATABASE_NAME: String = "privacyperiod.db"
+        const val DEFAULT_DATABASE_NAME: String = "privacyperiod.db"
         const val HEX_RADIX: Int = 16
         const val BYTE_MASK: Int = 0xFF
         const val HEX_CHARS_PER_BYTE: Int = 2
