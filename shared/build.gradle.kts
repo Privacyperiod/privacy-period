@@ -16,9 +16,19 @@ kotlin {
     // the JVM — iOS (and later Android) are the real targets.
     jvm()
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    // Bundle the iOS targets into a single "Shared" framework that the SwiftUI
+    // app links against. Static linking folds the symbols into the app binary
+    // and avoids shipping a separate dynamic framework.
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+        }
+    }
 
     sourceSets {
         commonMain.dependencies {
