@@ -27,12 +27,20 @@ have an issue template.
 
 ## Development setup
 
-- **iOS:** Xcode 16+, plus XcodeGen and SwiftLint (`brew install xcodegen swiftlint`).
-  The `.xcodeproj` is generated from `iosApp/project.yml` and is git-ignored, so
-  run `xcodegen generate` inside `iosApp/` after cloning or after editing the spec.
-  The app links the KMP `shared/` module as a `Shared` framework that a Gradle
-  build phase compiles automatically during the Xcode build — no manual framework
-  step is needed.
+- **iOS:** Xcode 16+, plus XcodeGen, SwiftLint, and CocoaPods
+  (`brew install xcodegen swiftlint cocoapods`). The `.xcodeproj` and
+  `.xcworkspace` are generated and git-ignored. From `iosApp/`:
+
+  ```sh
+  xcodegen generate
+  ../gradlew :shared:podspec :shared:generateDummyFramework
+  pod install
+  ```
+
+  then open/build `PrivacyPeriod.xcworkspace`. The app consumes the KMP `shared/`
+  module as a CocoaPods pod, which builds the `Shared` framework via Gradle and
+  links **SQLCipher** (used to encrypt the database at rest). Re-run the steps
+  above after editing `project.yml` or the Gradle config.
 - **Shared module:** a JDK 21 and the bundled Gradle wrapper (`./gradlew`). The
   `shared/` module holds all data models, algorithms, database queries, and
   encryption logic.
@@ -41,8 +49,9 @@ have an issue template.
 
 - **Shared (KMP):** `./gradlew :shared:allTests` (unit tests live in `commonTest`;
   they run on both the JVM and the iOS simulator).
-- **iOS:** `xcodegen generate` in `iosApp/`, then build/test the `PrivacyPeriod`
-  scheme from Xcode or with `xcodebuild`.
+- **iOS:** after the setup steps above, build/test the `PrivacyPeriod` scheme from
+  `PrivacyPeriod.xcworkspace` in Xcode or with `xcodebuild -workspace`. The
+  encrypted-database tests run as part of `:shared:iosSimulatorArm64Test`.
 
 Tests must pass before a change is considered complete. New logic ships **with**
 its tests, not after.
