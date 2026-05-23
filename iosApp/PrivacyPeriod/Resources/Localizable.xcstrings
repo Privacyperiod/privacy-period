@@ -3,27 +3,94 @@
   "version" : "1.0",
   "strings" : {
     "app.name" : {
-      "comment" : "The application's display name shown on the main screen.",
+      "comment" : "The product name. Title Case; not translated.",
       "extractionState" : "manual",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privacy Period"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period" } }
       }
     },
-    "diagnostics.schema_version_label" : {
-      "comment" : "Label for the on-device database schema version (diagnostic only).",
+    "onboarding.welcome.tagline" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On-device database schema version"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Private menstrual and mental health tracking. Encrypted on your device, never shared." } }
+      }
+    },
+    "onboarding.welcome.note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period is free, open source, and not-for-profit." } }
+      }
+    },
+    "onboarding.get_started" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Get started" } }
+      }
+    },
+    "onboarding.lock.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lock the app?" } }
+      }
+    },
+    "onboarding.lock.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional. Adds a Face ID or PIN check when you open Privacy Period. You can change this any time." } }
+      }
+    },
+    "onboarding.lock.faceid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Use Face ID" } }
+      }
+    },
+    "onboarding.lock.faceid_detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recommended on this device" } }
+      }
+    },
+    "onboarding.lock.pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Use a 4-digit PIN" } }
+      }
+    },
+    "onboarding.lock.pin_detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up later in Settings" } }
+      }
+    },
+    "onboarding.lock.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No lock" } }
+      }
+    },
+    "onboarding.lock.none_detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open straight to tonight" } }
+      }
+    },
+    "onboarding.continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue" } }
+      }
+    },
+    "dashboard.placeholder.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period" } }
+      }
+    },
+    "dashboard.placeholder.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your dashboard will appear here." } }
       }
     }
   }

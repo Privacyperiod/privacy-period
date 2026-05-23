@@ -15,4 +15,6 @@ generated `Shared` framework.
 ### App
 
 - ``PrivacyPeriodApp``
-- ``ContentView``
+- ``RootView``
+- ``OnboardingView``
+- ``DashboardView``
