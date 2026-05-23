@@ -35,11 +35,16 @@ jobs:
         working-directory: iosApp
         run: swiftlint lint --strict
 
+      # Run from the repository root: the shared module is part of the root
+      # Gradle build, so invoking the wrapper from iosApp/ would make Gradle
+      # treat iosApp as the project directory and fail.
+      - name: Generate shared CocoaPods artifacts
+        run: ./gradlew :shared:podspec :shared:generateDummyFramework
+
       - name: Generate Xcode project and install pods
         working-directory: iosApp
         run: |
           xcodegen generate
-          ../gradlew :shared:podspec :shared:generateDummyFramework
           pod install
 
       - name: Build iOS app
