@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   implementation (256-bit key, `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`,
   never exported), a `CryptoProvider` contract for future encrypted backups, and
   an encrypted SQLDelight database driver. Documented in `docs/encryption.md`.
+- First-run onboarding (iOS): a "Desert Dusk" welcome screen — a sun-and-mountains
+  hero, the brand name and logo, a plain-language description, and an info pill —
+  followed by an optional app-lock step, plus a placeholder dashboard. Completion
+  is remembered so onboarding shows only once. Introduces the Desert Dusk design
+  system in the app: colour and type tokens, the Instrument Serif / Outfit / IBM
+  Plex Mono fonts, Lucide icons, and the app icon.
 
 ### Security
 
