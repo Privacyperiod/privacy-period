@@ -32,16 +32,29 @@ targets:
         PRODUCT_NAME: PrivacyPeriod
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
-        GENERATE_INFOPLIST_FILE: "YES"
-        INFOPLIST_KEY_CFBundleDisplayName: Privacy Period
-        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
-        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
         # Emit localized-string keys so the String Catalog stays the single
         # source of truth for user-facing text.
         SWIFT_EMIT_LOC_STRINGS: "YES"
         # The shared Kotlin framework and SQLCipher are supplied by CocoaPods
         # (see iosApp/Podfile). The shared pod's own script phase builds the
         # framework via Gradle, so no manual embed step is needed here.
+    info:
+      path: PrivacyPeriod/Info.plist
+      properties:
+        CFBundleDisplayName: Privacy Period
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        # Bundled Desert Dusk fonts (converted from the design system woff2).
+        UIAppFonts:
+          - InstrumentSerif-Regular.ttf
+          - InstrumentSerif-Italic.ttf
+          - Outfit-Regular.ttf
+          - Outfit-Medium.ttf
+          - Outfit-SemiBold.ttf
+          - IBMPlexMono-Regular.ttf
+          - IBMPlexMono-Medium.ttf
+          - IBMPlexMono-SemiBold.ttf
 
 schemes:
   PrivacyPeriod:
