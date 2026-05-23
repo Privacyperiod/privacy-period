@@ -31,6 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   is remembered so onboarding shows only once. Introduces the Desert Dusk design
   system in the app: colour and type tokens, the Instrument Serif / Outfit / IBM
   Plex Mono fonts, Lucide icons, and the app icon.
+- Cycle logging (iOS): a "Log period" form (start date, optional end date, flow
+  intensity, and an optional note) reached from the dashboard. Saving writes an
+  encrypted `cycle_entries` row through `EncryptedStore`, which opens the
+  SQLCipher database lazily and degrades gracefully — without crashing — if the
+  Keychain is unavailable. A random, device-local identifier is generated inside
+  the encrypted store on first open and never leaves the device. Adds reusable
+  Desert Dusk form components (navigation bar, segmented control, field
+  container).
 
 ### Security
 

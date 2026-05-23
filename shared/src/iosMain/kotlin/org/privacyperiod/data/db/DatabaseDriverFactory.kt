@@ -7,6 +7,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseConfiguration
 import org.privacyperiod.crypto.KeyStorage
+import org.privacyperiod.crypto.KeychainKeyStorage
 
 /**
  * Creates the encrypted [SqlDriver] for the on-device database on iOS.
@@ -56,4 +57,19 @@ public class DatabaseDriverFactory(
         const val BYTE_MASK: Int = 0xFF
         const val HEX_CHARS_PER_BYTE: Int = 2
     }
+}
+
+/**
+ * Builds the production [PrivacyPeriodDatabase]: an encrypted database whose key
+ * lives in the iOS Keychain.
+ *
+ * Declared to throw so Swift can catch and degrade gracefully if the key is
+ * unavailable (for example, Keychain access denied on an unsigned build) rather
+ * than crashing at launch. On a signed app the Keychain is available and this
+ * succeeds.
+ */
+@Throws(Throwable::class)
+public fun createEncryptedDatabase(): PrivacyPeriodDatabase {
+    val driver = DatabaseDriverFactory(KeychainKeyStorage()).create()
+    return PrivacyPeriodDatabase(driver)
 }

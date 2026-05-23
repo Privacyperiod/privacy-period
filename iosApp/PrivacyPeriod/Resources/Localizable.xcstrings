@@ -92,6 +92,74 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Your dashboard will appear here." } }
       }
+    },
+    "dashboard.log_period" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log period" } } }
+    },
+    "common.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } } }
+    },
+    "common.save" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } } }
+    },
+    "cyclelog.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log period" } } }
+    },
+    "cyclelog.start" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period start" } } }
+    },
+    "cyclelog.start.help" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Defaults to today. Tap to change." } } }
+    },
+    "cyclelog.end" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Add an end date" } } }
+    },
+    "cyclelog.end.date" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period end" } } }
+    },
+    "cyclelog.flow" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Flow intensity" } } }
+    },
+    "cyclelog.flow.spotting" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Spotting" } } }
+    },
+    "cyclelog.flow.light" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } } }
+    },
+    "cyclelog.flow.medium" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Medium" } } }
+    },
+    "cyclelog.flow.heavy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy" } } }
+    },
+    "cyclelog.notes" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes (optional)" } } }
+    },
+    "cyclelog.notes.help" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Stored locally and encrypted." } } }
+    },
+    "cyclelog.notes.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anything worth remembering" } } }
+    },
+    "cyclelog.privacy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cycle entries never leave your device. To share with a clinician, export from Settings." } } }
     }
   }
 }
