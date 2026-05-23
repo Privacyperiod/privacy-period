@@ -18,6 +18,11 @@ SELECT *
 FROM app_settings
 ORDER BY key;
 
+selectAppSetting:
+SELECT value
+FROM app_settings
+WHERE key = ?;
+
 upsertAppSetting:
 INSERT OR REPLACE INTO app_settings(key, value)
 VALUES (?, ?);
