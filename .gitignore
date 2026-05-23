@@ -27,6 +27,10 @@ iosApp/PrivacyPeriod/Info.plist
 *.xcworkspace/
 shared/shared.podspec
 
+# Local design-system source (brand fonts, SVGs, CSS, UI kit). The app bundles
+# the derived fonts/icons it needs; this folder stays a local reference.
+/design system/
+
 # IDE
 .idea/
 *.iml
