@@ -7,6 +7,7 @@ import org.privacyperiod.data.db.Cycle_entries
 import org.privacyperiod.data.db.PrivacyPeriodDatabase
 import org.privacyperiod.data.db.Symptom_entries
 import org.privacyperiod.pmdd.DrspCatalog
+import org.privacyperiod.pme.MacPmssCatalog
 
 /**
  * The single read/write gateway between clinical modules and the universal data
@@ -28,6 +29,7 @@ class ClinicalRepository(private val database: PrivacyPeriodDatabase) {
     @Throws(Throwable::class)
     fun seedCatalog() {
         DrspCatalog.seedInto(database.symptomDefinitionsQueries)
+        MacPmssCatalog.seedInto(database.symptomDefinitionsQueries)
     }
 
     /**
