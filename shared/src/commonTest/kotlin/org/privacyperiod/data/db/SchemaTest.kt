@@ -42,8 +42,9 @@ class SchemaTest {
         assertTrue(database.cycleEntriesQueries.selectAllCycleEntries().executeAsList().isEmpty())
         assertTrue(database.moodEntriesQueries.selectAllMoodEntries().executeAsList().isEmpty())
         assertTrue(database.symptomEntriesQueries.selectAllSymptomEntries().executeAsList().isEmpty())
-        assertTrue(database.symptomDefinitionsQueries.selectAllSymptomDefinitions().executeAsList().isEmpty())
+        assertTrue(database.symptomDefinitionsQueries.selectAllActiveSymptomDefinitions().executeAsList().isEmpty())
         assertTrue(database.birthControlEntriesQueries.selectAllBirthControlEntries().executeAsList().isEmpty())
+        assertTrue(database.moduleEnrollmentsQueries.selectAllEnrollments().executeAsList().isEmpty())
         assertTrue(database.appSettingsQueries.selectAllAppSettings().executeAsList().isEmpty())
     }
 
@@ -67,5 +68,51 @@ class SchemaTest {
         assertEquals("MEDIUM", entry.flow_intensity)
         assertEquals("first logged cycle", entry.notes)
         assertEquals(1_700_000_000_000L, entry.created_at)
+    }
+
+    /** A clinical symptom definition and entry round-trip, and re-rating the same
+     *  symptom on the same day updates in place rather than inserting a duplicate. */
+    @Test
+    fun clinicalSymptomLayerRoundTripsAndIsUniquePerDay() {
+        database.symptomDefinitionsQueries.upsertSymptomDefinition(
+            id = "drsp_depressed_mood",
+            name_key = "symptom.depressed_mood",
+            category = "mood",
+            severity_scale = "drsp_6",
+            clinical_provenance = "DRSP",
+            provenance_item = "DRSP-1",
+            is_active = 1L,
+        )
+
+        database.symptomEntriesQueries.upsertSymptomEntry(
+            id = "entry-1",
+            symptom_id = "drsp_depressed_mood",
+            date = "2026-05-23",
+            severity = 4.0,
+            cycle_id = null,
+            cycle_phase = "luteal",
+            cycle_day = 24L,
+            same_day_logged = 1L,
+            notes = null,
+            created_at = 1_700_000_000_000L,
+        )
+        // Re-rate the same symptom on the same day: must update, not duplicate.
+        database.symptomEntriesQueries.upsertSymptomEntry(
+            id = "entry-2",
+            symptom_id = "drsp_depressed_mood",
+            date = "2026-05-23",
+            severity = 6.0,
+            cycle_id = null,
+            cycle_phase = "luteal",
+            cycle_day = 24L,
+            same_day_logged = 1L,
+            notes = null,
+            created_at = 1_700_000_001_000L,
+        )
+
+        val entries = database.symptomEntriesQueries.selectAllSymptomEntries().executeAsList()
+        assertEquals(1, entries.size)
+        assertEquals(6.0, entries.first().severity)
+        assertEquals("drsp_depressed_mood", entries.first().symptom_id)
     }
 }

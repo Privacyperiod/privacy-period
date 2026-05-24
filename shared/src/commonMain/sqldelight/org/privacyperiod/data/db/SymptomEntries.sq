@@ -2,29 +2,63 @@
 -- Copyright (C) 2026 Privacy Period Contributors
 
 /**
- * A single logged occurrence of a symptom on a given day.
+ * A single logged rating of one symptom on one day — the clinical entry every
+ * module scores over.
  *
- * Each row references a definition in symptom_definitions. The date is ISO-8601
- * (YYYY-MM-DD) and severity is a small integer on the UI's fixed scale.
+ * The primary key is a UUID (a stable string) so entries from different devices
+ * can be merged in a future encrypted backup without collisions. A symptom is
+ * rated at most once per day (enforced by a unique index); re-rating updates the
+ * row in place.
+ *
+ * Cycle context (cycle_id / cycle_phase / cycle_day) is fixed when the row is
+ * written and never recomputed on read: correcting a past cycle's start date must
+ * not retroactively change the phase of historical entries, which would corrupt
+ * clinical analysis. same_day_logged is 1 only when the entry was made on the day
+ * it describes; backdated entries (0) are excluded from same-day-only scoring.
  */
 CREATE TABLE symptom_entries (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- ISO-8601 date (YYYY-MM-DD) the symptom was logged for.
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- The symptom rated; references the stable id in symptom_definitions.
+    symptom_id TEXT NOT NULL,
+    -- ISO-8601 date (YYYY-MM-DD) the rating describes.
     date TEXT NOT NULL,
-    -- Foreign key into symptom_definitions identifying which symptom this is.
-    symptom_id INTEGER NOT NULL,
-    -- Severity on the app's fixed scale.
-    severity INTEGER NOT NULL,
+    -- Severity, interpreted in the context of the symptom's severity_scale.
+    severity REAL NOT NULL,
+    -- The cycle this entry falls in, if known (nullable).
+    cycle_id TEXT,
+    -- Cycle phase fixed at write time: follicular | ovulatory | luteal | menstrual.
+    cycle_phase TEXT,
+    -- 1-based day within the cycle, fixed at write time.
+    cycle_day INTEGER,
+    -- 1 if logged on the day it describes; 0 if backdated.
+    same_day_logged INTEGER NOT NULL,
+    -- Optional free-text note (encrypted at rest with the whole database).
+    notes TEXT,
     -- Epoch milliseconds when this row was created.
     created_at INTEGER NOT NULL,
     FOREIGN KEY(symptom_id) REFERENCES symptom_definitions(id)
 );
+
+CREATE INDEX symptom_entries_by_date ON symptom_entries(date);
+CREATE INDEX symptom_entries_by_symptom ON symptom_entries(symptom_id, date);
+CREATE UNIQUE INDEX symptom_entries_unique_per_day ON symptom_entries(symptom_id, date);
 
 selectAllSymptomEntries:
 SELECT *
 FROM symptom_entries
 ORDER BY date;
 
-insertSymptomEntry:
-INSERT INTO symptom_entries(date, symptom_id, severity, created_at)
-VALUES (?, ?, ?, ?);
+selectSymptomEntriesForSymptom:
+SELECT *
+FROM symptom_entries
+WHERE symptom_id = ?
+ORDER BY date;
+
+-- INSERT OR REPLACE (the SQLite 3.18 dialect predates UPSERT): re-rating the
+-- same symptom on the same day hits the unique (symptom_id, date) index and
+-- replaces the row. The replacement carries a fresh id and created_at, which is
+-- acceptable — entry ids are not referenced across re-rating.
+upsertSymptomEntry:
+INSERT OR REPLACE INTO symptom_entries(id, symptom_id, date, severity, cycle_id, cycle_phase, cycle_day, same_day_logged, notes, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

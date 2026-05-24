@@ -1,0 +1,44 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A user's opt-in to a clinical module (pmdd, pme, hmb, …).
+ *
+ * Modules are off until the user enrolls; the app never surfaces a module's
+ * screens or scoring without an enrollment row. config_json holds module-specific
+ * configuration (for example the PME underlying-condition family), as JSON.
+ */
+CREATE TABLE module_enrollments (
+    -- Stable module identifier, e.g. "pmdd" or "pme".
+    module_id TEXT PRIMARY KEY NOT NULL,
+    -- Epoch milliseconds when the user enrolled.
+    enrolled_at INTEGER NOT NULL,
+    -- Module-specific configuration as JSON, or null.
+    config_json TEXT,
+    -- Epoch milliseconds the module was last used, or null.
+    last_active_at INTEGER
+);
+
+selectAllEnrollments:
+SELECT *
+FROM module_enrollments
+ORDER BY module_id;
+
+selectEnrollment:
+SELECT *
+FROM module_enrollments
+WHERE module_id = ?;
+
+insertEnrollment:
+INSERT OR IGNORE INTO module_enrollments(module_id, enrolled_at, config_json, last_active_at)
+VALUES (?, ?, ?, ?);
+
+-- Updates a module's config and last-used time without disturbing enrolled_at.
+updateEnrollment:
+UPDATE module_enrollments
+SET config_json = ?, last_active_at = ?
+WHERE module_id = ?;
+
+deleteEnrollment:
+DELETE FROM module_enrollments
+WHERE module_id = ?;
