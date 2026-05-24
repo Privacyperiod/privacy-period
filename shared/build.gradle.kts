@@ -89,3 +89,16 @@ ktlint {
         exclude { element -> element.file.path.contains("/build/") }
     }
 }
+
+// Work around an intermittent Gradle bug when generating reports for the
+// Kotlin/Native test tasks: reading back the test-output store can fail with
+// "Multiple entries with same key" (TestOutputStore) even though every test
+// passed, flaking local builds and CI. The crash is purely in report
+// generation, not test execution — failing native tests still fail the build
+// and print to the console — so we turn off the XML/HTML reports for these
+// tasks. The JVM test task keeps full reports, and it runs the same shared
+// (commonTest) tests, so reporting coverage is preserved.
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest>().configureEach {
+    reports.junitXml.required.set(false)
+    reports.html.required.set(false)
+}
