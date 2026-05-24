@@ -31,6 +31,12 @@ shared/shared.podspec
 # the derived fonts/icons it needs; this folder stays a local reference.
 /design system/
 
+# Local clinical planning material (condition catalog, module plans, the
+# clinical screening plan). The published, auditable outcomes live in docs/
+# (clinical-provenance.md, the per-module conformance reports); this folder
+# stays a local working reference.
+/clinical condition screens and data/
+
 # IDE
 .idea/
 *.iml
