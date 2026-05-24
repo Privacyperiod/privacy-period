@@ -37,7 +37,8 @@ CREATE TABLE symptom_entries (
     notes TEXT,
     -- Epoch milliseconds when this row was created.
     created_at INTEGER NOT NULL,
-    FOREIGN KEY(symptom_id) REFERENCES symptom_definitions(id)
+    FOREIGN KEY(symptom_id) REFERENCES symptom_definitions(id),
+    FOREIGN KEY(cycle_id) REFERENCES cycle_entries(id)
 );
 
 CREATE INDEX symptom_entries_by_date ON symptom_entries(date);

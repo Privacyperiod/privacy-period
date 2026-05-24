@@ -1,0 +1,42 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A completed periodic instrument with a recall window (EHP-30, EHP-5, Peri-SS,
+ * Greene Climacteric Scale, …).
+ *
+ * Unlike daily symptoms, these instruments have fixed, instrument-specific item
+ * sets that do not decompose cleanly to the symptom catalogue (e.g. "I felt
+ * unable to talk to my friends about my pain"), so the responses are stored as
+ * JSON and the subscale/total scores are computed at save time. The instrument's
+ * items are never modified; this table records a completion of the validated
+ * form as published.
+ */
+CREATE TABLE instrument_completions (
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- Instrument identifier: ehp_30 | ehp_5 | peri_ss | greene_climacteric | etc.
+    instrument_type TEXT NOT NULL,
+    -- ISO-8601 start of the recall period.
+    start_date TEXT NOT NULL,
+    -- ISO-8601 end of the recall period (typically the completion date).
+    end_date TEXT NOT NULL,
+    -- Map of item id -> response value, as JSON.
+    item_responses_json TEXT NOT NULL,
+    -- Subscale and total scores computed at save time, as JSON, or NULL.
+    computed_scores_json TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL
+);
+
+CREATE INDEX instrument_completions_by_type_date ON instrument_completions(instrument_type, end_date);
+
+selectInstrumentCompletions:
+SELECT *
+FROM instrument_completions
+WHERE instrument_type = ?
+ORDER BY end_date;
+
+insertInstrumentCompletion:
+INSERT INTO instrument_completions(id, instrument_type, start_date, end_date, item_responses_json, computed_scores_json, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);

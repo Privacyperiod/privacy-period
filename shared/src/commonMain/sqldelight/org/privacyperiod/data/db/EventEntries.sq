@@ -1,0 +1,72 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * Occurrence-based clinical events (as opposed to daily symptom ratings): things
+ * that happen at a point in time, such as dyspareunia, dyschezia, dysuria, or a
+ * flooding episode. Like symptoms, event types tie out to their clinical source.
+ */
+CREATE TABLE event_type_definitions (
+    -- Stable string identifier, e.g. "dyspareunia".
+    id TEXT PRIMARY KEY NOT NULL,
+    -- i18n key the UI resolves to a localised name.
+    i18n_key TEXT NOT NULL,
+    -- Grouping: pain_event | bleeding_event | mood_event | other_event.
+    category TEXT NOT NULL,
+    -- Severity scale, or NULL when the event is a binary occurrence.
+    severity_scale TEXT,
+    -- Validated instrument the event derives from, or 'custom'.
+    clinical_provenance TEXT NOT NULL
+);
+
+/**
+ * A single occurrence of an event on a given date/time.
+ *
+ * Cycle context is fixed at write time, mirroring symptom_entries.
+ */
+CREATE TABLE event_entries (
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- The kind of event; references event_type_definitions.
+    event_type_id TEXT NOT NULL,
+    -- ISO-8601 date the event occurred.
+    event_date TEXT NOT NULL,
+    -- ISO-8601 time the event occurred, or NULL.
+    event_time TEXT,
+    -- Severity in the context of the event type's scale, or NULL.
+    severity REAL,
+    -- The cycle this event falls in, if known.
+    cycle_id TEXT,
+    -- Cycle phase fixed at write time.
+    cycle_phase TEXT,
+    -- 1-based day within the cycle, fixed at write time.
+    cycle_day INTEGER,
+    -- Optional free-text note (encrypted at rest with the whole database).
+    notes TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(event_type_id) REFERENCES event_type_definitions(id),
+    FOREIGN KEY(cycle_id) REFERENCES cycle_entries(id)
+);
+
+CREATE INDEX event_entries_by_date ON event_entries(event_date);
+CREATE INDEX event_entries_by_type ON event_entries(event_type_id, event_date);
+
+selectAllActiveEventTypes:
+SELECT *
+FROM event_type_definitions
+ORDER BY id;
+
+upsertEventType:
+INSERT OR REPLACE INTO event_type_definitions(id, i18n_key, category, severity_scale, clinical_provenance)
+VALUES (?, ?, ?, ?, ?);
+
+selectEventEntriesForTypes:
+SELECT *
+FROM event_entries
+WHERE event_type_id IN ?
+ORDER BY event_date;
+
+insertEventEntry:
+INSERT INTO event_entries(id, event_type_id, event_date, event_time, severity, cycle_id, cycle_phase, cycle_day, notes, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
