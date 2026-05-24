@@ -2,27 +2,52 @@
 -- Copyright (C) 2026 Privacy Period Contributors
 
 /**
- * The catalogue of symptoms a user can log.
+ * The catalogue of symptoms that can be logged — the substrate every clinical
+ * module consumes.
  *
- * The app ships with a predefined set and the user may add their own. name_key
- * is an internationalisation key (never a display string) so symptom names
- * localise correctly; is_custom records whether the row is user-created.
+ * The primary key is a stable string identifier (e.g. "drsp_depressed_mood"),
+ * not an autoincrement number, so it is deterministic across devices and can be
+ * referenced directly by modules and seed data. A symptom is stored once here and
+ * reused by every module that needs it.
+ *
+ * Clinical symptoms must tie out to established science: clinical_provenance
+ * names the validated instrument and provenance_item the exact source item. The
+ * mapping is published in docs/clinical-provenance.md. User-defined symptoms use
+ * clinical_provenance = 'custom' and never mix into a validated instrument.
  */
 CREATE TABLE symptom_definitions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- i18n key the UI resolves to a localised name, e.g. "symptom.cramps".
+    -- Stable string identifier, e.g. "drsp_depressed_mood".
+    id TEXT PRIMARY KEY NOT NULL,
+    -- i18n key the UI resolves to a localised name, e.g. "symptom.depressed_mood".
     name_key TEXT NOT NULL,
-    -- Grouping key for the symptom, e.g. "physical" or "emotional".
+    -- Grouping: mood | energy | pain | bleeding | vasomotor | cognitive |
+    -- behavioral | functional | physical | sexual.
     category TEXT NOT NULL,
-    -- 1 if the user created this symptom, 0 if it is a built-in definition.
-    is_custom INTEGER NOT NULL
+    -- Severity scale: drsp_6 | vas_10 | likert_5 | binary | count | minutes | hours.
+    severity_scale TEXT NOT NULL,
+    -- Validated instrument this item belongs to, or 'custom' for user-defined.
+    clinical_provenance TEXT NOT NULL,
+    -- The exact source item, e.g. "DRSP-1"; null for custom symptoms.
+    provenance_item TEXT,
+    -- 0 soft-deletes a definition without removing historical entries.
+    is_active INTEGER NOT NULL DEFAULT 1
 );
 
-selectAllSymptomDefinitions:
+CREATE INDEX symptom_definitions_by_category ON symptom_definitions(category);
+
+selectAllActiveSymptomDefinitions:
 SELECT *
 FROM symptom_definitions
-ORDER BY name_key;
+WHERE is_active = 1
+ORDER BY id;
 
-insertSymptomDefinition:
-INSERT INTO symptom_definitions(name_key, category, is_custom)
-VALUES (?, ?, ?);
+selectSymptomDefinition:
+SELECT *
+FROM symptom_definitions
+WHERE id = ?;
+
+-- INSERT OR REPLACE (the SQLite 3.18 dialect predates UPSERT): re-seeding a
+-- definition with the same stable id replaces it in place.
+upsertSymptomDefinition:
+INSERT OR REPLACE INTO symptom_definitions(id, name_key, category, severity_scale, clinical_provenance, provenance_item, is_active)
+VALUES (?, ?, ?, ?, ?, ?, ?);
