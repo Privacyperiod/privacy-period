@@ -62,6 +62,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   writes DRSP `symptom_entries`, and `PmddModule` scores them with the
   conformance-verified C-PASS scorer. Still hidden behind the `PmddFeature` gate
   until clinical sign-off.
+- PME scoring engine (shared module, not yet user-facing): a second
+  `ClinicalModule` (`PmeModule`) on the universal layer for premenstrual
+  exacerbation. Adds the MAC-PMSS mood-chart items to the catalog (reusing the
+  DRSP items) and a `PmddVsPmePatternClassifier` that distinguishes PMDD-like from
+  PME patterns by the follicular baseline (the most clinically important
+  distinction): low baseline rising premenstrually (PMDD) vs. an elevated baseline
+  rising further (PME), plus ongoing-condition and no-pattern cases. Thresholds
+  are the documented starting values pending clinical confirmation; the module is
+  gated and never renders a diagnosis.
 
 ### Security
 
