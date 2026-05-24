@@ -74,6 +74,22 @@ implementation, dependency — must satisfy all of them.
 - The PMDD and mental health modules are out of scope until clinical review
   is complete. Do not scaffold, stub, or implement them without explicit instruction.
 
+### 6. Fertility Awareness — Strict Language Rules
+
+- The Fertility Awareness module (backlog) implements the Sensiplan symptothermal
+  methodology as a tracking and self-awareness tool. It is **not** a contraceptive
+  method and must never be presented as one. This boundary keeps the app on the
+  wellness side of the FDA general-wellness / Software-as-Medical-Device line.
+- **Never generate any of these strings or equivalents:** "safe day," "low
+  pregnancy risk," "not fertile today," "green day," "red day," "birth control,"
+  "contraception," "effective for preventing pregnancy," or any effectiveness
+  percentage; and never recommend sexual-behaviour changes from the output.
+- Fertile-window display uses neutral language: "Your tracked signs indicate you
+  are in your fertile window" / "Your fertile window has been confirmed closed for
+  this cycle." Do not colour-code days red/green.
+- The full spec and disclaimer text live in the local `module-fertility-awareness.md`;
+  read it before working on this module. A regulatory review precedes shipping it.
+
 -----
 
 ## Attribution Rules
