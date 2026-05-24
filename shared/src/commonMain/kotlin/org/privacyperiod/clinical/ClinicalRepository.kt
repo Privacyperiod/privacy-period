@@ -20,7 +20,12 @@ class ClinicalRepository(private val database: PrivacyPeriodDatabase) {
      * Seeds (or refreshes) the built-in clinical catalog — the validated
      * instrument items expressed as universal symptom definitions. Idempotent;
      * safe to call on every launch.
+     *
+     * Declared to throw so the caller can degrade gracefully (rather than crash
+     * at launch) if the database is in an unexpected state — for example a stale
+     * schema on a developer device. On a fresh install it always succeeds.
      */
+    @Throws(Throwable::class)
     fun seedCatalog() {
         DrspCatalog.seedInto(database.symptomDefinitionsQueries)
     }

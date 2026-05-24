@@ -160,6 +160,198 @@
     "cyclelog.privacy" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cycle entries never leave your device. To share with a clinician, export from Settings." } } }
+    },
+    "pmdd.checkin.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily check-in" } } }
+    },
+    "pmdd.checkin.today" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } } }
+    },
+    "pmdd.checkin.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This is a symptom screening to share with a clinician — not a diagnosis." } } }
+    },
+    "pmdd.checkin.intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate the level you experienced for each category today. All categories must be answered." } } }
+    },
+    "pmdd.level.1" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "None" } } }
+    },
+    "pmdd.level.2" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Minimal" } } }
+    },
+    "pmdd.level.3" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mild" } } }
+    },
+    "pmdd.level.4" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } }
+    },
+    "pmdd.level.5" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Severe" } } }
+    },
+    "pmdd.level.6" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Extreme" } } }
+    },
+    "pmdd.section.emotional" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Emotional symptoms" } } }
+    },
+    "pmdd.section.physical" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Physical & other symptoms" } } }
+    },
+    "pmdd.section.impact" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Impact on daily life" } } }
+    },
+    "pmdd.item.1" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Depressed or blue" } } }
+    },
+    "pmdd.item.2" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Hopeless" } } }
+    },
+    "pmdd.item.3" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Worthless or guilty" } } }
+    },
+    "pmdd.item.4" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anxious or on edge" } } }
+    },
+    "pmdd.item.5" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood swings" } } }
+    },
+    "pmdd.item.6" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sensitive to rejection" } } }
+    },
+    "pmdd.item.7" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Angry or irritable" } } }
+    },
+    "pmdd.item.8" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Conflict with others" } } }
+    },
+    "pmdd.item.9" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Less interest in usual activities" } } }
+    },
+    "pmdd.item.10" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty concentrating" } } }
+    },
+    "pmdd.item.11" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Lethargic or low energy" } } }
+    },
+    "pmdd.item.12" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Increased appetite or overeating" } } }
+    },
+    "pmdd.item.13" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Food cravings" } } }
+    },
+    "pmdd.item.14" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Slept more than usual" } } }
+    },
+    "pmdd.item.15" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Trouble sleeping" } } }
+    },
+    "pmdd.item.16" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Overwhelmed" } } }
+    },
+    "pmdd.item.17" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Out of control" } } }
+    },
+    "pmdd.item.18" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Breast tenderness" } } }
+    },
+    "pmdd.item.19" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Swelling or bloating" } } }
+    },
+    "pmdd.item.20" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Headache" } } }
+    },
+    "pmdd.item.21" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Joint or muscle pain" } } }
+    },
+    "pmdd.item.22" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Interfered with work or school" } } }
+    },
+    "pmdd.item.23" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Interfered with hobbies or social life" } } }
+    },
+    "pmdd.item.24" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Interfered with relationships" } } }
+    },
+    "common.done" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } } }
+    },
+    "pmdd.results.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptom summary" } } }
+    },
+    "pmdd.results.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A screening to share with your clinician — not a diagnosis." } } }
+    },
+    "pmdd.results.sharenote" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This is a screening, not a diagnosis. Share this summary with a qualified clinician to talk it through." } } }
+    },
+    "pmdd.results.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for your clinician" } } }
+    },
+    "pmdd.results.basis" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Based on %lld scored cycles." } } }
+    },
+    "pmdd.result.pmdd" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Over your tracked cycles, your symptoms match the DSM-5 premenstrual pattern clinicians screen for as PMDD." } } }
+    },
+    "pmdd.result.mrmd" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your symptoms show a premenstrual mood pattern — a core symptom met criteria across cycles." } } }
+    },
+    "pmdd.result.pme" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your symptoms show premenstrual exacerbation: they rise before your period without fully clearing afterward." } } }
+    },
+    "pmdd.result.none" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Over your tracked cycles, your symptoms don't match the DSM-5 premenstrual pattern." } } }
+    },
+    "pmdd.result.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep checking in daily. A summary needs at least two cycles with enough entries." } } }
     }
   }
 }
