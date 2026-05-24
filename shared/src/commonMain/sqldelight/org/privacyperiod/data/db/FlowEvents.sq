@@ -1,0 +1,46 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * Granular menstrual-flow events used by PBAC scoring for heavy-bleeding
+ * tracking: each product change, clot, or flooding episode during a period.
+ *
+ * This is finer-grained than the single flow_intensity recorded on a cycle; the
+ * Heavy Menstrual Bleeding module sums pbac_points (or uses measured_ml for cups
+ * and discs) over a cycle. Every flow event belongs to a cycle.
+ */
+CREATE TABLE flow_events (
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- The cycle this flow event belongs to.
+    cycle_id TEXT NOT NULL,
+    -- ISO-8601 date the event occurred.
+    event_date TEXT NOT NULL,
+    -- ISO-8601 time the event occurred, or NULL.
+    event_time TEXT,
+    -- pad | tampon | cup | disc | period_underwear | clot | flooding.
+    flow_type TEXT NOT NULL,
+    -- light | moderate | heavy | soaked (for products), else NULL.
+    saturation TEXT,
+    -- small | large (for clots), else NULL.
+    clot_size TEXT,
+    -- Directly measured volume in millilitres (cups/discs), else NULL.
+    measured_ml REAL,
+    -- PBAC points computed from flow_type/saturation/clot_size, else NULL.
+    pbac_points INTEGER,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(cycle_id) REFERENCES cycle_entries(id)
+);
+
+CREATE INDEX flow_events_by_cycle ON flow_events(cycle_id);
+
+selectFlowEventsForCycle:
+SELECT *
+FROM flow_events
+WHERE cycle_id = ?
+ORDER BY event_date, event_time;
+
+insertFlowEvent:
+INSERT INTO flow_events(id, cycle_id, event_date, event_time, flow_type, saturation, clot_size, measured_ml, pbac_points, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

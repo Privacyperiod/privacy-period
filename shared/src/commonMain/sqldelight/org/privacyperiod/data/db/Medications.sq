@@ -1,0 +1,69 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * Medication categories the user can record taking, and their administrations.
+ *
+ * Categories are generic (NSAID, hormonal contraceptive, SSRI, …), never brand
+ * or prescription details — the app records timing and self-reported
+ * effectiveness only, consistent with the no-clinical-PII rule.
+ */
+CREATE TABLE medication_definitions (
+    -- Stable string identifier, e.g. "nsaid".
+    id TEXT PRIMARY KEY NOT NULL,
+    -- i18n key the UI resolves to a localised category name.
+    i18n_key TEXT NOT NULL,
+    -- nsaid | hormonal_contraceptive | ssri | gnrh_agonist | other.
+    category TEXT NOT NULL,
+    -- 1 if user-created, 0 if app-provided.
+    user_defined INTEGER NOT NULL DEFAULT 0
+);
+
+/** A single administration (or skipped dose) of a medication. */
+CREATE TABLE medication_administrations (
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- The medication taken; references medication_definitions.
+    medication_id TEXT NOT NULL,
+    -- ISO-8601 date the dose was taken (or skipped).
+    administered_date TEXT NOT NULL,
+    -- ISO-8601 time, or NULL.
+    administered_time TEXT,
+    -- 1 if the user marked this dose skipped.
+    skipped INTEGER NOT NULL DEFAULT 0,
+    -- Self-reported effectiveness 0-5, or NULL.
+    effectiveness REAL,
+    -- The cycle this administration falls in, if known.
+    cycle_id TEXT,
+    -- Cycle phase fixed at write time.
+    cycle_phase TEXT,
+    -- 1-based day within the cycle, fixed at write time.
+    cycle_day INTEGER,
+    -- Optional free-text note (encrypted at rest with the whole database).
+    notes TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY(medication_id) REFERENCES medication_definitions(id),
+    FOREIGN KEY(cycle_id) REFERENCES cycle_entries(id)
+);
+
+CREATE INDEX medication_administrations_by_date ON medication_administrations(administered_date);
+
+selectAllMedicationDefinitions:
+SELECT *
+FROM medication_definitions
+ORDER BY id;
+
+upsertMedicationDefinition:
+INSERT OR REPLACE INTO medication_definitions(id, i18n_key, category, user_defined)
+VALUES (?, ?, ?, ?);
+
+selectMedicationAdministrationsInRange:
+SELECT *
+FROM medication_administrations
+WHERE administered_date >= ? AND administered_date <= ?
+ORDER BY administered_date;
+
+insertMedicationAdministration:
+INSERT INTO medication_administrations(id, medication_id, administered_date, administered_time, skipped, effectiveness, cycle_id, cycle_phase, cycle_day, notes, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

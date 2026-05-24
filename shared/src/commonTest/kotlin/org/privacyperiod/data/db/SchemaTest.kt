@@ -45,6 +45,13 @@ class SchemaTest {
         assertTrue(database.symptomDefinitionsQueries.selectAllActiveSymptomDefinitions().executeAsList().isEmpty())
         assertTrue(database.birthControlEntriesQueries.selectAllBirthControlEntries().executeAsList().isEmpty())
         assertTrue(database.moduleEnrollmentsQueries.selectAllEnrollments().executeAsList().isEmpty())
+        assertTrue(database.eventEntriesQueries.selectAllActiveEventTypes().executeAsList().isEmpty())
+        assertTrue(database.measurementEntriesQueries.selectAllMeasurementTypes().executeAsList().isEmpty())
+        assertTrue(database.medicationsQueries.selectAllMedicationDefinitions().executeAsList().isEmpty())
+        assertTrue(database.flowEventsQueries.selectFlowEventsForCycle("none").executeAsList().isEmpty())
+        assertTrue(
+            database.instrumentCompletionsQueries.selectInstrumentCompletions("peri_ss").executeAsList().isEmpty()
+        )
         assertTrue(database.appSettingsQueries.selectAllAppSettings().executeAsList().isEmpty())
     }
 
@@ -52,10 +59,12 @@ class SchemaTest {
     @Test
     fun cycleEntryRoundTrips() {
         database.cycleEntriesQueries.insertCycleEntry(
+            id = "cycle-1",
             start_date = "2026-01-01",
             end_date = "2026-01-05",
             flow_intensity = "MEDIUM",
             notes = "first logged cycle",
+            predicted_next = null,
             created_at = 1_700_000_000_000L,
         )
 
@@ -63,6 +72,7 @@ class SchemaTest {
 
         assertEquals(1, entries.size)
         val entry = entries.first()
+        assertEquals("cycle-1", entry.id)
         assertEquals("2026-01-01", entry.start_date)
         assertEquals("2026-01-05", entry.end_date)
         assertEquals("MEDIUM", entry.flow_intensity)

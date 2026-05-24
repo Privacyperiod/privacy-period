@@ -2,15 +2,18 @@
 -- Copyright (C) 2026 Privacy Period Contributors
 
 /**
- * A single menstrual cycle the user has logged.
+ * A single menstrual cycle the user has logged — the "cycles" table of the
+ * universal data layer that clinical entries reference for phase and day.
  *
- * Dates are stored as ISO-8601 calendar dates (YYYY-MM-DD) in the user's local
- * calendar; created_at is an epoch-millisecond timestamp recording when the row
- * was first written. Every value is entered by the user and never leaves the
- * device unless the user explicitly exports or backs up their data.
+ * The primary key is a UUID (a stable string) so cycles from different devices
+ * can be merged in a future encrypted backup. Dates are ISO-8601 calendar dates
+ * (YYYY-MM-DD) in the user's local calendar; created_at is epoch milliseconds.
+ * Every value is entered by the user and never leaves the device unless they
+ * explicitly export or back up.
  */
 CREATE TABLE cycle_entries (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
     -- ISO-8601 date (YYYY-MM-DD) the period started.
     start_date TEXT NOT NULL,
     -- ISO-8601 date the period ended, or NULL while the cycle is still ongoing.
@@ -19,9 +22,13 @@ CREATE TABLE cycle_entries (
     flow_intensity TEXT NOT NULL,
     -- Optional free-text note entered by the user.
     notes TEXT,
+    -- Computed predicted start of the next cycle (ISO-8601 date), or NULL.
+    predicted_next TEXT,
     -- Epoch milliseconds when this row was created.
     created_at INTEGER NOT NULL
 );
+
+CREATE INDEX cycle_entries_by_start_date ON cycle_entries(start_date);
 
 selectAllCycleEntries:
 SELECT *
@@ -29,5 +36,5 @@ FROM cycle_entries
 ORDER BY start_date;
 
 insertCycleEntry:
-INSERT INTO cycle_entries(start_date, end_date, flow_intensity, notes, created_at)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO cycle_entries(id, start_date, end_date, flow_intensity, notes, predicted_next, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);

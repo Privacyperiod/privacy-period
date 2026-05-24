@@ -48,10 +48,12 @@ final class EncryptedStore: ObservableObject {
         guard let database else { return }
         let trimmedNotes = draft.notes.trimmingCharacters(in: .whitespacesAndNewlines)
         database.cycleEntriesQueries.insertCycleEntry(
+            id: UUID().uuidString,
             start_date: Self.isoDate(draft.startDate),
             end_date: draft.endDate.map(Self.isoDate),
             flow_intensity: draft.flow,
             notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
+            predicted_next: nil,
             created_at: Int64(Date().timeIntervalSince1970 * 1000)
         )
     }

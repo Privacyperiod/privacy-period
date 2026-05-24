@@ -36,10 +36,12 @@ class EncryptedDatabaseTest {
         try {
             val database = PrivacyPeriodDatabase(driver)
             database.cycleEntriesQueries.insertCycleEntry(
+                id = "cycle-a",
                 start_date = "2026-02-01",
                 end_date = "2026-02-05",
                 flow_intensity = "LIGHT",
                 notes = null,
+                predicted_next = null,
                 created_at = CREATED_AT,
             )
             val entries = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList()
@@ -54,10 +56,12 @@ class EncryptedDatabaseTest {
     fun aWrongKeyCannotReadTheEncryptedDatabase() {
         val writer = DatabaseDriverFactory(FixedKeyStorage(keyA()), TEST_DB_NAME).create()
         PrivacyPeriodDatabase(writer).cycleEntriesQueries.insertCycleEntry(
+            id = "cycle-b",
             start_date = "2026-03-01",
             end_date = null,
             flow_intensity = "HEAVY",
             notes = null,
+            predicted_next = null,
             created_at = CREATED_AT,
         )
         writer.close()
