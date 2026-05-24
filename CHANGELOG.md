@@ -39,6 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the encrypted store on first open and never leaves the device. Adds reusable
   Desert Dusk form components (navigation bar, segmented control, field
   container).
+- PMDD scoring engine (shared module, not yet user-facing): a clean-room Kotlin
+  implementation of the Carolina Premenstrual Assessment Scoring System (C-PASS)
+  for premenstrual-symptom screening, written from the published specification.
+  Includes the DRSP item / DSM-5 domain dictionary and item-, domain-, cycle-,
+  and subject-level scoring. A conformance suite proves the output is identical
+  to the reference R package `lasy/cpass` on its example dataset (37 cycles, 20
+  subjects); the results are published in `docs/cpass-conformance.md`. The
+  feature is intentionally gated out of shipped builds until the clinical
+  disclaimer in `docs/clinical-disclaimer.md` is reviewed and signed, and it
+  never renders a diagnosis.
 
 ### Security
 
