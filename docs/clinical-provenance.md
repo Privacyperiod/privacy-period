@@ -37,6 +37,14 @@ conformance check.
 | Heavy menstrual bleeding | PBAC (Pictorial Blood Loss Assessment Chart) | product/saturation/clot/flooding points | Higham et al. (1990), *BJOG* 97(8):734–739 | published scoring (no code dependency) | _pending_ | Planned |
 | Perimenopause | Peri-SS, or Greene Climacteric Scale (permission-free) | per instrument | Peri-SS (2025); Greene (1998) | published scoring | _pending_ | Planned |
 | Endometriosis | EHP-30 (Endometriosis Health Profile) | 30 core items, 5 subscales (+ optional modules) | Jones et al. (2001), Oxford | published scoring (instrument licensed by Oxford University Innovation) | _pending_ | Planned — contingent on license |
+| Fertility awareness (symptothermal) | Sensiplan symptothermal method (temperature + mucus double-check) | BBT rule, cervical-mucus peak rule, double-check; mucus/cervix categories | Arbeitsgruppe NFP, *Natürliche Familienplanung heute* (Springer); Frank-Herrmann et al. (2007), *Hum Reprod* 22(5):1310–1319 | drip. (gitlab.com/bloodyhealth/drip) — independent implementation, cross-checked | _pending_ | Planned (backlog) |
+
+> **Fertility awareness is a wellness/tracking tool, not contraception.** The
+> Sensiplan rules are public-domain and patent-free; we implement them
+> independently with attribution, and the module never uses contraceptive
+> framing ("safe day", "green/red day", effectiveness claims). It ships only
+> after a regulatory review. The published rules — not any closed algorithm —
+> are what the implementation will be audited against.
 
 ## How to verify
 

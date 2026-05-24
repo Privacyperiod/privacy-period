@@ -37,6 +37,10 @@ shared/shared.podspec
 # stays a local working reference.
 /clinical condition screens and data/
 
+# Local fertility-awareness planning material (Sensiplan module spec, governing
+# notes). As above: the published audit lives in docs/; this folder stays local.
+/fertility awareness/
+
 # IDE
 .idea/
 *.iml
