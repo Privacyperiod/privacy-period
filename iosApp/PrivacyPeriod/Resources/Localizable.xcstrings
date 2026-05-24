@@ -352,6 +352,82 @@
     "pmdd.result.insufficient" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep checking in daily. A summary needs at least two cycles with enough entries." } } }
+    },
+    "pmdd.si.support_link" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Support resources" } } }
+    },
+    "pmdd.si.support_title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You're not alone" } } }
+    },
+    "pmdd.si.support_intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "If you're struggling, support is available right now. These connect you directly — nothing is shared." } } }
+    },
+    "pmdd.si.support_private" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing here leaves your device or is shared." } } }
+    },
+    "pmdd.si.prefer_not" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Prefer not to answer" } } }
+    },
+    "crisis.us.988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "988 Suicide & Crisis Lifeline" } } }
+    },
+    "crisis.us.textline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Crisis Text Line" } } }
+    },
+    "crisis.uk.samaritans" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Samaritans" } } }
+    },
+    "crisis.uk.shout" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Shout" } } }
+    },
+    "crisis.ca.988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Suicide Crisis Helpline" } } }
+    },
+    "crisis.au.lifeline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Lifeline" } } }
+    },
+    "crisis.ie.samaritans" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Samaritans" } } }
+    },
+    "crisis.generic.local" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Local crisis & emergency services" } } }
+    },
+    "crisis.action.call_988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 988" } } }
+    },
+    "crisis.action.text_741741" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Text HOME to 741741" } } }
+    },
+    "crisis.action.call_116123" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 116 123" } } }
+    },
+    "crisis.action.text_85258" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Text SHOUT to 85258" } } }
+    },
+    "crisis.action.call_131114" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 13 11 14" } } }
+    },
+    "crisis.action.local" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Contact your local crisis line or emergency services" } } }
     }
   }
 }
