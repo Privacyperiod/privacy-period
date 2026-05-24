@@ -23,6 +23,7 @@ struct CycleDraft {
 /// is available and the store opens normally.
 final class EncryptedStore: ObservableObject {
     private let database: PrivacyPeriodDatabase?
+    private let repository: ClinicalRepository?
 
     init() {
         var opened: PrivacyPeriodDatabase?
@@ -37,7 +38,18 @@ final class EncryptedStore: ObservableObject {
             #endif
         }
         database = opened
+        repository = opened.map { ClinicalRepository(database: $0) }
         ensureDeviceIdentifier()
+        // Seed the clinical catalog (the DRSP items, …) so the symptom ids that
+        // modules reference exist. Idempotent; degrade rather than crash if the
+        // database is in an unexpected state (e.g. a stale schema on a dev device).
+        do {
+            try repository?.seedCatalog()
+        } catch {
+            #if DEBUG
+            print("EncryptedStore: catalog seeding failed: \(error)")
+            #endif
+        }
     }
 
     /// Whether the encrypted store is open and able to persist data.
@@ -56,6 +68,38 @@ final class EncryptedStore: ObservableObject {
             predicted_next: nil,
             created_at: Int64(Date().timeIntervalSince1970 * 1000)
         )
+    }
+
+    /// Persists a DRSP daily check-in as same-day symptom entries on the universal
+    /// clinical layer (one per rated item). No-op when the store is unavailable.
+    func saveCheckIn(date: Date, scores: [Int: Int]) {
+        guard let repository else { return }
+        let dateString = Self.isoDate(date)
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        for (item, score) in scores {
+            repository.saveSymptomEntry(
+                entry: SymptomEntry(
+                    id: UUID().uuidString,
+                    symptomId: "drsp_\(item)",
+                    date: dateString,
+                    severity: Double(score),
+                    cycleId: nil,
+                    cyclePhase: nil,
+                    cycleDay: nil,
+                    sameDayLogged: true,
+                    notes: nil,
+                    createdAt: now
+                )
+            )
+        }
+    }
+
+    /// Computes the PMDD screening result through the PMDD module over the
+    /// universal layer, or nil when the store is unavailable.
+    func cpassResult() -> CpassResult? {
+        guard let repository else { return nil }
+        let result = PmddModule.shared.runScoring(history: repository.history())
+        return (result as? PmddScoringResult)?.result
     }
 
     /// Generates and stores a random, device-local identifier on first open.

@@ -49,6 +49,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   feature is intentionally gated out of shipped builds until the clinical
   disclaimer in `docs/clinical-disclaimer.md` is reviewed and signed, and it
   never renders a diagnosis.
+- Universal clinical data layer: a single encrypted substrate (`symptom_definitions`
+  / `symptom_entries` with stable ids, UUID entries, write-time cycle context, and
+  one rating per symptom per day; plus event, measurement, flow, medication,
+  instrument-completion, and module-enrollment tables) that clinical modules
+  consume through a `ClinicalRepository` / `ClinicalHistory`. Modules are manifests,
+  not storage: a `ClinicalModule` declares the symptoms it needs and how to score
+  them. Each clinical symptom ties out to a validated instrument via published
+  provenance (`docs/clinical-provenance.md`).
+- PMDD screening (iOS, gated): the same-day DRSP check-in, factual non-diagnostic
+  summary, and clinician export now run on the universal layer — the check-in
+  writes DRSP `symptom_entries`, and `PmddModule` scores them with the
+  conformance-verified C-PASS scorer. Still hidden behind the `PmddFeature` gate
+  until clinical sign-off.
 
 ### Security
 

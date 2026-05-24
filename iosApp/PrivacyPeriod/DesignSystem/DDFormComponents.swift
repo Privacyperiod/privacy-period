@@ -29,6 +29,7 @@ struct DDNav<Leading: View, Trailing: View>: View {
 /// A text button styled as a nav action (burnt-orange, sentence case).
 struct DDNavButton: View {
     let titleKey: LocalizedStringKey
+    var isEnabled: Bool = true
     let action: () -> Void
 
     var body: some View {
@@ -36,6 +37,8 @@ struct DDNavButton: View {
             Text(titleKey).font(.ddSans(16, .semibold))
         }
         .foregroundColor(.ddSunDeep)
+        .disabled(!isEnabled)
+        .opacity(isEnabled ? 1 : 0.35)
     }
 }
 
