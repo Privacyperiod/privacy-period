@@ -11,7 +11,12 @@ import SwiftUI
 /// is optional so an unrated item reads as "not yet answered".
 struct DDLikert: View {
     @Binding var selection: Int?
-    private let values = Array(1...6)
+    var range: ClosedRange<Int> = 1...6
+    /// Localization key prefix for the per-level anchor labels (`<prefix><n>`).
+    /// Defaults to the DRSP severity anchors; pass another set (e.g. functional
+    /// impairment: none → unable) where a different construct needs its own words.
+    var labelKeyPrefix: String = "pmdd.level."
+    private var values: [Int] { Array(range) }
 
     var body: some View {
         HStack(alignment: .top, spacing: 4) {
@@ -39,7 +44,7 @@ struct DDLikert: View {
                             lineWidth: isSelected ? 2 : 1
                         )
                     )
-                Text(Self.levelLabel(value))
+                Text(levelLabel(value))
                     .font(.ddMono(9))
                     .foregroundColor(isSelected ? color : .ddFg3)
                     .lineLimit(1)
@@ -49,7 +54,7 @@ struct DDLikert: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement()
-        .accessibilityLabel(Text(Self.levelLabel(value)))
+        .accessibilityLabel(Text(levelLabel(value)))
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 
@@ -71,7 +76,7 @@ struct DDLikert: View {
         value <= 4 ? .ddPlumDeep : .white
     }
 
-    private static func levelLabel(_ value: Int) -> String {
-        NSLocalizedString("pmdd.level.\(value)", comment: "DRSP severity level label")
+    private func levelLabel(_ value: Int) -> String {
+        NSLocalizedString("\(labelKeyPrefix)\(value)", comment: "rating level anchor label")
     }
 }

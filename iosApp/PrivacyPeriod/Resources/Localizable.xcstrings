@@ -321,6 +321,14 @@
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A screening to share with your clinician — not a diagnosis." } } }
     },
+    "pmdd.results.pme_hint" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual exacerbation usually layers on an ongoing condition. If you live with one, PME tracking follows how it changes across your cycle." } } }
+    },
+    "pmdd.results.pme_hint_action" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up PME tracking" } } }
+    },
     "pmdd.results.sharenote" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This is a screening, not a diagnosis. Share this summary with a qualified clinician to talk it through." } } }
@@ -428,6 +436,170 @@
     "crisis.action.local" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Contact your local crisis line or emergency services" } } }
+    },
+    "pme.checkin.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily check-in" } } }
+    },
+    "pme.checkin.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A symptom screening to share with a clinician — not a diagnosis." } } }
+    },
+    "pme.checkin.intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate your premenstrual symptoms and today's mood. All categories must be answered." } } }
+    },
+    "pme.checkin.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood & symptom check-in" } } }
+    },
+    "pme.enroll.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up premenstrual tracking" } } }
+    },
+    "pme.enroll.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up tracking" } } }
+    },
+    "pme.enroll.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This records a condition you already track with a clinician — it does not diagnose anything." } } }
+    },
+    "pme.enroll.intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual exacerbation tracking is for people who already live with an ongoing condition that worsens before their period. Choose the condition you track with your clinician — this frames your tracking." } } }
+    },
+    "pme.condition.depression" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Depression" } } }
+    },
+    "pme.condition.bipolar" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bipolar disorder" } } }
+    },
+    "pme.condition.anxiety" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anxiety disorder" } } }
+    },
+    "pme.condition.adhd" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "ADHD" } } }
+    },
+    "pme.condition.other" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Other / prefer not to specify" } } }
+    },
+    "pme.results.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual pattern" } } }
+    },
+    "pme.results.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your pattern" } } }
+    },
+    "pme.results.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A factual summary of your tracked symptoms to share with a clinician — not a diagnosis." } } }
+    },
+    "pme.results.sharenote" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You can export this summary to share with your clinician. Nothing leaves your device unless you choose to share it." } } }
+    },
+    "pme.results.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for my clinician" } } }
+    },
+    "pme.results.basis" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Based on %d scored cycles." } } }
+    },
+    "pme.result.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep logging — at least two scored cycles are needed before a pattern can be shown." } } }
+    },
+    "pme.result.pmdd_pattern" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms rise before your period and ease afterwards — a cyclical pattern to share with your clinician." } } }
+    },
+    "pme.result.pme_pattern" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms are present across your cycle and worsen before your period — a premenstrual-exacerbation pattern to share with your clinician." } } }
+    },
+    "pme.result.ongoing" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms are present across your cycle without a clear rise before your period." } } }
+    },
+    "pme.result.none" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms don't show a clear cyclical pattern." } } }
+    },
+    "pme.result.indeterminate" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms don't fit a single pattern yet — keep logging." } } }
+    },
+    "pme.section.mood" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood today" } } }
+    },
+    "pme.impairment.1" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "None" } } }
+    },
+    "pme.impairment.2" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Slight" } } }
+    },
+    "pme.impairment.3" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } }
+    },
+    "pme.impairment.4" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Marked" } } }
+    },
+    "pme.impairment.5" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable" } } }
+    },
+    "definition.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Definition" } } }
+    },
+    "definition.source" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "From the %@ instrument" } } }
+    },
+    "definition.pending" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "The official definition for this item comes from its source instrument and will appear here once that instrument is licensed. Nothing here is a diagnosis." } } }
+    },
+    "definition.hint" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Opens the definition for this item" } } }
+    },
+    "symptom.macpmss_depressed_mood" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Depressed mood" } } }
+    },
+    "symptom.macpmss_anxiety" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anxiety" } } }
+    },
+    "symptom.macpmss_low_energy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Low energy" } } }
+    },
+    "symptom.macpmss_functional_impairment" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty functioning" } } }
+    },
+    "symptom.macpmss_mood_elevation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Elevated or racing mood" } } }
+    },
+    "symptom.macpmss_suicidal_ideation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Thoughts of self-harm" } } }
     }
   }
 }
