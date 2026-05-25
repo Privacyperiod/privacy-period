@@ -7,9 +7,9 @@ import SwiftUI
 /// all") to 3 ("extremely"), grouped by symptom domain. On save it hands the
 /// responses to the parent to persist as an instrument completion.
 ///
-/// Item labels are loose paraphrases (same approach as the DRSP labels); the
-/// Greene scale is permission-free, so official wording may replace them. Part of
-/// the gated Perimenopause feature (see `PeriFeature`). Nothing here is a diagnosis.
+/// Item labels are the official Greene Climacteric Scale wording (the scale is
+/// permission-free; sourced and cross-checked against published reproductions).
+/// Part of the gated Perimenopause feature (see `PeriFeature`). Not a diagnosis.
 struct GreeneQuestionnaireView: View {
     let onCancel: () -> Void
     let onSave: ([Int: Int]) -> Void

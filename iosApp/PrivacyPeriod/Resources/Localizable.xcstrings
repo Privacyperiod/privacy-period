@@ -399,7 +399,7 @@
     },
     "greene.item.1" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heart racing or pounding" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heart beating quickly or strongly" } } }
     },
     "greene.item.2" : {
       "extractionState" : "manual",
@@ -407,23 +407,23 @@
     },
     "greene.item.3" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty sleeping" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty in sleeping" } } }
     },
     "greene.item.4" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Feeling excitable" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Excitable" } } }
     },
     "greene.item.5" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Panic attacks" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Attacks of panic" } } }
     },
     "greene.item.6" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty concentrating" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty in concentrating" } } }
     },
     "greene.item.7" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Feeling tired or lacking energy" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Feeling tired or lacking in energy" } } }
     },
     "greene.item.8" : {
       "extractionState" : "manual",
@@ -447,11 +447,11 @@
     },
     "greene.item.13" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pressure or tightness in the head or body" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pressure or tightness in head" } } }
     },
     "greene.item.14" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Parts of the body feel numb or tingling" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Parts of body feel numb" } } }
     },
     "greene.item.15" : {
       "extractionState" : "manual",
@@ -459,7 +459,7 @@
     },
     "greene.item.16" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Muscle or joint pains" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Muscle and joint pains" } } }
     },
     "greene.item.17" : {
       "extractionState" : "manual",
