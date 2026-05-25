@@ -171,28 +171,38 @@ extension EncryptedStore {
         return nil
     }
 
-    /// The current cycle's daily symptom picture for the landing-page reveal: the mean
-    /// DRSP severity logged on each cycle day so far (nil on days not yet logged, so
-    /// the chart visibly fills in), plus how many of those days have any entry.
-    /// Returns nil when no period has been logged yet.
-    func currentCycleReveal() -> CycleReveal? {
-        guard let repository, let snapshot = currentCycleSnapshot() else { return nil }
-        let cycleDay = snapshot.dayOfCycle
+    /// The Mental + Physical Daily Data time series for the landing-page hero: one bar
+    /// per logged day over the recent window, each carrying that day's *aggregate
+    /// score* — the sum of the day's DRSP item ratings (total symptom load). Days with
+    /// no entry produce no bar, so the picture grows as logging continues. Also returns
+    /// the menses-onset dates in the window so the chart can mark cycle boundaries —
+    /// making the "collect two cycles" goal visible. `days` spans roughly two cycles.
+    func dailyAggregateSeries(days: Int = 64) -> DailyAggregateSeries? {
+        guard let database, let repository else { return nil }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return nil }
         let drspIds = Set((1...24).map { "drsp_\($0)" })
-        var sumByDay: [Int: (total: Double, count: Int)] = [:]
+        var sumByDate: [String: Double] = [:]
         for entry in repository.history().symptomEntries(symptomIds: drspIds) {
-            let day = Self.daysBetween(snapshot.startDate, entry.date) + 1
-            guard day >= 1, day <= cycleDay else { continue }
-            var aggregate = sumByDay[day] ?? (total: 0, count: 0)
-            aggregate.total += entry.severity
-            aggregate.count += 1
-            sumByDay[day] = aggregate
+            sumByDate[entry.date, default: 0] += entry.severity
         }
-        let points = (1...cycleDay).map { day -> CycleRevealPoint in
-            guard let aggregate = sumByDay[day] else { return CycleRevealPoint(day: day, severity: nil) }
-            return CycleRevealPoint(day: day, severity: aggregate.total / Double(aggregate.count))
+        var bars: [DailyAggregate] = []
+        for offset in 0..<days {
+            guard let date = calendar.date(byAdding: .day, value: offset, to: windowStart) else { continue }
+            if let score = sumByDate[Self.isoDate(date)] {
+                bars.append(DailyAggregate(date: date, score: score))
+            }
         }
-        return CycleReveal(points: points, cycleDay: cycleDay, daysLogged: sumByDay.count)
+        let cycleStarts = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList()
+            .compactMap { Self.date(fromISO: $0.start_date) }
+            .filter { $0 >= windowStart }
+        return DailyAggregateSeries(
+            bars: bars,
+            cycleStarts: cycleStarts,
+            windowStart: windowStart,
+            windowEnd: today
+        )
     }
 
     /// Whether the given periodic instrument (e.g. the Greene Climacteric Scale) has

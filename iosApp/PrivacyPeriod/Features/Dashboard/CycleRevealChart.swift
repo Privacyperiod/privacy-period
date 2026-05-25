@@ -4,75 +4,55 @@
 import Charts
 import SwiftUI
 
-/// One cycle day's mean tracked symptom severity (1–6), or nil when nothing was
-/// logged that day — so the reveal visibly fills in as the user logs.
-struct CycleRevealPoint: Identifiable {
-    let day: Int
-    let severity: Double?
-    var id: Int { day }
+/// One logged day of Mental + Physical Daily Data: the date and its aggregate score
+/// (the sum of that day's DRSP item ratings — total symptom load).
+struct DailyAggregate: Identifiable {
+    let date: Date
+    let score: Double
+    var id: Date { date }
 }
 
-/// The current cycle's symptom picture for the landing-page reveal.
-struct CycleReveal {
-    let points: [CycleRevealPoint]
-    /// Today's day of the current cycle.
-    let cycleDay: Int
-    /// How many days of this cycle have at least one entry (for the completeness line).
-    let daysLogged: Int
+/// The Mental + Physical Daily Data time series for the landing hero: a bar per logged
+/// day over the recent window, plus the menses-onset dates that mark cycle boundaries.
+struct DailyAggregateSeries {
+    let bars: [DailyAggregate]
+    let cycleStarts: [Date]
+    let windowStart: Date
+    let windowEnd: Date
 }
 
-/// The progressive reveal: the user's own cycle chart filling in. Plots the mean
-/// tracked symptom severity for each logged day of the current cycle; unlogged days
-/// are gaps, so the picture grows as logging continues. It shows the user's data —
-/// never a score, streak, or judgement.
+/// The landing-page hero chart: a time series of the user's daily Mental + Physical
+/// Data, one bar per logged day (height = that day's aggregate score), with dashed
+/// markers at each period start so two cycles of collected data are visible at a
+/// glance. It shows the user's own data — never a score, streak, or judgement.
 struct CycleRevealChart: View {
-    let reveal: CycleReveal
-
-    private var logged: [CycleRevealPoint] {
-        reveal.points.filter { $0.severity != nil }
-    }
+    let series: DailyAggregateSeries
 
     var body: some View {
-        Chart(logged) { point in
-            if let severity = point.severity {
-                AreaMark(x: .value("Cycle day", point.day), y: .value("Symptoms", severity))
-                    .interpolationMethod(.catmullRom)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color.ddSun.opacity(0.35), Color.ddSun.opacity(0.04)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                LineMark(x: .value("Cycle day", point.day), y: .value("Symptoms", severity))
-                    .interpolationMethod(.catmullRom)
-                    .foregroundStyle(Color.ddSunDeep)
-                PointMark(x: .value("Cycle day", point.day), y: .value("Symptoms", severity))
-                    .foregroundStyle(Color.ddSunDeep)
-                    .symbolSize(16)
+        Chart {
+            ForEach(series.cycleStarts, id: \.self) { start in
+                RuleMark(x: .value("Period start", start, unit: .day))
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                    .foregroundStyle(Color.ddPlumDeep.opacity(0.25))
+            }
+            ForEach(series.bars) { bar in
+                BarMark(
+                    x: .value("Date", bar.date, unit: .day),
+                    y: .value("Symptom load", bar.score),
+                    width: .fixed(3)
+                )
+                .cornerRadius(1)
+                .foregroundStyle(Color.ddSun)
             }
         }
-        .chartXScale(domain: 1...max(reveal.cycleDay, 2))
-        .chartYScale(domain: 1...6)
-        .chartYAxis {
-            AxisMarks(values: [1, 6]) { value in
-                AxisValueLabel {
-                    if let raw = value.as(Int.self) {
-                        Text(raw == 1 ? "low" : "high").font(.ddMono(9)).foregroundColor(.ddFg3)
-                    }
-                }
-            }
-        }
+        .chartXScale(domain: series.windowStart...series.windowEnd)
+        .chartYAxis(.hidden)
         .chartXAxis {
-            AxisMarks(values: .automatic(desiredCount: 4)) { value in
-                AxisGridLine().foregroundStyle(Color.ddSand.opacity(0.5))
-                AxisValueLabel {
-                    if let day = value.as(Int.self) {
-                        Text(verbatim: "\(day)").font(.ddMono(9)).foregroundColor(.ddFg3)
-                    }
-                }
+            AxisMarks(values: .stride(by: .day, count: 14)) { _ in
+                AxisGridLine().foregroundStyle(Color.ddSand.opacity(0.4))
+                AxisValueLabel(format: .dateTime.month(.abbreviated).day())
             }
         }
-        .frame(height: 130)
+        .frame(height: 120)
     }
 }
