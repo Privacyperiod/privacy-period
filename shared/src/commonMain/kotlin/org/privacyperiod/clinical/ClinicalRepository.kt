@@ -5,6 +5,7 @@ package org.privacyperiod.clinical
 
 import org.privacyperiod.data.db.Cycle_entries
 import org.privacyperiod.data.db.Flow_events
+import org.privacyperiod.data.db.Instrument_completions
 import org.privacyperiod.data.db.PrivacyPeriodDatabase
 import org.privacyperiod.data.db.Symptom_entries
 import org.privacyperiod.pmdd.DrspCatalog
@@ -49,6 +50,22 @@ class ClinicalRepository(private val database: PrivacyPeriodDatabase) {
             same_day_logged = if (entry.sameDayLogged) 1L else 0L,
             notes = entry.notes,
             created_at = entry.createdAt,
+        )
+    }
+
+    /**
+     * Records a completion of a periodic instrument (Greene scale, EHP-30, …). The
+     * caller supplies the id, the item-responses JSON, and any computed-scores JSON.
+     */
+    fun saveInstrumentCompletion(completion: InstrumentCompletion) {
+        database.instrumentCompletionsQueries.insertInstrumentCompletion(
+            id = completion.id,
+            instrument_type = completion.instrumentType,
+            start_date = completion.startDate,
+            end_date = completion.endDate,
+            item_responses_json = completion.itemResponsesJson,
+            computed_scores_json = completion.computedScoresJson,
+            created_at = completion.createdAt,
         )
     }
 
@@ -126,6 +143,12 @@ private class DatabaseClinicalHistory(
     override fun sameDaySymptomEntries(symptomIds: Set<String>): List<SymptomEntry> =
         symptomEntries(symptomIds).filter { it.sameDayLogged }
 
+    override fun instrumentCompletions(instrumentType: String): List<InstrumentCompletion> =
+        database.instrumentCompletionsQueries
+            .selectInstrumentCompletions(instrumentType)
+            .executeAsList()
+            .map { it.toInstrumentCompletion() }
+
     override fun flowEvents(): List<FlowEvent> = allFlowEvents
 
     private val allFlowEvents: List<FlowEvent> by lazy {
@@ -155,6 +178,17 @@ private fun Symptom_entries.toSymptomEntry(): SymptomEntry =
         cycleDay = cycle_day?.toInt(),
         sameDayLogged = same_day_logged != 0L,
         notes = notes,
+        createdAt = created_at,
+    )
+
+private fun Instrument_completions.toInstrumentCompletion(): InstrumentCompletion =
+    InstrumentCompletion(
+        id = id,
+        instrumentType = instrument_type,
+        startDate = start_date,
+        endDate = end_date,
+        itemResponsesJson = item_responses_json,
+        computedScoresJson = computed_scores_json,
         createdAt = created_at,
     )
 

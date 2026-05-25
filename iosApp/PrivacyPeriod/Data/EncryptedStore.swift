@@ -128,6 +128,36 @@ final class EncryptedStore: ObservableObject {
         return (result as? PmddScoringResult)?.result
     }
 
+    /// Persists a completed Greene Climacteric Scale questionnaire as an instrument
+    /// completion. The item responses are written as JSON; the module re-scores them
+    /// on read, so no computed scores are stored here. No-op when unavailable.
+    func saveGreeneCompletion(_ responses: [Int: Int]) {
+        guard let repository else { return }
+        let json = "{" + responses.sorted { $0.key < $1.key }
+            .map { "\"\($0.key)\":\($0.value)" }
+            .joined(separator: ",") + "}"
+        let today = Self.isoDate(Date())
+        repository.saveInstrumentCompletion(
+            completion: InstrumentCompletion(
+                id: UUID().uuidString,
+                instrumentType: "greene_climacteric",
+                startDate: today,
+                endDate: today,
+                itemResponsesJson: json,
+                computedScoresJson: nil,
+                createdAt: Int64(Date().timeIntervalSince1970 * 1000)
+            )
+        )
+    }
+
+    /// The user's Greene completions, each scored into its domain profile (oldest
+    /// first), or nil when the store is unavailable.
+    func greeneCompletions() -> [GreeneCompletionScore]? {
+        guard let repository else { return nil }
+        let result = GreeneModule.shared.runScoring(history: repository.history())
+        return (result as? GreeneScoringResult)?.completions
+    }
+
     /// The most recent cycle's id, or nil if no period has been logged yet. Flow
     /// events attach to this cycle, since PBAC scoring is per cycle.
     func currentCycleId() -> String? {

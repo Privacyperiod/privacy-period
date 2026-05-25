@@ -20,9 +20,12 @@ struct DashboardView: View {
     // Set when the user taps the PME hint in the PMDD results; opens enrollment
     // once the results sheet has dismissed (avoids overlapping sheet presentation).
     @State private var pendingPmeEnroll = false
+    @State private var showingGreene = false
+    @State private var showingGreeneSummary = false
     @State private var summaryResult: CpassResult?
     @State private var pmeResult: PmePatternResult?
     @State private var hmbCycles: [HmbCycleScore]?
+    @State private var greeneCompletions: [GreeneCompletionScore]?
 
     var body: some View {
         ZStack {
@@ -86,6 +89,20 @@ struct DashboardView: View {
                             .foregroundColor(.ddSun)
                             .padding(.top, 4)
                     }
+                }
+                // The perimenopause entry points stay hidden until the feature is
+                // clinically signed off (see PeriFeature / clinical-disclaimer).
+                if PeriFeature.shared.isEnabled {
+                    Button("greene.entry") { showingGreene = true }
+                        .font(.ddSans(15, .medium))
+                        .foregroundColor(.ddSun)
+                        .padding(.top, 4)
+                    Button("greene.results.entry") {
+                        greeneCompletions = store.greeneCompletions()
+                        showingGreeneSummary = true
+                    }
+                    .font(.ddSans(15, .medium))
+                    .foregroundColor(.ddSun)
                 }
             }
             .padding()
@@ -156,6 +173,18 @@ struct DashboardView: View {
                     showingPmeEnroll = false
                 }
             )
+        }
+        .sheet(isPresented: $showingGreene) {
+            GreeneQuestionnaireView(
+                onCancel: { showingGreene = false },
+                onSave: { responses in
+                    store.saveGreeneCompletion(responses)
+                    showingGreene = false
+                }
+            )
+        }
+        .sheet(isPresented: $showingGreeneSummary) {
+            GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
         }
         .onAppear { pmeEnrolled = store.isPmeEnrolled }
     }
