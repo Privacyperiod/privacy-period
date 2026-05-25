@@ -4,6 +4,7 @@
 package org.privacyperiod.clinical
 
 import org.privacyperiod.data.db.Cycle_entries
+import org.privacyperiod.data.db.Flow_events
 import org.privacyperiod.data.db.PrivacyPeriodDatabase
 import org.privacyperiod.data.db.Symptom_entries
 import org.privacyperiod.pmdd.DrspCatalog
@@ -51,6 +52,25 @@ class ClinicalRepository(private val database: PrivacyPeriodDatabase) {
         )
     }
 
+    /**
+     * Records a single menstrual-flow event (a product change, clot, or flooding
+     * episode) for the Heavy Menstrual Bleeding module's PBAC scoring.
+     */
+    fun saveFlowEvent(event: FlowEvent) {
+        database.flowEventsQueries.insertFlowEvent(
+            id = event.id,
+            cycle_id = event.cycleId,
+            event_date = event.eventDate,
+            event_time = event.eventTime,
+            flow_type = event.flowType,
+            saturation = event.saturation,
+            clot_size = event.clotSize,
+            measured_ml = event.measuredMl,
+            pbac_points = event.pbacPoints?.toLong(),
+            created_at = event.createdAt,
+        )
+    }
+
     /** Returns a read-only snapshot of the user's clinical data for scoring. */
     fun history(): ClinicalHistory = DatabaseClinicalHistory(database)
 }
@@ -72,6 +92,12 @@ private class DatabaseClinicalHistory(
 
     override fun sameDaySymptomEntries(symptomIds: Set<String>): List<SymptomEntry> =
         symptomEntries(symptomIds).filter { it.sameDayLogged }
+
+    override fun flowEvents(): List<FlowEvent> = allFlowEvents
+
+    private val allFlowEvents: List<FlowEvent> by lazy {
+        database.flowEventsQueries.selectAllFlowEvents().executeAsList().map { it.toFlowEvent() }
+    }
 }
 
 private fun Cycle_entries.toCycle(): Cycle =
@@ -96,5 +122,19 @@ private fun Symptom_entries.toSymptomEntry(): SymptomEntry =
         cycleDay = cycle_day?.toInt(),
         sameDayLogged = same_day_logged != 0L,
         notes = notes,
+        createdAt = created_at,
+    )
+
+private fun Flow_events.toFlowEvent(): FlowEvent =
+    FlowEvent(
+        id = id,
+        cycleId = cycle_id,
+        eventDate = event_date,
+        eventTime = event_time,
+        flowType = flow_type,
+        saturation = saturation,
+        clotSize = clot_size,
+        measuredMl = measured_ml,
+        pbacPoints = pbac_points?.toInt(),
         createdAt = created_at,
     )
