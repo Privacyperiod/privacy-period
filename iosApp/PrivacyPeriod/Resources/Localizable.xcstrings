@@ -352,6 +352,138 @@
     "pmdd.result.insufficient" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep checking in daily. A summary needs at least two cycles with enough entries." } } }
+    },
+    "hmb.flow.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+    },
+    "hmb.flow.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+    },
+    "hmb.flow.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tracking your flow for heavy-bleeding screening — not a diagnosis." } } }
+    },
+    "hmb.flow.nocycle" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log your period first — flow entries attach to that cycle." } } }
+    },
+    "hmb.flow.kind" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "What are you logging?" } } }
+    },
+    "hmb.flow.saturation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Saturation" } } }
+    },
+    "hmb.flow.measured" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Measured volume" } } }
+    },
+    "hmb.flow.clotsize" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Clot size" } } }
+    },
+    "hmb.flow.pad" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pad" } } }
+    },
+    "hmb.flow.tampon" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tampon" } } }
+    },
+    "hmb.flow.period_underwear" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period underwear" } } }
+    },
+    "hmb.flow.cup" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Menstrual cup" } } }
+    },
+    "hmb.flow.disc" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Menstrual disc" } } }
+    },
+    "hmb.flow.clot" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Clot" } } }
+    },
+    "hmb.flow.flooding" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Flooding" } } }
+    },
+    "hmb.sat.light" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } } }
+    },
+    "hmb.sat.moderate" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } }
+    },
+    "hmb.sat.heavy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy" } } }
+    },
+    "hmb.sat.soaked" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Soaked" } } }
+    },
+    "hmb.clot.small" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Small" } } }
+    },
+    "hmb.clot.large" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Large" } } }
+    },
+    "hmb.results.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bleeding summary" } } }
+    },
+    "hmb.results.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bleeding summary" } } }
+    },
+    "hmb.results.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A factual summary of your tracked flow to share with a clinician — not a diagnosis." } } }
+    },
+    "hmb.results.sharenote" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You can export this summary to share with your clinician. Nothing leaves your device unless you choose to share it." } } }
+    },
+    "hmb.results.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for my clinician" } } }
+    },
+    "hmb.result.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log your flow during your period to see a PBAC summary here." } } }
+    },
+    "hmb.result.points" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "%d PBAC points" } } }
+    },
+    "hmb.result.measured" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "%d mL measured" } } }
+    },
+    "hmb.class.heavy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy" } } }
+    },
+    "hmb.class.borderline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Borderline" } } }
+    },
+    "hmb.class.normal" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Typical range" } } }
+    },
+    "hmb.class.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Not enough data" } } }
     }
   }
 }

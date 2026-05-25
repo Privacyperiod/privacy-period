@@ -14,6 +14,19 @@ struct CycleDraft {
     let notes: String
 }
 
+/// A draft menstrual-flow event collected from the flow-logging form, before it
+/// is persisted against the current cycle.
+struct FlowEventDraft {
+    /// pad, tampon, cup, disc, period_underwear, clot, or flooding.
+    let flowType: String
+    /// Product saturation (light/moderate/heavy/soaked), or nil.
+    let saturation: String?
+    /// Clot size (small/large), or nil.
+    let clotSize: String?
+    /// Directly measured volume in millilitres (cups/discs), or nil.
+    let measuredMl: Double?
+}
+
 /// The app's gateway to the encrypted on-device database.
 ///
 /// The database is opened with SQLCipher, keyed from the iOS Keychain. Opening
@@ -100,6 +113,42 @@ final class EncryptedStore: ObservableObject {
         guard let repository else { return nil }
         let result = PmddModule.shared.runScoring(history: repository.history())
         return (result as? PmddScoringResult)?.result
+    }
+
+    /// The most recent cycle's id, or nil if no period has been logged yet. Flow
+    /// events attach to this cycle, since PBAC scoring is per cycle.
+    func currentCycleId() -> String? {
+        database?.cycleEntriesQueries.selectAllCycleEntries().executeAsList().last?.id
+    }
+
+    /// Records a flow event against the current cycle. Returns false (a no-op) when
+    /// the store is unavailable or no cycle exists to attach it to.
+    @discardableResult
+    func saveFlowEvent(_ draft: FlowEventDraft) -> Bool {
+        guard let repository, let cycleId = currentCycleId() else { return false }
+        repository.saveFlowEvent(
+            event: FlowEvent(
+                id: UUID().uuidString,
+                cycleId: cycleId,
+                eventDate: Self.isoDate(Date()),
+                eventTime: nil,
+                flowType: draft.flowType,
+                saturation: draft.saturation,
+                clotSize: draft.clotSize,
+                measuredMl: draft.measuredMl.map { KotlinDouble(value: $0) },
+                pbacPoints: nil,
+                createdAt: Int64(Date().timeIntervalSince1970 * 1000)
+            )
+        )
+        return true
+    }
+
+    /// Computes the per-cycle PBAC scores through the HMB module over the universal
+    /// layer, or nil when the store is unavailable.
+    func hmbCycleScores() -> [HmbCycleScore]? {
+        guard let repository else { return nil }
+        let result = HmbModule.shared.runScoring(history: repository.history())
+        return (result as? HmbScoringResult)?.cycles
     }
 
     /// Generates and stores a random, device-local identifier on first open.
