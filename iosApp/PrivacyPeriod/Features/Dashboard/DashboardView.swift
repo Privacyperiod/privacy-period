@@ -11,7 +11,10 @@ struct DashboardView: View {
     @State private var showingCycleLog = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
+    @State private var showingGreene = false
+    @State private var showingGreeneSummary = false
     @State private var summaryResult: CpassResult?
+    @State private var greeneCompletions: [GreeneCompletionScore]?
 
     var body: some View {
         ZStack {
@@ -40,6 +43,20 @@ struct DashboardView: View {
                     .font(.ddSans(15, .medium))
                     .foregroundColor(.ddSun)
                 }
+                // The perimenopause entry points stay hidden until the feature is
+                // clinically signed off (see PeriFeature / clinical-disclaimer).
+                if PeriFeature.shared.isEnabled {
+                    Button("greene.entry") { showingGreene = true }
+                        .font(.ddSans(15, .medium))
+                        .foregroundColor(.ddSun)
+                        .padding(.top, 4)
+                    Button("greene.results.entry") {
+                        greeneCompletions = store.greeneCompletions()
+                        showingGreeneSummary = true
+                    }
+                    .font(.ddSans(15, .medium))
+                    .foregroundColor(.ddSun)
+                }
             }
             .padding()
         }
@@ -63,6 +80,18 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingSummary) {
             PmddResultsView(result: summaryResult) { showingSummary = false }
+        }
+        .sheet(isPresented: $showingGreene) {
+            GreeneQuestionnaireView(
+                onCancel: { showingGreene = false },
+                onSave: { responses in
+                    store.saveGreeneCompletion(responses)
+                    showingGreene = false
+                }
+            )
+        }
+        .sheet(isPresented: $showingGreeneSummary) {
+            GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
         }
     }
 }

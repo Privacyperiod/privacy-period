@@ -32,4 +32,11 @@ data class GreeneResult(
     val psychological: Int,
     val total: Int,
     val isComplete: Boolean,
-)
+) {
+    /** Per-domain accessors, for callers (e.g. the iOS layer) that avoid map lookups. */
+    val anxiety: Int get() = subscales[GreeneSubscale.ANXIETY] ?: 0
+    val depression: Int get() = subscales[GreeneSubscale.DEPRESSION] ?: 0
+    val somatic: Int get() = subscales[GreeneSubscale.SOMATIC] ?: 0
+    val vasomotor: Int get() = subscales[GreeneSubscale.VASOMOTOR] ?: 0
+    val sexual: Int get() = subscales[GreeneSubscale.SEXUAL] ?: 0
+}
