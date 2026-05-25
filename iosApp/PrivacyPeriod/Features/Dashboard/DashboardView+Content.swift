@@ -25,23 +25,18 @@ extension DashboardView {
         }
     }
 
-    // The landing-page hero: the current cycle's context plus the progressive reveal
-    // chart of the user's own tracked symptoms filling in across the cycle.
+    // The landing-page hero. When a premenstrual condition is tracked it shows the
+    // Mental + Physical Daily Data time series with a compact "toward a clinician
+    // review" readiness footer — one tracker, not two. When it isn't, it reverts to
+    // the plain period-cycle context.
     var cycleCard: some View {
         card {
             if let snapshot = store.currentCycleSnapshot() {
                 VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
-                                    snapshot.dayOfCycle))
-                            .font(.ddDisplay(22))
-                            .foregroundColor(.ddPlumDeep)
-                        Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
-                                    Self.displayDate(snapshot.startDate)))
-                            .font(.ddSans(14))
-                            .foregroundColor(.ddFg2)
+                    cycleHeader(snapshot)
+                    if isPremenstrualTracked {
+                        dailyDataTracker
                     }
-                    reveal
                 }
             } else {
                 Text("dashboard.cycle.none")
@@ -52,59 +47,70 @@ extension DashboardView {
         }
     }
 
-    // Progress toward a clinician-ready premenstrual analysis (C-PASS needs two
-    // tracked cycles). A factual milestone, stated without pressure — a clinical
-    // capability unlocking, never a streak.
-    @ViewBuilder var readinessCard: some View {
-        if enrolled.contains(EncryptedStore.pmddModuleId) || enrolled.contains(EncryptedStore.pmeModuleId),
-           let readiness = store.premenstrualReadiness() {
-            card {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("readiness.title")
-                        .font(.ddSans(13, .semibold))
-                        .foregroundColor(.ddFg3)
-                        .textCase(.uppercase)
-                    HStack(spacing: 6) {
-                        ForEach(0..<readiness.requiredCycles, id: \.self) { index in
-                            Circle()
-                                .fill(index < readiness.scoredCycles ? Color.ddSun : Color.ddSand)
-                                .frame(width: 12, height: 12)
-                        }
-                    }
-                    if readiness.isReady {
-                        Text("readiness.ready")
-                            .font(.ddSans(15, .medium))
-                            .foregroundColor(.ddPlumDeep)
-                            .fixedSize(horizontal: false, vertical: true)
-                    } else {
-                        Text(String(format: NSLocalizedString("readiness.progress", comment: "cycles tracked"),
-                                    readiness.scoredCycles, readiness.requiredCycles))
-                            .font(.ddSans(15, .medium))
-                            .foregroundColor(.ddPlumDeep)
-                        Text("readiness.help")
-                            .font(.ddSans(13))
-                            .foregroundColor(.ddFg3)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-            }
+    var isPremenstrualTracked: Bool {
+        enrolled.contains(EncryptedStore.pmddModuleId) || enrolled.contains(EncryptedStore.pmeModuleId)
+    }
+
+    private func cycleHeader(_ snapshot: CycleSnapshot) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
+                        snapshot.dayOfCycle))
+                .font(.ddDisplay(22))
+                .foregroundColor(.ddPlumDeep)
+            Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
+                        Self.displayDate(snapshot.startDate)))
+                .font(.ddSans(14))
+                .foregroundColor(.ddFg2)
         }
     }
 
-    @ViewBuilder var reveal: some View {
-        if let reveal = store.currentCycleReveal(), reveal.daysLogged > 0 {
-            VStack(alignment: .leading, spacing: 6) {
-                CycleRevealChart(reveal: reveal)
-                Text(String(format: NSLocalizedString("reveal.completeness", comment: "days logged"),
-                            reveal.daysLogged, reveal.cycleDay))
-                    .font(.ddSans(12))
-                    .foregroundColor(.ddFg3)
+    // The Mental + Physical Daily Data tracker: a time series of daily aggregate
+    // scores plus a compact readiness footer toward the two cycles a clinician needs.
+    @ViewBuilder var dailyDataTracker: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("pme.checkin.entry")
+                .font(.ddSans(13, .semibold))
+                .foregroundColor(.ddFg3)
+                .textCase(.uppercase)
+            if let series = store.dailyAggregateSeries(), !series.bars.isEmpty {
+                CycleRevealChart(series: series)
+            } else {
+                Text("reveal.empty")
+                    .font(.ddSans(14))
+                    .foregroundColor(.ddFg2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-        } else {
-            Text("reveal.empty")
-                .font(.ddSans(14))
-                .foregroundColor(.ddFg2)
-                .fixedSize(horizontal: false, vertical: true)
+            readinessFooter
+        }
+    }
+
+    // Progress toward a clinician-ready analysis (C-PASS needs two scored cycles):
+    // a pip per scored cycle and a short status. A clinical capability unlocking,
+    // stated factually — never a streak.
+    @ViewBuilder var readinessFooter: some View {
+        if let readiness = store.premenstrualReadiness() {
+            HStack(spacing: 8) {
+                HStack(spacing: 5) {
+                    ForEach(0..<readiness.requiredCycles, id: \.self) { index in
+                        Circle()
+                            .fill(index < readiness.scoredCycles ? Color.ddSun : Color.ddSand)
+                            .frame(width: 9, height: 9)
+                    }
+                }
+                Group {
+                    if readiness.isReady {
+                        Text("readiness.ready.short")
+                    } else {
+                        Text(verbatim: String(
+                            format: NSLocalizedString("readiness.progress", comment: "cycles tracked"),
+                            readiness.scoredCycles, readiness.requiredCycles
+                        ))
+                    }
+                }
+                .font(.ddSans(13, .medium))
+                .foregroundColor(.ddPlumDeep)
+                Spacer(minLength: 0)
+            }
         }
     }
 

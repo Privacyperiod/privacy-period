@@ -2,6 +2,12 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "readiness.ready.short" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to share with a clinician" } }
+      }
+    },
     "readiness.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -35,7 +41,7 @@
     "reveal.empty" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your cycle fills in here as you log. Start with today’s check-in." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your daily data appears here as you log. Start with today’s check-in." } }
       }
     },
     "settings.credits" : {

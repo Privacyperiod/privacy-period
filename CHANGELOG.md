@@ -169,6 +169,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   pattern — a pip per scored cycle and a factual "N of 2 cycles tracked" line, or a
   "Ready to share" state once met. A clinical capability unlocking, stated without
   pressure (no streaks). Shown when a premenstrual condition is tracked.
+- The home hero is now the Mental + Physical Daily Data tracker: a time-series bar
+  chart of each day's aggregate symptom score across ~2 cycles, with dashed period-
+  start markers, shown only when a premenstrual condition is tracked (otherwise the
+  hero reverts to the plain period-cycle context). The clinician-readiness progress
+  is folded into the chart's footer — one tracker, not two.
 
 ### Security
 
