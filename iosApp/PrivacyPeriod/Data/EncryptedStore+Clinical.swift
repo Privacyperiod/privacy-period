@@ -183,15 +183,22 @@ extension EncryptedStore {
         let today = calendar.startOfDay(for: Date())
         guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return nil }
         let drspIds = Set((1...24).map { "drsp_\($0)" })
-        var sumByDate: [String: Double] = [:]
+        var byDate: [String: (sum: Double, items: Int)] = [:]
         for entry in repository.history().symptomEntries(symptomIds: drspIds) {
-            sumByDate[entry.date, default: 0] += entry.severity
+            var aggregate = byDate[entry.date] ?? (sum: 0, items: 0)
+            aggregate.sum += entry.severity
+            aggregate.items += 1
+            byDate[entry.date] = aggregate
         }
         var bars: [DailyAggregate] = []
         for offset in 0..<days {
             guard let date = calendar.date(byAdding: .day, value: offset, to: windowStart) else { continue }
-            if let score = sumByDate[Self.isoDate(date)] {
-                bars.append(DailyAggregate(date: date, score: score))
+            if let aggregate = byDate[Self.isoDate(date)], aggregate.items > 0 {
+                // Colour by the day's mean severity (1–6) on the shared ramp; height by
+                // the aggregate sum.
+                let mean = aggregate.sum / Double(aggregate.items)
+                let level = min(6, max(1, Int(mean.rounded())))
+                bars.append(DailyAggregate(date: date, score: aggregate.sum, severityLevel: level))
             }
         }
         let cycleStarts = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList()
