@@ -69,8 +69,10 @@ struct PmePatternResult {
 /// degrades to unavailable rather than crashing. On a signed build the Keychain
 /// is available and the store opens normally.
 final class EncryptedStore: ObservableObject {
-    private let database: PrivacyPeriodDatabase?
-    private let repository: ClinicalRepository?
+    // Internal (not private) so the clinical-module accessors in
+    // EncryptedStore+Clinical.swift can reach them; still confined to the app target.
+    let database: PrivacyPeriodDatabase?
+    let repository: ClinicalRepository?
 
     init() {
         var opened: PrivacyPeriodDatabase?
@@ -142,200 +144,53 @@ final class EncryptedStore: ObservableObject {
         return MoodEntryDraft(mood: Int(row.mood_score), energy: Int(row.energy_score), notes: row.notes ?? "")
     }
 
-    /// Persists a DRSP daily check-in as same-day symptom entries on the universal
-    /// clinical layer (one per rated item). No-op when the store is unavailable.
-    func saveCheckIn(date: Date, scores: [Int: Int]) {
-        guard let repository else { return }
-        let dateString = Self.isoDate(date)
-        let now = Int64(Date().timeIntervalSince1970 * 1000)
-        for (item, score) in scores {
-            repository.saveSymptomEntry(
-                entry: SymptomEntry(
-                    id: UUID().uuidString,
-                    symptomId: "drsp_\(item)",
-                    date: dateString,
-                    severity: Double(score),
-                    cycleId: nil,
-                    cyclePhase: nil,
-                    cycleDay: nil,
-                    sameDayLogged: true,
-                    notes: nil,
-                    createdAt: now
-                )
-            )
+    /// A plain-text copy of the user's everyday data (cycles and mood/energy), for
+    /// the user to export and keep or share. Produced only on explicit request.
+    func exportData() -> String {
+        guard let database else { return "No data available." }
+        var lines: [String] = []
+        lines.append("Privacy Period — data export")
+        lines.append("Generated \(Self.exportDateString(Date()))")
+        lines.append("")
+        let cycles = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList()
+        lines.append("Cycles (\(cycles.count)):")
+        for cycle in cycles {
+            let end = cycle.end_date.map { " – \($0)" } ?? ""
+            lines.append("  \(cycle.start_date)\(end) · flow \(cycle.flow_intensity)")
         }
-    }
-
-    /// Computes the PMDD screening result through the PMDD module over the
-    /// universal layer, or nil when the store is unavailable.
-    func cpassResult() -> CpassResult? {
-        guard let repository else { return nil }
-        let result = PmddModule.shared.runScoring(history: repository.history())
-        return (result as? PmddScoringResult)?.result
-    }
-
-    /// Computes the endometriosis screening result from the questionnaire answers.
-    /// A pure, stateless calculation (no persistence) — the result is a screening
-    /// estimate to share with a clinician, never a diagnosis.
-    func scoreEndoScreen(_ draft: EndoScreenDraft) -> EndoScreenResult {
-        EndoScreenScorer.shared.score(
-            inputs: EndoScreenInputs(
-                familyHistory: draft.familyHistory,
-                primaryInfertility: draft.primaryInfertility,
-                bmiUnder22: draft.bmiUnder22,
-                cyclesUnder28: draft.cyclesUnder28,
-                vasDysmenorrhea: KotlinInt(value: Int32(draft.vasDysmenorrhea)),
-                vasDeepDyspareunia: KotlinInt(value: Int32(draft.vasDeepDyspareunia)),
-                vasGiSymptoms: KotlinInt(value: Int32(draft.vasGiSymptoms)),
-                vasUrinarySymptoms: KotlinInt(value: Int32(draft.vasUrinarySymptoms))
-            )
-        )
-    }
-
-    /// Persists a completed Greene Climacteric Scale questionnaire as an instrument
-    /// completion. The item responses are written as JSON; the module re-scores them
-    /// on read, so no computed scores are stored here. No-op when unavailable.
-    func saveGreeneCompletion(_ responses: [Int: Int]) {
-        guard let repository else { return }
-        let json = "{" + responses.sorted { $0.key < $1.key }
-            .map { "\"\($0.key)\":\($0.value)" }
-            .joined(separator: ",") + "}"
-        let today = Self.isoDate(Date())
-        repository.saveInstrumentCompletion(
-            completion: InstrumentCompletion(
-                id: UUID().uuidString,
-                instrumentType: "greene_climacteric",
-                startDate: today,
-                endDate: today,
-                itemResponsesJson: json,
-                computedScoresJson: nil,
-                createdAt: Int64(Date().timeIntervalSince1970 * 1000)
-            )
-        )
-    }
-
-    /// The user's Greene completions, each scored into its domain profile (oldest
-    /// first), or nil when the store is unavailable.
-    func greeneCompletions() -> [GreeneCompletionScore]? {
-        guard let repository else { return nil }
-        let result = GreeneModule.shared.runScoring(history: repository.history())
-        return (result as? GreeneScoringResult)?.completions
-    }
-
-    /// The most recent cycle's id, or nil if no period has been logged yet. Flow
-    /// events attach to this cycle, since PBAC scoring is per cycle.
-    func currentCycleId() -> String? {
-        database?.cycleEntriesQueries.selectAllCycleEntries().executeAsList().last?.id
-    }
-
-    /// Records a flow event against the current cycle. Returns false (a no-op) when
-    /// the store is unavailable or no cycle exists to attach it to.
-    @discardableResult
-    func saveFlowEvent(_ draft: FlowEventDraft) -> Bool {
-        guard let repository, let cycleId = currentCycleId() else { return false }
-        repository.saveFlowEvent(
-            event: FlowEvent(
-                id: UUID().uuidString,
-                cycleId: cycleId,
-                eventDate: Self.isoDate(Date()),
-                eventTime: nil,
-                flowType: draft.flowType,
-                saturation: draft.saturation,
-                clotSize: draft.clotSize,
-                measuredMl: draft.measuredMl.map { KotlinDouble(value: $0) },
-                pbacPoints: nil,
-                createdAt: Int64(Date().timeIntervalSince1970 * 1000)
-            )
-        )
-        return true
-    }
-
-    /// Computes the per-cycle PBAC scores through the HMB module over the universal
-    /// layer, or nil when the store is unavailable.
-    func hmbCycleScores() -> [HmbCycleScore]? {
-        guard let repository else { return nil }
-        let result = HmbModule.shared.runScoring(history: repository.history())
-        return (result as? HmbScoringResult)?.cycles
-    }
-
-    /// Computes the PMDD-vs-PME pattern through the PME module over the universal
-    /// layer, paired with its readiness, or nil when the store is unavailable.
-    func pmePattern() -> PmePatternResult? {
-        guard let repository else { return nil }
-        let history = repository.history()
-        let readiness = PmeModule.shared.checkReadiness(history: history)
-        guard let scoring = PmeModule.shared.runScoring(history: history) as? PmeScoringResult else {
-            return nil
+        lines.append("")
+        let moods = database.moodEntriesQueries.selectAllMoodEntries().executeAsList()
+        lines.append("Mood & energy (\(moods.count)):")
+        for mood in moods {
+            lines.append("  \(mood.date): mood \(mood.mood_score)/5, energy \(mood.energy_score)/5")
         }
-        return PmePatternResult(
-            classification: scoring.classification,
-            scoredCycles: Int(readiness.scoredCycles),
-            isReady: readiness.isReady,
-            condition: repository.enrollment(moduleId: Self.pmeModuleId)?.config
-        )
+        return lines.joined(separator: "\n")
     }
 
-    /// Enrolls the user in the PME module with their self-reported underlying-
-    /// condition family. No-op when the store is unavailable.
-    func enrollPme(condition: String) {
-        guard let repository else { return }
-        repository.enroll(
-            moduleId: Self.pmeModuleId,
-            config: condition,
-            now: Int64(Date().timeIntervalSince1970 * 1000)
-        )
+    /// Permanently erases every table that holds user data, then resets the device
+    /// identifier. The catalog/definition tables (re-seeded on launch) are kept.
+    /// No-op when the store is unavailable.
+    func deleteAllData() {
+        guard let database else { return }
+        let queries = database.maintenanceQueries
+        queries.deleteAllCycleEntries()
+        queries.deleteAllSymptomEntries()
+        queries.deleteAllMoodEntries()
+        queries.deleteAllFlowEvents()
+        queries.deleteAllInstrumentCompletions()
+        queries.deleteAllModuleEnrollments()
+        queries.deleteAllMeasurementEntries()
+        queries.deleteAllMedicationAdministrations()
+        queries.deleteAllBirthControlEntries()
+        queries.deleteAllEventEntries()
+        queries.deleteAllAppSettings()
+        ensureDeviceIdentifier()
     }
 
-    /// The user's self-reported PME condition family, or nil if not enrolled.
-    func pmeCondition() -> String? {
-        repository?.enrollment(moduleId: Self.pmeModuleId)?.config
-    }
-
-    /// Whether the user has enrolled in the PME module.
-    var isPmeEnrolled: Bool { repository?.enrollment(moduleId: Self.pmeModuleId) != nil }
-
-    private static let pmeModuleId = "pme"
-
-    /// Persists a PME (MAC-PMSS) daily check-in: the DRSP items and the rated mood
-    /// items as same-day symptom entries. A "prefer not to answer" suicidal-ideation
-    /// response writes no entry (it is excluded from scoring either way). No-op when
-    /// the store is unavailable.
-    func savePmeCheckIn(date: Date, draft: PmeCheckInDraft) {
-        guard let repository else { return }
-        let dateString = Self.isoDate(date)
-        let now = Int64(Date().timeIntervalSince1970 * 1000)
-        for (item, score) in draft.drsp {
-            writeSymptom(repository, "drsp_\(item)", Double(score), dateString, now)
-        }
-        for (symptomId, score) in draft.mood {
-            writeSymptom(repository, symptomId, Double(score), dateString, now)
-        }
-        if let siRating = draft.siRating {
-            writeSymptom(repository, "macpmss_suicidal_ideation", Double(siRating), dateString, now)
-        }
-    }
-
-    private func writeSymptom(
-        _ repository: ClinicalRepository,
-        _ symptomId: String,
-        _ severity: Double,
-        _ date: String,
-        _ createdAt: Int64
-    ) {
-        repository.saveSymptomEntry(
-            entry: SymptomEntry(
-                id: UUID().uuidString,
-                symptomId: symptomId,
-                date: date,
-                severity: severity,
-                cycleId: nil,
-                cyclePhase: nil,
-                cycleDay: nil,
-                sameDayLogged: true,
-                notes: nil,
-                createdAt: createdAt
-            )
-        )
+    private static func exportDateString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 
     /// Generates and stores a random, device-local identifier on first open.
@@ -355,7 +210,7 @@ final class EncryptedStore: ObservableObject {
 
     private static let deviceIdKey = "device_id"
 
-    private static func isoDate(_ date: Date) -> String {
+    static func isoDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone.current

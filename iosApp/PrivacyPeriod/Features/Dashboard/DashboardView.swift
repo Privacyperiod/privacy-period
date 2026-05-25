@@ -10,6 +10,7 @@ struct DashboardView: View {
     @StateObject private var store = EncryptedStore()
     @State private var showingCycleLog = false
     @State private var showingMoodLog = false
+    @State private var showingSettings = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
     @State private var showingEndoScreen = false
@@ -45,6 +46,10 @@ struct DashboardView: View {
                 Button("mood.entry") { showingMoodLog = true }
                     .font(.ddSans(15, .medium))
                     .foregroundColor(.ddSun)
+                    .padding(.top, 4)
+                Button("settings.entry") { showingSettings = true }
+                    .font(.ddSans(15, .medium))
+                    .foregroundColor(.ddFg2)
                     .padding(.top, 4)
                 // The PMDD screening entry points stay hidden until the feature
                 // is clinically signed off (see PmddFeature / clinical-disclaimer).
@@ -138,6 +143,13 @@ struct DashboardView: View {
                     store.saveMoodEntry(draft)
                     showingMoodLog = false
                 }
+            )
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView(
+                exportText: { store.exportData() },
+                onDeleteAll: { store.deleteAllData() },
+                onClose: { showingSettings = false }
             )
         }
         .sheet(isPresented: $showingCheckIn) {
