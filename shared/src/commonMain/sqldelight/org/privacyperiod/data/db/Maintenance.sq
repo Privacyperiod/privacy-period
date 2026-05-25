@@ -1,0 +1,39 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+-- Delete-all support: clears every table that holds user data, leaving the
+-- catalog/definition tables (re-seeded on launch) intact. Run together in one
+-- transaction by the repository's deleteAllUserData().
+
+deleteAllCycleEntries:
+DELETE FROM cycle_entries;
+
+deleteAllSymptomEntries:
+DELETE FROM symptom_entries;
+
+deleteAllMoodEntries:
+DELETE FROM mood_entries;
+
+deleteAllFlowEvents:
+DELETE FROM flow_events;
+
+deleteAllInstrumentCompletions:
+DELETE FROM instrument_completions;
+
+deleteAllModuleEnrollments:
+DELETE FROM module_enrollments;
+
+deleteAllMeasurementEntries:
+DELETE FROM measurement_entries;
+
+deleteAllMedicationAdministrations:
+DELETE FROM medication_administrations;
+
+deleteAllBirthControlEntries:
+DELETE FROM birth_control_entries;
+
+deleteAllEventEntries:
+DELETE FROM event_entries;
+
+deleteAllAppSettings:
+DELETE FROM app_settings;

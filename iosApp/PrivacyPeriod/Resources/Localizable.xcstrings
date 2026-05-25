@@ -1028,6 +1028,66 @@
     "mood.notes.placeholder" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anything worth remembering" } } }
+    },
+    "settings.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } } }
+    },
+    "settings.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } } }
+    },
+    "settings.section.data" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your data" } } }
+    },
+    "settings.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export my data" } } }
+    },
+    "settings.export.help" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A plain-text copy of your cycles and mood entries, shared only where you choose." } } }
+    },
+    "settings.delete" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete all data" } } }
+    },
+    "settings.delete.help" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Permanently erases everything on this device. This can't be undone." } } }
+    },
+    "settings.delete.confirm.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete all data?" } } }
+    },
+    "settings.delete.confirm.body" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This permanently erases all your cycles, entries, and settings on this device. It can't be undone." } } }
+    },
+    "settings.delete.confirm.action" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete everything" } } }
+    },
+    "settings.deleted" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "All your data has been deleted." } } }
+    },
+    "settings.section.privacy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } } }
+    },
+    "settings.privacy.note" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Everything you log stays on this device, encrypted. Privacy Period has no account and no server." } } }
+    },
+    "settings.section.about" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } } }
+    },
+    "settings.version" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@" } } }
     }
   }
 }
