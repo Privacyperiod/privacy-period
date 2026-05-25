@@ -13,11 +13,17 @@ struct FlowLogView: View {
     let hasCycle: Bool
     let onCancel: () -> Void
     let onSave: (FlowEventDraft) -> Void
+    /// Saves the current event without closing, so several events can be logged in a
+    /// row (PBAC is per-event — many product changes, clots, or floods across a day).
+    var onSaveAnother: ((FlowEventDraft) -> Void)?
 
     @State private var kind = "pad"
     @State private var saturation = "moderate"
     @State private var clotSize = "small"
     @State private var measuredMl = 30
+    /// How many events have been saved without leaving this screen (for the running
+    /// "logged so far" confirmation).
+    @State private var loggedCount = 0
 
     private let kinds = ["pad", "tampon", "period_underwear", "cup", "disc", "clot", "flooding"]
     private let productKinds = ["pad", "tampon", "period_underwear"]
@@ -58,6 +64,16 @@ struct FlowLogView: View {
                         ForEach(kinds, id: \.self) { kindRow($0) }
                     }
                     detailSection
+                    if onSaveAnother != nil {
+                        addAnotherButton
+                    }
+                    if loggedCount > 0 {
+                        Text(String(format: NSLocalizedString("hmb.flow.logged", comment: "events logged so far"),
+                                    loggedCount))
+                            .font(.ddSans(13, .medium))
+                            .foregroundColor(.ddPlumDeep)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
                 .padding(20)
             }
@@ -136,6 +152,32 @@ struct FlowLogView: View {
             .font(.ddSans(13, .semibold))
             .foregroundColor(.ddFg3)
             .textCase(.uppercase)
+    }
+
+    private var addAnotherButton: some View {
+        Button { logAnother() } label: {
+            Text("hmb.flow.add_another")
+                .font(.ddSans(16, .semibold))
+                .foregroundColor(.ddSun)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(
+                    RoundedRectangle(cornerRadius: DDRadius.md, style: .continuous)
+                        .strokeBorder(Color.ddSun, lineWidth: 1.5)
+                )
+        }
+        .buttonStyle(.plain)
+        .disabled(!hasCycle)
+    }
+
+    // Saves the current event and resets the form to log the next one, without leaving.
+    private func logAnother() {
+        onSaveAnother?(draft())
+        loggedCount += 1
+        kind = "pad"
+        saturation = "moderate"
+        clotSize = "small"
+        measuredMl = 30
     }
 
     private func draft() -> FlowEventDraft {

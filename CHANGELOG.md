@@ -150,6 +150,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   additional "Save & log heavy bleeding" step (shown only when heavy menstrual
   bleeding is a tracked condition), so its events attach to the cycle, and is removed
   from the home Tracking menu (the Bleeding summary stays).
+- Heavy bleeding tracker — log multiple events (iOS): the tracker offers "Save & add
+  another", saving the current PBAC event and resetting the form so several product
+  changes, clots, or floods can be logged in one sitting (with a running "N logged so
+  far" count). "Save" still saves the current event and closes.
 
 ### Security
 

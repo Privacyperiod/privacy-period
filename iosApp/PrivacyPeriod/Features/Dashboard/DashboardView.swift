@@ -137,7 +137,8 @@ struct DashboardView: View {
                 onSave: { draft in
                     store.saveFlowEvent(draft)
                     showingFlowLog = false
-                }
+                },
+                onSaveAnother: { draft in store.saveFlowEvent(draft) }
             )
         }
         .sheet(isPresented: $showingHmbSummary) {
