@@ -1088,6 +1088,38 @@
     "settings.version" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@" } } }
+    },
+    "dashboard.today" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } } }
+    },
+    "dashboard.cycle.day" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cycle day %d" } } }
+    },
+    "dashboard.cycle.since" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period started %@" } } }
+    },
+    "dashboard.cycle.none" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No period logged yet. Log your first to start tracking your cycle." } } }
+    },
+    "dashboard.mood.today" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's check-in" } } }
+    },
+    "dashboard.mood.summary" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood %@ · Energy %@" } } }
+    },
+    "dashboard.mood.edit" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit" } } }
+    },
+    "dashboard.mood.prompt" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "How are you feeling today?" } } }
     }
   }
 }
