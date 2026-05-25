@@ -2,6 +2,114 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "conditions.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Conditions" } }
+      }
+    },
+    "conditions.entry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose conditions" } }
+      }
+    },
+    "conditions.intro" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose what you'd like to track and share with a clinician. You can change this anytime — Privacy Period helps you collect your own data, it doesn't diagnose." } }
+      }
+    },
+    "conditions.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No conditions are available in this build yet. Each becomes available once it has been clinically reviewed." } }
+      }
+    },
+    "conditions.premenstrual.underlying" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Do you already live with a diagnosed condition whose symptoms may worsen before your period? This tailors what you track." } }
+      }
+    },
+    "conditions.prem.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No — track premenstrual symptoms only" } }
+      }
+    },
+    "condition.premenstrual.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual symptoms" } }
+      }
+    },
+    "condition.premenstrual.blurb" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Track day-to-day symptoms across your cycle to see whether they pattern with the days before your period." } }
+      }
+    },
+    "condition.hmb.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy menstrual bleeding" } }
+      }
+    },
+    "condition.hmb.blurb" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow during your period to estimate how heavy it is over a cycle." } }
+      }
+    },
+    "condition.perimenopause.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Perimenopause" } }
+      }
+    },
+    "condition.perimenopause.blurb" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A periodic questionnaire covering the symptom areas of the menopause transition." } }
+      }
+    },
+    "condition.endometriosis.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Endometriosis" } }
+      }
+    },
+    "condition.endometriosis.blurb" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A short questionnaire on symptoms and risk factors to discuss with a clinician." } }
+      }
+    },
+    "condition.cadence.daily" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily" } }
+      }
+    },
+    "condition.cadence.perevent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "During your period" } }
+      }
+    },
+    "condition.cadence.monthly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Monthly" } }
+      }
+    },
+    "condition.cadence.occasional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "One-off" } }
+      }
+    },
     "pmdd.legend" : {
       "extractionState" : "manual",
       "localizations" : {

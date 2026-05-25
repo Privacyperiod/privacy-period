@@ -101,6 +101,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the gated clinical modules for TestFlight and clinician review through a single
   `ClinicalGate`, without un-gating the App Store ("Release") build. Each module
   still ships hidden behind its own feature flag until its own clinical sign-off.
+- Conditions (iOS): a screen to choose which conditions you collect data on — which
+  is what the home screen then surfaces (nothing clinical appears until you opt in).
+  Selections persist through the universal `module_enrollments` layer. The premenstrual
+  condition is a single choice with a follow-up that records whether you live with a
+  diagnosed underlying condition, selecting DRSP-only (PMDD) or DRSP + the MAC-PMSS
+  mood chart (PME). Copy is non-diagnostic, and the selectable list is bounded by the
+  clinical sign-off gate — the App Store build lists only signed-off conditions, the
+  Demo build lists all. First step of the landing-page / navigation redesign.
 
 ### Security
 
