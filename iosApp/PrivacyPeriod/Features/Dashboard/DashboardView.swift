@@ -27,6 +27,9 @@ struct DashboardView: View {
     // results; opens the Conditions sheet once the results sheet has dismissed
     // (avoids overlapping sheet presentation).
     @State var pendingConditions = false
+    // Set when the user chooses "Save & log heavy bleeding" on the period form; opens
+    // the heavy bleeding tracker once the period sheet has dismissed.
+    @State var pendingFlowLog = false
     @State var showingGreene = false
     @State var showingGreeneSummary = false
     // Whether the monthly perimenopause questionnaire is still due this month; when
@@ -54,15 +57,26 @@ struct DashboardView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .sheet(isPresented: $showingCycleLog) {
+        .sheet(isPresented: $showingCycleLog, onDismiss: {
+            if pendingFlowLog {
+                pendingFlowLog = false
+                showingFlowLog = true
+            }
+        }, content: {
             CycleLogView(
                 onCancel: { showingCycleLog = false },
                 onSave: { draft in
                     store.save(draft)
                     showingCycleLog = false
+                },
+                canLogHeavyBleeding: enrolled.contains("hmb"),
+                onSaveAndLogBleeding: { draft in
+                    store.save(draft)
+                    pendingFlowLog = true
+                    showingCycleLog = false
                 }
             )
-        }
+        })
         .sheet(isPresented: $showingMoodLog) {
             MoodLogView(
                 initial: store.todayMoodEntry(),

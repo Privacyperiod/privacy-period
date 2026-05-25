@@ -9,6 +9,11 @@ import SwiftUI
 struct CycleLogView: View {
     let onCancel: () -> Void
     let onSave: (CycleDraft) -> Void
+    /// Whether to offer the follow-on "log heavy bleeding" step — only when the user
+    /// tracks heavy menstrual bleeding. When tapped it saves the period (so the cycle
+    /// exists) and hands off to the heavy bleeding tracker via `onSaveAndLogBleeding`.
+    var canLogHeavyBleeding = false
+    var onSaveAndLogBleeding: ((CycleDraft) -> Void)?
 
     @State private var startDate = Date()
     @State private var hasEndDate = false
@@ -46,6 +51,9 @@ struct CycleLogView: View {
                             .lineLimit(1...4)
                             .tint(.ddSun)
                     }
+                    if canLogHeavyBleeding {
+                        heavyBleedingButton
+                    }
                     PrivacyNotice { Text("cyclelog.privacy") }
                 }
                 .padding(20)
@@ -72,18 +80,36 @@ struct CycleLogView: View {
         }
     }
 
-    /// Builds a ``CycleDraft`` from the current form state and hands it to the
-    /// parent to persist. The end date is included only when the user opted in.
-    private func save() {
-        onSave(
-            CycleDraft(
-                startDate: startDate,
-                endDate: hasEndDate ? endDate : nil,
-                flow: flow.rawValue.uppercased(),
-                notes: notes
-            )
+    // Saves the period, then hands off to the heavy bleeding tracker (the cycle now
+    // exists, so the flow events can attach to it).
+    private var heavyBleedingButton: some View {
+        Button { onSaveAndLogBleeding?(draft()) } label: {
+            Text("cyclelog.also_bleeding")
+                .font(.ddSans(16, .semibold))
+                .foregroundColor(.ddSun)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(
+                    RoundedRectangle(cornerRadius: DDRadius.md, style: .continuous)
+                        .strokeBorder(Color.ddSun, lineWidth: 1.5)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Builds a ``CycleDraft`` from the current form state. The end date is included
+    /// only when the user opted in.
+    private func draft() -> CycleDraft {
+        CycleDraft(
+            startDate: startDate,
+            endDate: hasEndDate ? endDate : nil,
+            flow: flow.rawValue.uppercased(),
+            notes: notes
         )
     }
+
+    /// Hands the draft to the parent to persist.
+    private func save() { onSave(draft()) }
 
     private var flowField: some View {
         VStack(alignment: .leading, spacing: 10) {
