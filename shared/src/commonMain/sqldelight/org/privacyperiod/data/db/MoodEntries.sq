@@ -22,11 +22,19 @@ CREATE TABLE mood_entries (
     created_at INTEGER NOT NULL
 );
 
+-- One check-in per calendar day; re-saving the same day replaces it.
+CREATE UNIQUE INDEX mood_entries_by_date ON mood_entries(date);
+
 selectAllMoodEntries:
 SELECT *
 FROM mood_entries
 ORDER BY date;
 
-insertMoodEntry:
-INSERT INTO mood_entries(date, mood_score, energy_score, notes, created_at)
+selectMoodEntryForDate:
+SELECT *
+FROM mood_entries
+WHERE date = ?;
+
+upsertMoodEntry:
+INSERT OR REPLACE INTO mood_entries(date, mood_score, energy_score, notes, created_at)
 VALUES (?, ?, ?, ?, ?);
