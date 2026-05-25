@@ -174,6 +174,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   start markers, shown only when a premenstrual condition is tracked (otherwise the
   hero reverts to the plain period-cycle context). The clinician-readiness progress
   is folded into the chart's footer — one tracker, not two.
+- Daily-data tracker styling: each bar is coloured by that day's mean severity on
+  the shared green→eggplant ramp (matching the rating selectors), and the readiness
+  footer is now a horizontal progress bar that fills toward the ~two cycles of data a
+  clinician needs (completing only once two cycles actually score). The readiness
+  pips are removed.
 
 ### Security
 

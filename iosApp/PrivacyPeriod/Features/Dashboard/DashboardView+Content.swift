@@ -65,7 +65,8 @@ extension DashboardView {
     }
 
     // The Mental + Physical Daily Data tracker: a time series of daily aggregate
-    // scores plus a compact readiness footer toward the two cycles a clinician needs.
+    // scores, with a horizontal progress bar toward the amount of data a clinician
+    // needs running along the bottom.
     @ViewBuilder var dailyDataTracker: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("pme.checkin.entry")
@@ -74,43 +75,32 @@ extension DashboardView {
                 .textCase(.uppercase)
             if let series = store.dailyAggregateSeries(), !series.bars.isEmpty {
                 CycleRevealChart(series: series)
+                clinicianProgress(daysLogged: series.bars.count)
             } else {
                 Text("reveal.empty")
                     .font(.ddSans(14))
                     .foregroundColor(.ddFg2)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            readinessFooter
         }
     }
 
-    // Progress toward a clinician-ready analysis (C-PASS needs two scored cycles):
-    // a pip per scored cycle and a short status. A clinical capability unlocking,
-    // stated factually — never a streak.
-    @ViewBuilder var readinessFooter: some View {
-        if let readiness = store.premenstrualReadiness() {
-            HStack(spacing: 8) {
-                HStack(spacing: 5) {
-                    ForEach(0..<readiness.requiredCycles, id: \.self) { index in
-                        Circle()
-                            .fill(index < readiness.scoredCycles ? Color.ddSun : Color.ddSand)
-                            .frame(width: 9, height: 9)
-                    }
-                }
-                Group {
-                    if readiness.isReady {
-                        Text("readiness.ready.short")
-                    } else {
-                        Text(verbatim: String(
-                            format: NSLocalizedString("readiness.progress", comment: "cycles tracked"),
-                            readiness.scoredCycles, readiness.requiredCycles
-                        ))
-                    }
-                }
-                .font(.ddSans(13, .medium))
-                .foregroundColor(.ddPlumDeep)
-                Spacer(minLength: 0)
-            }
+    // About two cycles of daily logging is what makes the premenstrual data readable
+    // by a clinician; the progress bar fills toward this, but completion ("ready") is
+    // driven by the actual two-scored-cycle check so the bar never overstates.
+    static let daysForClinicianReview = 56
+
+    // Progress toward a clinician-ready amount of data: a label and a horizontal bar
+    // that fills as daily logs accumulate, completing only once two cycles actually
+    // score. A clinical capability unlocking, stated factually — never a streak.
+    func clinicianProgress(daysLogged: Int) -> some View {
+        let isReady = store.premenstrualReadiness()?.isReady ?? false
+        let fraction = isReady ? 1 : min(Double(daysLogged) / Double(Self.daysForClinicianReview), 0.95)
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(isReady ? "readiness.ready.short" : "readiness.title")
+                .font(.ddSans(12, .medium))
+                .foregroundColor(.ddFg2)
+            DDProgressBar(fraction: fraction)
         }
     }
 

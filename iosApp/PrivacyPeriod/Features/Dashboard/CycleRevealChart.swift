@@ -4,11 +4,13 @@
 import Charts
 import SwiftUI
 
-/// One logged day of Mental + Physical Daily Data: the date and its aggregate score
-/// (the sum of that day's DRSP item ratings — total symptom load).
+/// One logged day of Mental + Physical Daily Data: the date, its aggregate score (the
+/// sum of that day's DRSP item ratings — total symptom load, the bar height), and the
+/// day's mean severity level 1–6 (the bar colour, on the shared green→eggplant ramp).
 struct DailyAggregate: Identifiable {
     let date: Date
     let score: Double
+    let severityLevel: Int
     var id: Date { date }
 }
 
@@ -22,9 +24,10 @@ struct DailyAggregateSeries {
 }
 
 /// The landing-page hero chart: a time series of the user's daily Mental + Physical
-/// Data, one bar per logged day (height = that day's aggregate score), with dashed
-/// markers at each period start so two cycles of collected data are visible at a
-/// glance. It shows the user's own data — never a score, streak, or judgement.
+/// Data, one bar per logged day. Bar height is the day's aggregate score; bar colour
+/// is the day's mean severity on the same green→eggplant ramp as the rating selectors,
+/// so intensity reads at a glance. Dashed markers sit at each period start. It shows
+/// the user's own data — never a verdict, streak, or judgement.
 struct CycleRevealChart: View {
     let series: DailyAggregateSeries
 
@@ -42,7 +45,7 @@ struct CycleRevealChart: View {
                     width: .fixed(3)
                 )
                 .cornerRadius(1)
-                .foregroundStyle(Color.ddSun)
+                .foregroundStyle(DDLikert.severityColor(bar.severityLevel))
             }
         }
         .chartXScale(domain: series.windowStart...series.windowEnd)
@@ -54,5 +57,23 @@ struct CycleRevealChart: View {
             }
         }
         .frame(height: 120)
+    }
+}
+
+/// A thin horizontal progress track (Desert Dusk styling), filled left-to-right by
+/// `fraction` (0–1). Used for progress toward a clinician-ready amount of data.
+struct DDProgressBar: View {
+    let fraction: Double
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color.ddSand)
+                Capsule()
+                    .fill(Color.ddSun)
+                    .frame(width: max(0, min(1, fraction)) * geometry.size.width)
+            }
+        }
+        .frame(height: 8)
     }
 }
