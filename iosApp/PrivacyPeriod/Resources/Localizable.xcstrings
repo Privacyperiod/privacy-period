@@ -2,6 +2,36 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "settings.section.demo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Demo (testing)" } }
+      }
+    },
+    "mood.skip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not today" } }
+      }
+    },
+    "settings.seed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Load sample data" } }
+      }
+    },
+    "settings.seed.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Replace your data with two cycles of sample entries to preview the pattern tracker. Available in demo builds only." } }
+      }
+    },
+    "settings.seeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sample data loaded." } }
+      }
+    },
     "conditions.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11,7 +41,7 @@
     "conditions.entry" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose conditions" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose conditions to track" } }
       }
     },
     "conditions.intro" : {
@@ -29,7 +59,7 @@
     "conditions.premenstrual.underlying" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Do you already live with a diagnosed condition whose symptoms may worsen before your period? This tailors what you track." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Do you already live with one or more diagnosed conditions whose symptoms may worsen before your period? Select any that apply, or leave blank to track premenstrual symptoms only." } }
       }
     },
     "conditions.prem.none" : {

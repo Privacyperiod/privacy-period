@@ -9,10 +9,14 @@ import SwiftUI
 struct SettingsView: View {
     let exportText: () -> String
     let onDeleteAll: () -> Void
+    /// Demo-only: replace the user's data with sample entries. Nil (hidden) outside
+    /// demo builds.
+    var onSeed: (() -> Void)?
     let onClose: () -> Void
 
     @State private var showingDeleteConfirm = false
     @State private var deleted = false
+    @State private var seeded = false
 
     private var appVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
@@ -30,6 +34,9 @@ struct SettingsView: View {
                     dataSection
                     privacySection
                     aboutSection
+                    if let onSeed {
+                        seedSection(onSeed)
+                    }
                 }
                 .padding(20)
             }
@@ -112,6 +119,27 @@ struct SettingsView: View {
             Text(String(format: NSLocalizedString("settings.version", comment: "app version"), appVersion))
                 .font(.ddSans(14))
                 .foregroundColor(.ddFg3)
+        }
+    }
+
+    private func seedSection(_ onSeed: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionHeader("settings.section.demo")
+            if seeded {
+                Text("settings.seeded")
+                    .font(.ddSans(14, .medium))
+                    .foregroundColor(.ddPlumDeep)
+            } else {
+                Button { onSeed(); seeded = true } label: {
+                    row(
+                        icon: "trending-up",
+                        titleKey: "settings.seed",
+                        helpKey: "settings.seed.help",
+                        tint: .ddPlumDeep
+                    )
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 

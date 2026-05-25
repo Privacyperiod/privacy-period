@@ -188,4 +188,44 @@ extension EncryptedStore {
     }
 
     static let pmeModuleId = "pme"
+
+    #if DEMO
+    /// Replaces all user data with two cycles of sample DRSP entries (a clear luteal
+    /// rise) plus the cycle starts that anchor them, so the pattern tracker can be
+    /// previewed for testing and clinician review. Demo builds only — never compiled
+    /// into the App Store build.
+    func seedSampleData() {
+        guard let repository else { return }
+        deleteAllData()
+        setPremenstrual(enabled: true, families: ["anxiety"])
+        let calendar = Calendar.current
+        let today = Date()
+        // Two menses onsets, each fully surrounded by data so C-PASS can score the
+        // cycle centred on it (it compares the pre-menstrual week before the onset
+        // with the post-menstrual week after it).
+        let onsetsDaysAgo = [42, 14]
+        for daysAgo in onsetsDaysAgo {
+            if let start = calendar.date(byAdding: .day, value: -daysAgo, to: today) {
+                save(CycleDraft(startDate: start, endDate: nil, flow: "MEDIUM", notes: ""))
+            }
+        }
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let baseSeverity = 2
+        let premenstrualSeverity = 6
+        // 56 days of daily DRSP ratings: a low follicular baseline that rises in the
+        // seven days before each onset — a clear, cyclical premenstrual pattern.
+        for daysAgo in 0...55 {
+            guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { continue }
+            let dateString = Self.isoDate(date)
+            let isPremenstrual = onsetsDaysAgo.contains { onset in
+                let daysBeforeOnset = daysAgo - onset
+                return daysBeforeOnset >= 1 && daysBeforeOnset <= 7
+            }
+            let score = isPremenstrual ? premenstrualSeverity : baseSeverity
+            for item in 1...24 {
+                writeSymptom(repository, "drsp_\(item)", Double(score), dateString, now)
+            }
+        }
+    }
+    #endif
 }

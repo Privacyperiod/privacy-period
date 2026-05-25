@@ -141,6 +141,10 @@ final class EncryptedStore: ObservableObject {
         )
     }
 
+    /// Whether a mood & energy entry has already been logged today. Drives the
+    /// launch gate: if today is already logged, the gate is skipped automatically.
+    func hasMoodEntryToday() -> Bool { todayMoodEntry() != nil }
+
     /// Today's mood & energy entry, or nil if none has been logged today.
     func todayMoodEntry() -> MoodEntryDraft? {
         guard let database else { return nil }

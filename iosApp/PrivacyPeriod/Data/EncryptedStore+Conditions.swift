@@ -40,38 +40,38 @@ extension EncryptedStore {
     // MARK: - Premenstrual (the merged PMDD / PME condition)
 
     /// Whether the premenstrual condition is on (in either PMDD-only or PME form).
-    var isPremenstrualEnabled: Bool { premenstrualSelection() != nil }
-
-    /// The premenstrual selection: `nil` when off, `premenstrualTrackOnly` for PMDD-only,
-    /// or an underlying-condition family id (e.g. "depression") for PME.
-    func premenstrualSelection() -> String? {
-        if let pme = repository?.enrollment(moduleId: Self.pmeModuleId) { return pme.config ?? "other" }
-        if isEnrolled(moduleId: Self.pmddModuleId) { return Self.premenstrualTrackOnly }
-        return nil
+    var isPremenstrualEnabled: Bool {
+        isEnrolled(moduleId: Self.pmddModuleId) || isEnrolled(moduleId: Self.pmeModuleId)
     }
 
-    /// Applies a premenstrual selection. Switching between PMDD-only and PME swaps the
-    /// underlying enrollment so exactly one (or neither) is active.
-    func setPremenstrual(_ selection: String?) {
-        guard let selection else {
+    /// The self-reported diagnosed underlying conditions for the premenstrual module.
+    /// Empty means PMDD-only (track premenstrual symptoms with no underlying condition)
+    /// or off. More than one is allowed — comorbidity is common.
+    func premenstrualFamilies() -> Set<String> {
+        guard let config = repository?.enrollment(moduleId: Self.pmeModuleId)?.config else { return [] }
+        return Set(config.split(separator: ",").map(String.init))
+    }
+
+    /// Applies a premenstrual selection. With no families it enrolls PMDD (DRSP only);
+    /// with one or more it enrolls PME (DRSP + the MAC-PMSS mood chart), recording the
+    /// families as a comma-separated config. Only one underlying module is ever active.
+    func setPremenstrual(enabled: Bool, families: Set<String>) {
+        guard enabled else {
             setEnrolled(moduleId: Self.pmddModuleId, false)
             setEnrolled(moduleId: Self.pmeModuleId, false)
             return
         }
-        if selection == Self.premenstrualTrackOnly {
+        if families.isEmpty {
             setEnrolled(moduleId: Self.pmeModuleId, false)
             setEnrolled(moduleId: Self.pmddModuleId, true)
         } else {
             setEnrolled(moduleId: Self.pmddModuleId, false)
-            setEnrolled(moduleId: Self.pmeModuleId, true, config: selection)
+            setEnrolled(moduleId: Self.pmeModuleId, true, config: families.sorted().joined(separator: ","))
         }
     }
 
     /// The module id for the DRSP-only premenstrual form (PMDD). (PME is `pmeModuleId`.)
     static let pmddModuleId = "pmdd"
-    /// The premenstrual selection sentinel meaning "track premenstrual symptoms only"
-    /// (PMDD), i.e. no reported underlying condition.
-    static let premenstrualTrackOnly = "none"
     /// The module ids the home screen checks to decide what to surface.
     static let knownModuleIds = ["pmdd", "pme", "hmb", "perimenopause", "endometriosis"]
 }
