@@ -66,6 +66,10 @@ struct PmeCheckInView: View {
             } trailing: {
                 DDNavButton(titleKey: "common.save", isEnabled: isComplete) { onSave(draft()) }
             }
+            // The 1–6 severity key for the DRSP symptom ratings, pinned below the nav
+            // so its meaning stays visible while scrolling (the mood-chart items below
+            // carry their own 1–5 anchors).
+            legendBar
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     disclaimer
@@ -149,8 +153,26 @@ struct PmeCheckInView: View {
     private func drspRow(_ item: Int) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             definitionTitle("pmdd.item.\(item)", symptomId: "drsp_\(item)")
-            DDLikert(selection: drspBinding(item))
+            // Anchors live in the pinned key above, not under every selector.
+            DDLikert(selection: drspBinding(item), showLabels: false)
         }
+    }
+
+    // The pinned 1–6 scale key. Kept to one line; shrinks slightly on the narrowest
+    // devices rather than wrapping or using a tiny base size.
+    private var legendBar: some View {
+        Text("pmdd.legend")
+            .font(.ddMono(11))
+            .foregroundColor(.ddFg2)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(Color.ddLinenDeep.opacity(0.6))
+            .overlay(alignment: .bottom) {
+                Rectangle().fill(Color.ddSand).frame(height: 1)
+            }
     }
 
     private var moodSection: some View {

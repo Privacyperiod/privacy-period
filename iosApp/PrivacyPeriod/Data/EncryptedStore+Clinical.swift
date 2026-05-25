@@ -147,6 +147,17 @@ extension EncryptedStore {
         return (result as? GreeneScoringResult)?.completions
     }
 
+    /// Whether the given periodic instrument (e.g. the Greene Climacteric Scale) has
+    /// a completion dated in the current calendar month. Used to promote a monthly
+    /// task only until it has been done for the month.
+    func instrumentCompletedThisMonth(_ instrumentType: String) -> Bool {
+        guard let repository else { return false }
+        let monthPrefix = String(Self.isoDate(Date()).prefix(7)) // "yyyy-MM"
+        return repository.history()
+            .instrumentCompletions(instrumentType: instrumentType)
+            .contains { $0.endDate.hasPrefix(monthPrefix) }
+    }
+
     /// Computes the endometriosis screening result from the questionnaire answers.
     /// A pure, stateless calculation — a screening estimate, never a diagnosis.
     func scoreEndoScreen(_ draft: EndoScreenDraft) -> EndoScreenResult {

@@ -127,6 +127,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cadence-tagged) and a **Screening** section (one-off questionnaires like
   endometriosis), with "Choose conditions to track" beneath. The daily premenstrual
   log and "Log period" remain prominent top-level actions.
+- Monthly task promotion (iOS): the perimenopause questionnaire (a monthly, recall-
+  based instrument) is promoted to a prominent button under "Log period" when it is
+  due, tagged "Monthly", and disappears once completed for the month — returning at
+  the start of the next month. It remains listed under Tracking for access any time.
+- The premenstrual mood & symptom check-in now pins the 1–6 rating scale to its
+  header (the DRSP items drop their per-selector labels; the mood-chart items keep
+  their own 1–5 anchors), matching the daily check-in.
 
 ### Security
 
