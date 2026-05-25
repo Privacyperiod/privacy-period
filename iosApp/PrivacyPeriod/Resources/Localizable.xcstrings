@@ -777,11 +777,11 @@
     },
     "hmb.flow.entry" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy bleeding tracker" } } }
     },
     "hmb.flow.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy bleeding tracker" } } }
     },
     "hmb.flow.disclaimer" : {
       "extractionState" : "manual",
