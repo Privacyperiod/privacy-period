@@ -352,6 +352,86 @@
     "pmdd.result.insufficient" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep checking in daily. A summary needs at least two cycles with enough entries." } } }
+    },
+    "endo.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Endometriosis screening" } } }
+    },
+    "endo.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Endometriosis screening" } } }
+    },
+    "endo.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A symptom screening to share with a clinician — not a diagnosis." } } }
+    },
+    "endo.section.factors" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "About you" } } }
+    },
+    "endo.section.symptoms" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptoms (0 = none, 10 = worst)" } } }
+    },
+    "endo.factor.family" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A close relative has endometriosis" } } }
+    },
+    "endo.factor.infertility" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty conceiving, with no prior pregnancy" } } }
+    },
+    "endo.factor.bmi" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Body-mass index below 22" } } }
+    },
+    "endo.factor.cycle" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cycles usually shorter than 28 days" } } }
+    },
+    "endo.vas.dysmenorrhea" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period pain" } } }
+    },
+    "endo.vas.dyspareunia" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pain during deep sex" } } }
+    },
+    "endo.vas.gi" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Gut or bowel symptoms" } } }
+    },
+    "endo.vas.urinary" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Urinary symptoms" } } }
+    },
+    "endo.see_result" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "See my result" } } }
+    },
+    "endo.result.basis" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A screening estimate based on validated research, not a diagnosis. Share it with a clinician to talk it through." } } }
+    },
+    "endo.result.high" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Several of your answers are associated with endometriosis. It would be worth discussing endometriosis with a clinician." } } }
+    },
+    "endo.result.intermediate" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Some of your answers are associated with endometriosis. It may be worth raising it with a clinician." } } }
+    },
+    "endo.result.low" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your answers don't point strongly toward endometriosis. If symptoms persist, still mention them to a clinician." } } }
+    },
+    "endo.result.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for my clinician" } } }
+    },
+    "endo.result.retake" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start over" } } }
     }
   }
 }

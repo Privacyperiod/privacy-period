@@ -11,6 +11,7 @@ struct DashboardView: View {
     @State private var showingCycleLog = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
+    @State private var showingEndoScreen = false
     @State private var summaryResult: CpassResult?
 
     var body: some View {
@@ -40,6 +41,14 @@ struct DashboardView: View {
                     .font(.ddSans(15, .medium))
                     .foregroundColor(.ddSun)
                 }
+                // The endometriosis screening entry stays hidden until the feature
+                // is clinically signed off (see EndoFeature / clinical-disclaimer).
+                if EndoFeature.shared.isEnabled {
+                    Button("endo.entry") { showingEndoScreen = true }
+                        .font(.ddSans(15, .medium))
+                        .foregroundColor(.ddSun)
+                        .padding(.top, 4)
+                }
             }
             .padding()
         }
@@ -63,6 +72,9 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingSummary) {
             PmddResultsView(result: summaryResult) { showingSummary = false }
+        }
+        .sheet(isPresented: $showingEndoScreen) {
+            EndoScreenView(score: { store.scoreEndoScreen($0) }, onClose: { showingEndoScreen = false })
         }
     }
 }
