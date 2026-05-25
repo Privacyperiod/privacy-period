@@ -4,8 +4,9 @@
 import Shared
 import SwiftUI
 
-/// Temporary placeholder for the main dashboard, shown after onboarding.
-/// Replaced by the real "Tonight" dashboard in a later milestone.
+/// The home screen shown after onboarding: today's date, the current cycle day,
+/// today's mood check-in (or a prompt to log it), and the quick-log actions.
+/// Clinical-module entry points appear here only when their feature is un-gated.
 struct DashboardView: View {
     @StateObject private var store = EncryptedStore()
     @State private var showingCycleLog = false
@@ -33,98 +34,18 @@ struct DashboardView: View {
     var body: some View {
         ZStack {
             Color.ddLinen.ignoresSafeArea()
-            VStack(spacing: 16) {
-                Text("dashboard.placeholder.title")
-                    .font(.ddDisplay(32))
-                    .foregroundColor(.ddPlumDeep)
-                Text("dashboard.placeholder.body")
-                    .font(.ddSans(16))
-                    .foregroundColor(.ddFg2)
-                DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
-                    .padding(.horizontal, 40)
-                    .padding(.top, 8)
-                Button("mood.entry") { showingMoodLog = true }
-                    .font(.ddSans(15, .medium))
-                    .foregroundColor(.ddSun)
-                    .padding(.top, 4)
-                Button("settings.entry") { showingSettings = true }
-                    .font(.ddSans(15, .medium))
-                    .foregroundColor(.ddFg2)
-                    .padding(.top, 4)
-                // The PMDD screening entry points stay hidden until the feature
-                // is clinically signed off (see PmddFeature / clinical-disclaimer).
-                if PmddFeature.shared.isEnabled {
-                    Button("pmdd.checkin.title") { showingCheckIn = true }
-                        .font(.ddSans(15, .medium))
-                        .foregroundColor(.ddSun)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    header
+                    cycleCard
+                    moodCard
+                    DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                         .padding(.top, 4)
-                    Button("pmdd.results.title") {
-                        summaryResult = store.cpassResult()
-                        showingSummary = true
-                    }
-                    .font(.ddSans(15, .medium))
-                    .foregroundColor(.ddSun)
+                    clinicalEntries
                 }
-                // The endometriosis screening entry stays hidden until the feature
-                // is clinically signed off (see EndoFeature / clinical-disclaimer).
-                if EndoFeature.shared.isEnabled {
-                    Button("endo.entry") { showingEndoScreen = true }
-                        .font(.ddSans(15, .medium))
-                        .foregroundColor(.ddSun)
-                        .padding(.top, 4)
-                }
-                // The HMB entry points stay hidden until the feature is clinically
-                // signed off (see HmbFeature / clinical-disclaimer).
-                if HmbFeature.shared.isEnabled {
-                    Button("hmb.flow.entry") { showingFlowLog = true }
-                        .font(.ddSans(15, .medium))
-                        .foregroundColor(.ddSun)
-                        .padding(.top, 4)
-                    Button("hmb.results.entry") {
-                        hmbCycles = store.hmbCycleScores()
-                        showingHmbSummary = true
-                    }
-                    .font(.ddSans(15, .medium))
-                    .foregroundColor(.ddSun)
-                }
-                // The PME screening entry points stay hidden until the feature is
-                // clinically + safety signed off (see PmeFeature / instrument-licensing).
-                // Within that, they appear only once the user has enrolled.
-                if PmeFeature.shared.isEnabled {
-                    if pmeEnrolled {
-                        Button("pme.checkin.entry") { showingPmeCheckIn = true }
-                            .font(.ddSans(15, .medium))
-                            .foregroundColor(.ddSun)
-                            .padding(.top, 4)
-                        Button("pme.results.entry") {
-                            pmeResult = store.pmePattern()
-                            showingPmeSummary = true
-                        }
-                        .font(.ddSans(15, .medium))
-                        .foregroundColor(.ddSun)
-                    } else {
-                        Button("pme.enroll.entry") { showingPmeEnroll = true }
-                            .font(.ddSans(15, .medium))
-                            .foregroundColor(.ddSun)
-                            .padding(.top, 4)
-                    }
-                }
-                // The perimenopause entry points stay hidden until the feature is
-                // clinically signed off (see PeriFeature / clinical-disclaimer).
-                if PeriFeature.shared.isEnabled {
-                    Button("greene.entry") { showingGreene = true }
-                        .font(.ddSans(15, .medium))
-                        .foregroundColor(.ddSun)
-                        .padding(.top, 4)
-                    Button("greene.results.entry") {
-                        greeneCompletions = store.greeneCompletions()
-                        showingGreeneSummary = true
-                    }
-                    .font(.ddSans(15, .medium))
-                    .foregroundColor(.ddSun)
-                }
+                .padding(20)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding()
         }
         .sheet(isPresented: $showingCycleLog) {
             CycleLogView(
@@ -226,5 +147,149 @@ struct DashboardView: View {
             GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
         }
         .onAppear { pmeEnrolled = store.isPmeEnrolled }
+    }
+}
+
+private extension DashboardView {
+    var header: some View {
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("dashboard.today")
+                    .font(.ddSans(14, .medium))
+                    .foregroundColor(.ddFg3)
+                Text(Date(), format: .dateTime.weekday(.wide).month(.wide).day())
+                    .font(.ddDisplay(28))
+                    .foregroundColor(.ddPlumDeep)
+            }
+            Spacer()
+            Button { showingSettings = true } label: {
+                DDIcon(name: "settings", size: 22).foregroundColor(.ddFg2)
+            }
+            .accessibilityLabel(Text("settings.entry"))
+        }
+    }
+
+    var cycleCard: some View {
+        card {
+            if let snapshot = store.currentCycleSnapshot() {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
+                                snapshot.dayOfCycle))
+                        .font(.ddDisplay(22))
+                        .foregroundColor(.ddPlumDeep)
+                    Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
+                                Self.displayDate(snapshot.startDate)))
+                        .font(.ddSans(14))
+                        .foregroundColor(.ddFg2)
+                }
+            } else {
+                Text("dashboard.cycle.none")
+                    .font(.ddSans(15))
+                    .foregroundColor(.ddFg2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    var moodCard: some View {
+        card {
+            if let mood = store.todayMoodEntry() {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("dashboard.mood.today")
+                            .font(.ddSans(13, .semibold))
+                            .foregroundColor(.ddFg3)
+                            .textCase(.uppercase)
+                        Text(String(format: NSLocalizedString("dashboard.mood.summary", comment: "mood summary"),
+                                    moodLabel(mood.mood), energyLabel(mood.energy)))
+                            .font(.ddSans(15))
+                            .foregroundColor(.ddPlumDeep)
+                    }
+                    Spacer()
+                    Button("dashboard.mood.edit") { showingMoodLog = true }
+                        .font(.ddSans(14, .medium))
+                        .foregroundColor(.ddSun)
+                }
+            } else {
+                HStack {
+                    Text("dashboard.mood.prompt")
+                        .font(.ddSans(15))
+                        .foregroundColor(.ddFg2)
+                    Spacer()
+                    Button("mood.entry") { showingMoodLog = true }
+                        .font(.ddSans(14, .medium))
+                        .foregroundColor(.ddSun)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder var clinicalEntries: some View {
+        if PmddFeature.shared.isEnabled {
+            Button("pmdd.checkin.title") { showingCheckIn = true }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            Button("pmdd.results.title") {
+                summaryResult = store.cpassResult()
+                showingSummary = true
+            }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+        }
+        if EndoFeature.shared.isEnabled {
+            Button("endo.entry") { showingEndoScreen = true }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+        }
+        if HmbFeature.shared.isEnabled {
+            Button("hmb.flow.entry") { showingFlowLog = true }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            Button("hmb.results.entry") {
+                hmbCycles = store.hmbCycleScores()
+                showingHmbSummary = true
+            }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+        }
+        if PmeFeature.shared.isEnabled {
+            if pmeEnrolled {
+                Button("pme.checkin.entry") { showingPmeCheckIn = true }
+                    .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+                Button("pme.results.entry") {
+                    pmeResult = store.pmePattern()
+                    showingPmeSummary = true
+                }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+            } else {
+                Button("pme.enroll.entry") { showingPmeEnroll = true }
+                    .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            }
+        }
+        if PeriFeature.shared.isEnabled {
+            Button("greene.entry") { showingGreene = true }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            Button("greene.results.entry") {
+                greeneCompletions = store.greeneCompletions()
+                showingGreeneSummary = true
+            }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+        }
+    }
+
+    func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        content()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(18)
+            .background(RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddLinenDeep.opacity(0.5)))
+    }
+
+    func moodLabel(_ value: Int) -> String { NSLocalizedString("mood.mood.\(value)", comment: "mood level") }
+
+    func energyLabel(_ value: Int) -> String { NSLocalizedString("mood.energy.\(value)", comment: "energy level") }
+
+    static func displayDate(_ iso: String) -> String {
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        parser.dateFormat = "yyyy-MM-dd"
+        guard let date = parser.date(from: iso) else { return iso }
+        let out = DateFormatter()
+        out.dateStyle = .medium
+        return out.string(from: date)
     }
 }

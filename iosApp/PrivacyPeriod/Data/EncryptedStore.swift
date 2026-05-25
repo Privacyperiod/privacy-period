@@ -22,6 +22,13 @@ struct MoodEntryDraft {
     let notes: String
 }
 
+/// A factual snapshot of the current cycle for the dashboard: the latest logged
+/// period's start date and how many days into the cycle today is. No prediction.
+struct CycleSnapshot {
+    let startDate: String
+    let dayOfCycle: Int
+}
+
 /// The answers to the endometriosis screening questionnaire, before scoring.
 /// VAS values are 0–10; 0 reads as "not bothered" (below every threshold).
 struct EndoScreenDraft {
@@ -144,6 +151,17 @@ final class EncryptedStore: ObservableObject {
         return MoodEntryDraft(mood: Int(row.mood_score), energy: Int(row.energy_score), notes: row.notes ?? "")
     }
 
+    /// The current cycle snapshot (latest period start + today's day-of-cycle), or
+    /// nil if no period has been logged. Factual only — no prediction.
+    func currentCycleSnapshot() -> CycleSnapshot? {
+        guard let database else { return nil }
+        guard let latest = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList().last else {
+            return nil
+        }
+        let day = Self.daysBetween(latest.start_date, Self.isoDate(Date())) + 1
+        return CycleSnapshot(startDate: latest.start_date, dayOfCycle: max(day, 1))
+    }
+
     /// A plain-text copy of the user's everyday data (cycles and mood/energy), for
     /// the user to export and keep or share. Produced only on explicit request.
     func exportData() -> String {
@@ -216,5 +234,15 @@ final class EncryptedStore: ObservableObject {
         formatter.timeZone = TimeZone.current
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
+    }
+
+    /// Whole days from one ISO-8601 date to another (0 if either can't be parsed).
+    private static func daysBetween(_ startISO: String, _ endISO: String) -> Int {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-dd"
+        guard let start = formatter.date(from: startISO), let end = formatter.date(from: endISO) else { return 0 }
+        return Calendar.current.dateComponents([.day], from: start, to: end).day ?? 0
     }
 }
