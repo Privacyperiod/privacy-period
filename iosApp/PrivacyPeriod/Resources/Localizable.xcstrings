@@ -2,6 +2,18 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "hmb.flow.add_another" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save & add another" } }
+      }
+    },
+    "hmb.flow.logged" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%d logged so far" } }
+      }
+    },
     "cyclelog.also_bleeding" : {
       "extractionState" : "manual",
       "localizations" : {
