@@ -144,6 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Data" (its subtitle removed). The mood & energy prompt is removed from the home — it
   is offered by the launch gate on open — and now lives in the Tracking section as an
   always-available "Quick Daily Check-in".
+- The heavy-menstrual-bleeding flow log is renamed "Heavy bleeding tracker" to
+  distinguish it from the period's overall flow intensity logged with "Log period".
 
 ### Security
 
