@@ -147,6 +147,30 @@ extension EncryptedStore {
         return (result as? GreeneScoringResult)?.completions
     }
 
+    /// The current cycle's daily symptom picture for the landing-page reveal: the mean
+    /// DRSP severity logged on each cycle day so far (nil on days not yet logged, so
+    /// the chart visibly fills in), plus how many of those days have any entry.
+    /// Returns nil when no period has been logged yet.
+    func currentCycleReveal() -> CycleReveal? {
+        guard let repository, let snapshot = currentCycleSnapshot() else { return nil }
+        let cycleDay = snapshot.dayOfCycle
+        let drspIds = Set((1...24).map { "drsp_\($0)" })
+        var sumByDay: [Int: (total: Double, count: Int)] = [:]
+        for entry in repository.history().symptomEntries(symptomIds: drspIds) {
+            let day = Self.daysBetween(snapshot.startDate, entry.date) + 1
+            guard day >= 1, day <= cycleDay else { continue }
+            var aggregate = sumByDay[day] ?? (total: 0, count: 0)
+            aggregate.total += entry.severity
+            aggregate.count += 1
+            sumByDay[day] = aggregate
+        }
+        let points = (1...cycleDay).map { day -> CycleRevealPoint in
+            guard let aggregate = sumByDay[day] else { return CycleRevealPoint(day: day, severity: nil) }
+            return CycleRevealPoint(day: day, severity: aggregate.total / Double(aggregate.count))
+        }
+        return CycleReveal(points: points, cycleDay: cycleDay, daysLogged: sumByDay.count)
+    }
+
     /// Whether the given periodic instrument (e.g. the Greene Climacteric Scale) has
     /// a completion dated in the current calendar month. Used to promote a monthly
     /// task only until it has been done for the month.
@@ -216,27 +240,28 @@ extension EncryptedStore {
         let calendar = Calendar.current
         let today = Date()
         // Two menses onsets, each fully surrounded by data so C-PASS can score the
-        // cycle centred on it (it compares the pre-menstrual week before the onset
-        // with the post-menstrual week after it).
-        let onsetsDaysAgo = [42, 14]
+        // cycle centred on it. The most recent (24 days ago) puts "today" at cycle
+        // day ~25 — late luteal — so the in-progress cycle visibly shows the rise on
+        // the landing-page reveal, not just the completed cycles.
+        let onsetsDaysAgo = [52, 24]
+        let referenceOnset = 24
         for daysAgo in onsetsDaysAgo {
             if let start = calendar.date(byAdding: .day, value: -daysAgo, to: today) {
                 save(CycleDraft(startDate: start, endDate: nil, flow: "MEDIUM", notes: ""))
             }
         }
         let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let cycleLength = 28
+        let lutealStart = 19
         let baseSeverity = 2
-        let premenstrualSeverity = 6
-        // 56 days of daily DRSP ratings: a low follicular baseline that rises in the
-        // seven days before each onset — a clear, cyclical premenstrual pattern.
-        for daysAgo in 0...55 {
+        // 63 days of daily DRSP ratings scored by cycle day: a low follicular baseline
+        // that rises through the luteal phase — a clear, cyclical premenstrual pattern
+        // that repeats every cycle, including the one in progress.
+        for daysAgo in 0...62 {
             guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { continue }
             let dateString = Self.isoDate(date)
-            let isPremenstrual = onsetsDaysAgo.contains { onset in
-                let daysBeforeOnset = daysAgo - onset
-                return daysBeforeOnset >= 1 && daysBeforeOnset <= 7
-            }
-            let score = isPremenstrual ? premenstrualSeverity : baseSeverity
+            let cycleDay = ((referenceOnset - daysAgo) % cycleLength + cycleLength) % cycleLength + 1
+            let score = cycleDay >= lutealStart ? min(6, baseSeverity + (cycleDay - lutealStart + 1)) : baseSeverity
             for item in 1...24 {
                 writeSymptom(repository, "drsp_\(item)", Double(score), dateString, now)
             }

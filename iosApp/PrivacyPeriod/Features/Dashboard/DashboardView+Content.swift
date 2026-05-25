@@ -25,18 +25,23 @@ extension DashboardView {
         }
     }
 
+    // The landing-page hero: the current cycle's context plus the progressive reveal
+    // chart of the user's own tracked symptoms filling in across the cycle.
     var cycleCard: some View {
         card {
             if let snapshot = store.currentCycleSnapshot() {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
-                                snapshot.dayOfCycle))
-                        .font(.ddDisplay(22))
-                        .foregroundColor(.ddPlumDeep)
-                    Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
-                                Self.displayDate(snapshot.startDate)))
-                        .font(.ddSans(14))
-                        .foregroundColor(.ddFg2)
+                VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
+                                    snapshot.dayOfCycle))
+                            .font(.ddDisplay(22))
+                            .foregroundColor(.ddPlumDeep)
+                        Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
+                                    Self.displayDate(snapshot.startDate)))
+                            .font(.ddSans(14))
+                            .foregroundColor(.ddFg2)
+                    }
+                    reveal
                 }
             } else {
                 Text("dashboard.cycle.none")
@@ -44,6 +49,23 @@ extension DashboardView {
                     .foregroundColor(.ddFg2)
                     .fixedSize(horizontal: false, vertical: true)
             }
+        }
+    }
+
+    @ViewBuilder var reveal: some View {
+        if let reveal = store.currentCycleReveal(), reveal.daysLogged > 0 {
+            VStack(alignment: .leading, spacing: 6) {
+                CycleRevealChart(reveal: reveal)
+                Text(String(format: NSLocalizedString("reveal.completeness", comment: "days logged"),
+                            reveal.daysLogged, reveal.cycleDay))
+                    .font(.ddSans(12))
+                    .foregroundColor(.ddFg3)
+            }
+        } else {
+            Text("reveal.empty")
+                .font(.ddSans(14))
+                .foregroundColor(.ddFg2)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 

@@ -158,6 +158,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   instruments each screen implements, with citations and a link to the provenance
   registry. Third-party open-source attributions live in the repository's CREDITS.md
   (added), not in the app UI.
+- Cycle reveal on the home (iOS): the landing hero is now the progressive reveal —
+  a Swift Charts view of the user's own tracked symptom severity filling in across
+  the current cycle (unlogged days stay gaps), with a factual "N of M days logged
+  this cycle" completeness line and an inviting empty state. It shows the user's
+  data, never a score, streak, or judgement. The demo seed now places the in-progress
+  cycle in the late luteal phase so the rise is visible immediately.
 
 ### Security
 
