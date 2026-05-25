@@ -2,6 +2,18 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "home.section.tracking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tracking" } }
+      }
+    },
+    "home.section.screening" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Screening" } }
+      }
+    },
     "settings.section.demo" : {
       "extractionState" : "manual",
       "localizations" : {

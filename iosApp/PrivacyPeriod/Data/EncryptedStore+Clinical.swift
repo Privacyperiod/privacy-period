@@ -197,7 +197,11 @@ extension EncryptedStore {
     func seedSampleData() {
         guard let repository else { return }
         deleteAllData()
+        // Enroll every condition so the seeded demo shows the full home structure.
         setPremenstrual(enabled: true, families: ["anxiety"])
+        setEnrolled(moduleId: "hmb", true)
+        setEnrolled(moduleId: "perimenopause", true)
+        setEnrolled(moduleId: "endometriosis", true)
         let calendar = Calendar.current
         let today = Date()
         // Two menses onsets, each fully surrounded by data so C-PASS can score the

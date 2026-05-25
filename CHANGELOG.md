@@ -122,6 +122,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sample data (iOS, demo only): a Settings action that loads two cycles of sample DRSP
   entries so the pattern tracker can be previewed for testing and clinician review.
   Compiled into demo builds only, never the App Store build.
+- Home organised into sections (iOS): the clinical entries are grouped into a
+  collapsible **Tracking** section (the ongoing logs and result views, each
+  cadence-tagged) and a **Screening** section (one-off questionnaires like
+  endometriosis), with "Choose conditions to track" beneath. The daily premenstrual
+  log and "Log period" remain prominent top-level actions.
 
 ### Security
 
