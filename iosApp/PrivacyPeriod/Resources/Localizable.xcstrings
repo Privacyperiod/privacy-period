@@ -321,6 +321,14 @@
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A screening to share with your clinician — not a diagnosis." } } }
     },
+    "pmdd.results.pme_hint" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual exacerbation usually layers on an ongoing condition. If you live with one, PME tracking follows how it changes across your cycle." } } }
+    },
+    "pmdd.results.pme_hint_action" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up PME tracking" } } }
+    },
     "pmdd.results.sharenote" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This is a screening, not a diagnosis. Share this summary with a qualified clinician to talk it through." } } }
@@ -500,6 +508,378 @@
     "greene.result.insufficient" : {
       "extractionState" : "manual",
       "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete the questionnaire to see your symptom profile here." } } }
+    },
+    "hmb.flow.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+    },
+    "hmb.flow.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log flow" } } }
+    },
+    "hmb.flow.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tracking your flow for heavy-bleeding screening — not a diagnosis." } } }
+    },
+    "hmb.flow.nocycle" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log your period first — flow entries attach to that cycle." } } }
+    },
+    "hmb.flow.kind" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "What are you logging?" } } }
+    },
+    "hmb.flow.saturation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Saturation" } } }
+    },
+    "hmb.flow.measured" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Measured volume" } } }
+    },
+    "hmb.flow.clotsize" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Clot size" } } }
+    },
+    "hmb.flow.pad" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pad" } } }
+    },
+    "hmb.flow.tampon" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Tampon" } } }
+    },
+    "hmb.flow.period_underwear" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Period underwear" } } }
+    },
+    "hmb.flow.cup" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Menstrual cup" } } }
+    },
+    "hmb.flow.disc" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Menstrual disc" } } }
+    },
+    "hmb.flow.clot" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Clot" } } }
+    },
+    "hmb.flow.flooding" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Flooding" } } }
+    },
+    "hmb.sat.light" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } } }
+    },
+    "hmb.sat.moderate" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } }
+    },
+    "hmb.sat.heavy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy" } } }
+    },
+    "hmb.sat.soaked" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Soaked" } } }
+    },
+    "hmb.clot.small" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Small" } } }
+    },
+    "hmb.clot.large" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Large" } } }
+    },
+    "hmb.results.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bleeding summary" } } }
+    },
+    "hmb.results.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bleeding summary" } } }
+    },
+    "hmb.results.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A factual summary of your tracked flow to share with a clinician — not a diagnosis." } } }
+    },
+    "hmb.results.sharenote" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You can export this summary to share with your clinician. Nothing leaves your device unless you choose to share it." } } }
+    },
+    "hmb.results.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for my clinician" } } }
+    },
+    "hmb.result.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Log your flow during your period to see a PBAC summary here." } } }
+    },
+    "hmb.result.points" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "%d PBAC points" } } }
+    },
+    "hmb.result.measured" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "%d mL measured" } } }
+    },
+    "hmb.class.heavy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Heavy" } } }
+    },
+    "hmb.class.borderline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Borderline" } } }
+    },
+    "hmb.class.normal" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Typical range" } } }
+    },
+    "hmb.class.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Not enough data" } } }
+    },
+    "pmdd.si.support_link" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Support resources" } } }
+    },
+    "pmdd.si.support_title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You're not alone" } } }
+    },
+    "pmdd.si.support_intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "If you're struggling, support is available right now. These connect you directly — nothing is shared." } } }
+    },
+    "pmdd.si.support_private" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing here leaves your device or is shared." } } }
+    },
+    "pmdd.si.prefer_not" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Prefer not to answer" } } }
+    },
+    "crisis.us.988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "988 Suicide & Crisis Lifeline" } } }
+    },
+    "crisis.us.textline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Crisis Text Line" } } }
+    },
+    "crisis.uk.samaritans" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Samaritans" } } }
+    },
+    "crisis.uk.shout" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Shout" } } }
+    },
+    "crisis.ca.988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Suicide Crisis Helpline" } } }
+    },
+    "crisis.au.lifeline" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Lifeline" } } }
+    },
+    "crisis.ie.samaritans" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Samaritans" } } }
+    },
+    "crisis.generic.local" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Local crisis & emergency services" } } }
+    },
+    "crisis.action.call_988" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 988" } } }
+    },
+    "crisis.action.text_741741" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Text HOME to 741741" } } }
+    },
+    "crisis.action.call_116123" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 116 123" } } }
+    },
+    "crisis.action.text_85258" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Text SHOUT to 85258" } } }
+    },
+    "crisis.action.call_131114" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Call 13 11 14" } } }
+    },
+    "crisis.action.local" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Contact your local crisis line or emergency services" } } }
+    },
+    "pme.checkin.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily check-in" } } }
+    },
+    "pme.checkin.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A symptom screening to share with a clinician — not a diagnosis." } } }
+    },
+    "pme.checkin.intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate your premenstrual symptoms and today's mood. All categories must be answered." } } }
+    },
+    "pme.checkin.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood & symptom check-in" } } }
+    },
+    "pme.enroll.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up premenstrual tracking" } } }
+    },
+    "pme.enroll.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up tracking" } } }
+    },
+    "pme.enroll.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This records a condition you already track with a clinician — it does not diagnose anything." } } }
+    },
+    "pme.enroll.intro" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual exacerbation tracking is for people who already live with an ongoing condition that worsens before their period. Choose the condition you track with your clinician — this frames your tracking." } } }
+    },
+    "pme.condition.depression" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Depression" } } }
+    },
+    "pme.condition.bipolar" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Bipolar disorder" } } }
+    },
+    "pme.condition.anxiety" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anxiety disorder" } } }
+    },
+    "pme.condition.adhd" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "ADHD" } } }
+    },
+    "pme.condition.other" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Other / prefer not to specify" } } }
+    },
+    "pme.results.entry" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual pattern" } } }
+    },
+    "pme.results.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your pattern" } } }
+    },
+    "pme.results.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "A factual summary of your tracked symptoms to share with a clinician — not a diagnosis." } } }
+    },
+    "pme.results.sharenote" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "You can export this summary to share with your clinician. Nothing leaves your device unless you choose to share it." } } }
+    },
+    "pme.results.export" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export for my clinician" } } }
+    },
+    "pme.results.basis" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Based on %d scored cycles." } } }
+    },
+    "pme.result.insufficient" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep logging — at least two scored cycles are needed before a pattern can be shown." } } }
+    },
+    "pme.result.pmdd_pattern" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms rise before your period and ease afterwards — a cyclical pattern to share with your clinician." } } }
+    },
+    "pme.result.pme_pattern" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms are present across your cycle and worsen before your period — a premenstrual-exacerbation pattern to share with your clinician." } } }
+    },
+    "pme.result.ongoing" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms are present across your cycle without a clear rise before your period." } } }
+    },
+    "pme.result.none" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms don't show a clear cyclical pattern." } } }
+    },
+    "pme.result.indeterminate" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Your tracked symptoms don't fit a single pattern yet — keep logging." } } }
+    },
+    "pme.section.mood" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood today" } } }
+    },
+    "pme.impairment.1" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "None" } } }
+    },
+    "pme.impairment.2" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Slight" } } }
+    },
+    "pme.impairment.3" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Moderate" } } }
+    },
+    "pme.impairment.4" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Marked" } } }
+    },
+    "pme.impairment.5" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable" } } }
+    },
+    "definition.title" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Definition" } } }
+    },
+    "definition.source" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "From the %@ instrument" } } }
+    },
+    "definition.pending" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "The official definition for this item comes from its source instrument and will appear here once that instrument is licensed. Nothing here is a diagnosis." } } }
+    },
+    "definition.hint" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Opens the definition for this item" } } }
+    },
+    "symptom.macpmss_depressed_mood" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Depressed mood" } } }
+    },
+    "symptom.macpmss_anxiety" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Anxiety" } } }
+    },
+    "symptom.macpmss_low_energy" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Low energy" } } }
+    },
+    "symptom.macpmss_functional_impairment" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Difficulty functioning" } } }
+    },
+    "symptom.macpmss_mood_elevation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Elevated or racing mood" } } }
+    },
+    "symptom.macpmss_suicidal_ideation" : {
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Thoughts of self-harm" } } }
     }
   }
 }
