@@ -2,6 +2,18 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "checkin.premenstrual.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily · today’s symptoms & mood" } }
+      }
+    },
+    "checkin.perimenopause.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Monthly · this month’s symptoms" } }
+      }
+    },
     "home.section.tracking" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -331,7 +343,7 @@
     },
     "pmdd.checkin.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
     },
     "pmdd.checkin.today" : {
       "extractionState" : "manual",
@@ -611,7 +623,7 @@
     },
     "greene.entry" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptom questionnaire" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Perimenopause check-in" } } }
     },
     "greene.results.entry" : {
       "extractionState" : "manual",
@@ -619,7 +631,7 @@
     },
     "greene.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptom questionnaire" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Perimenopause questionnaire" } } }
     },
     "greene.disclaimer" : {
       "extractionState" : "manual",
@@ -967,7 +979,7 @@
     },
     "pme.checkin.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
     },
     "pme.checkin.disclaimer" : {
       "extractionState" : "manual",
@@ -979,7 +991,7 @@
     },
     "pme.checkin.entry" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood & symptom check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
     },
     "pme.enroll.entry" : {
       "extractionState" : "manual",
