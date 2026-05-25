@@ -41,6 +41,11 @@ FROM flow_events
 WHERE cycle_id = ?
 ORDER BY event_date, event_time;
 
+selectAllFlowEvents:
+SELECT *
+FROM flow_events
+ORDER BY cycle_id, event_date, event_time;
+
 insertFlowEvent:
 INSERT INTO flow_events(id, cycle_id, event_date, event_time, flow_type, saturation, clot_size, measured_ml, pbac_points, created_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

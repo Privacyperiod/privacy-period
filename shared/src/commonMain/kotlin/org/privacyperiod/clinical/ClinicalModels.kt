@@ -54,4 +54,30 @@ interface ClinicalHistory {
 
     /** As [symptomEntries] but only same-day (prospective) entries. */
     fun sameDaySymptomEntries(symptomIds: Set<String>): List<SymptomEntry>
+
+    /** All logged menstrual-flow events (for PBAC / heavy-bleeding scoring). */
+    fun flowEvents(): List<FlowEvent>
 }
+
+/**
+ * A single menstrual-flow event — a product change, clot, or flooding episode —
+ * consumed by the Heavy Menstrual Bleeding module's PBAC scoring.
+ *
+ * @property flowType pad, tampon, cup, disc, period_underwear, clot, or flooding.
+ * @property saturation Product saturation (light/moderate/heavy/soaked) or null.
+ * @property clotSize Clot size (small/large) or null.
+ * @property measuredMl Directly measured volume in millilitres (cups/discs) or null.
+ * @property pbacPoints Precomputed PBAC points, or null to score from the fields.
+ */
+data class FlowEvent(
+    val id: String,
+    val cycleId: String,
+    val eventDate: String,
+    val eventTime: String?,
+    val flowType: String,
+    val saturation: String?,
+    val clotSize: String?,
+    val measuredMl: Double?,
+    val pbacPoints: Int?,
+    val createdAt: Long,
+)

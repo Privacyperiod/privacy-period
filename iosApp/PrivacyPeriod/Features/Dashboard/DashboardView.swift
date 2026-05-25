@@ -11,6 +11,8 @@ struct DashboardView: View {
     @State private var showingCycleLog = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
+    @State private var showingFlowLog = false
+    @State private var showingHmbSummary = false
     @State private var showingPmeCheckIn = false
     @State private var showingPmeSummary = false
     @State private var showingPmeEnroll = false
@@ -20,6 +22,7 @@ struct DashboardView: View {
     @State private var pendingPmeEnroll = false
     @State private var summaryResult: CpassResult?
     @State private var pmeResult: PmePatternResult?
+    @State private var hmbCycles: [HmbCycleScore]?
 
     var body: some View {
         ZStack {
@@ -44,6 +47,20 @@ struct DashboardView: View {
                     Button("pmdd.results.title") {
                         summaryResult = store.cpassResult()
                         showingSummary = true
+                    }
+                    .font(.ddSans(15, .medium))
+                    .foregroundColor(.ddSun)
+                }
+                // The HMB entry points stay hidden until the feature is clinically
+                // signed off (see HmbFeature / clinical-disclaimer).
+                if HmbFeature.shared.isEnabled {
+                    Button("hmb.flow.entry") { showingFlowLog = true }
+                        .font(.ddSans(15, .medium))
+                        .foregroundColor(.ddSun)
+                        .padding(.top, 4)
+                    Button("hmb.results.entry") {
+                        hmbCycles = store.hmbCycleScores()
+                        showingHmbSummary = true
                     }
                     .font(.ddSans(15, .medium))
                     .foregroundColor(.ddSun)
@@ -113,6 +130,19 @@ struct DashboardView: View {
                     showingPmeCheckIn = false
                 }
             )
+        }
+        .sheet(isPresented: $showingFlowLog) {
+            FlowLogView(
+                hasCycle: store.currentCycleId() != nil,
+                onCancel: { showingFlowLog = false },
+                onSave: { draft in
+                    store.saveFlowEvent(draft)
+                    showingFlowLog = false
+                }
+            )
+        }
+        .sheet(isPresented: $showingHmbSummary) {
+            HmbResultsView(cycles: hmbCycles) { showingHmbSummary = false }
         }
         .sheet(isPresented: $showingPmeSummary) {
             PmeResultsView(result: pmeResult) { showingPmeSummary = false }
