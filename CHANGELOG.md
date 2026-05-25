@@ -109,6 +109,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   mood chart (PME). Copy is non-diagnostic, and the selectable list is bounded by the
   clinical sign-off gate — the App Store build lists only signed-off conditions, the
   Demo build lists all. First step of the landing-page / navigation redesign.
+- Soft mood & energy gate (iOS): the app opens onto the mood & energy check-in on each
+  launch, setting the expectation that logging is the first thing you do. It is
+  skippable after the first run ("Not today", recorded as a neutral non-entry — never a
+  failure) and required only on the very first run; if today is already logged it is
+  skipped automatically.
+- Daily premenstrual log promoted (iOS): the premenstrual daily check-in (the PME mood
+  & symptom check-in, or the DRSP check-in) is now a prominent top-level action
+  alongside "Log period". The Conditions follow-up for an existing diagnosis is now
+  multi-select (comorbidity is common), and "Choose conditions" reads "Choose conditions
+  to track".
+- Sample data (iOS, demo only): a Settings action that loads two cycles of sample DRSP
+  entries so the pattern tracker can be previewed for testing and clinician review.
+  Compiled into demo builds only, never the App Store build.
 
 ### Security
 

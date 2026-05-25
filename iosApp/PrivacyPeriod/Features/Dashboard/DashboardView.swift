@@ -8,7 +8,7 @@ import SwiftUI
 /// today's mood check-in (or a prompt to log it), and the quick-log actions.
 /// Clinical-module entry points appear here only when their feature is un-gated.
 struct DashboardView: View {
-    @StateObject private var store = EncryptedStore()
+    @ObservedObject var store: EncryptedStore
     @State private var showingCycleLog = false
     @State private var showingMoodLog = false
     @State private var showingSettings = false
@@ -42,6 +42,7 @@ struct DashboardView: View {
                     header
                     cycleCard
                     moodCard
+                    dailyCheckInButton
                     DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                         .padding(.top, 4)
                     clinicalEntries
@@ -73,6 +74,7 @@ struct DashboardView: View {
             SettingsView(
                 exportText: { store.exportData() },
                 onDeleteAll: { store.deleteAllData() },
+                onSeed: seedAction,
                 onClose: { showingSettings = false }
             )
         }
@@ -220,27 +222,36 @@ private extension DashboardView {
         }
     }
 
+    // The daily premenstrual log, raised to a prominent top-level action (like "Log
+    // period") because it is the main daily task: the PME mood & symptom check-in when
+    // a underlying condition is recorded, otherwise the DRSP daily check-in.
+    @ViewBuilder var dailyCheckInButton: some View {
+        if enrolled.contains(EncryptedStore.pmeModuleId) {
+            DDPrimaryButton(titleKey: "pme.checkin.entry") { showingPmeCheckIn = true }
+                .padding(.top, 4)
+        } else if enrolled.contains(EncryptedStore.pmddModuleId) {
+            DDPrimaryButton(titleKey: "pmdd.checkin.title") { showingCheckIn = true }
+                .padding(.top, 4)
+        }
+    }
+
     @ViewBuilder var clinicalEntries: some View {
         // The doorway to choosing what you collect data on; drives everything below.
         Button("conditions.entry") { showingConditions = true }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         if enrolled.contains(EncryptedStore.pmddModuleId) {
-            Button("pmdd.checkin.title") { showingCheckIn = true }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("pmdd.results.title") {
                 summaryResult = store.cpassResult()
                 showingSummary = true
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         }
         if enrolled.contains(EncryptedStore.pmeModuleId) {
-            Button("pme.checkin.entry") { showingPmeCheckIn = true }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("pme.results.entry") {
                 pmeResult = store.pmePattern()
                 showingPmeSummary = true
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         }
         if enrolled.contains("hmb") {
             Button("hmb.flow.entry") { showingFlowLog = true }
@@ -264,6 +275,18 @@ private extension DashboardView {
             Button("endo.entry") { showingEndoScreen = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         }
+    }
+
+    // Demo-only sample-data action; nil (so the Settings button hides) otherwise.
+    var seedAction: (() -> Void)? {
+        #if DEMO
+        return {
+            store.seedSampleData()
+            enrolled = store.enabledModuleIds()
+        }
+        #else
+        return nil
+        #endif
     }
 
     func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {

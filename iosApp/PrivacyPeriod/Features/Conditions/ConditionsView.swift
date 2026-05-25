@@ -15,12 +15,12 @@ struct ConditionsView: View {
     let onClose: () -> Void
 
     @State private var enabled: Set<String> = []
-    @State private var premSelection: String?
+    @State private var premFamilies: Set<String> = []
 
-    // Premenstrual follow-up options. "none" = track premenstrual symptoms only
-    // (PMDD); the rest are self-reported existing diagnoses (PME). Order mirrors the
-    // PME enrollment flow.
-    private let premenstrualFamilies = ["none", "depression", "bipolar", "anxiety", "adhd", "other"]
+    // Premenstrual follow-up options: self-reported existing diagnoses (selecting any
+    // makes the module PME; selecting none keeps it PMDD-only). Multi-select, because
+    // comorbidity is common. Order mirrors the PME enrollment flow.
+    private let premenstrualFamilies = ["depression", "bipolar", "anxiety", "adhd", "other"]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -129,13 +129,13 @@ struct ConditionsView: View {
     }
 
     private func familyRow(_ family: String) -> some View {
-        let isSelected = premSelection == family
+        let isSelected = premFamilies.contains(family)
         return Button {
-            premSelection = family
-            store.setPremenstrual(family)
+            if isSelected { premFamilies.remove(family) } else { premFamilies.insert(family) }
+            store.setPremenstrual(enabled: true, families: premFamilies)
         } label: {
             HStack(spacing: 10) {
-                Image(systemName: isSelected ? "largecircle.fill.circle" : "circle")
+                Image(systemName: isSelected ? "checkmark.square.fill" : "square")
                     .font(.system(size: 16))
                     .foregroundColor(isSelected ? .ddSunDeep : .ddFg3)
                 Text(familyLabel(family))
@@ -150,9 +150,7 @@ struct ConditionsView: View {
     }
 
     private func familyLabel(_ family: String) -> String {
-        family == "none"
-            ? NSLocalizedString("conditions.prem.none", comment: "premenstrual: track only, no underlying condition")
-            : NSLocalizedString("pme.condition.\(family)", comment: "premenstrual underlying-condition family")
+        NSLocalizedString("pme.condition.\(family)", comment: "premenstrual underlying-condition family")
     }
 
     private func toggle(_ condition: ConditionInfo) {
@@ -171,12 +169,10 @@ struct ConditionsView: View {
             return
         }
         if on {
-            let selection = premSelection ?? EncryptedStore.premenstrualTrackOnly
-            premSelection = selection
-            store.setPremenstrual(selection)
+            store.setPremenstrual(enabled: true, families: premFamilies)
         } else {
-            premSelection = nil
-            store.setPremenstrual(nil)
+            premFamilies = []
+            store.setPremenstrual(enabled: false, families: [])
         }
     }
 
@@ -187,6 +183,6 @@ struct ConditionsView: View {
             ids.insert(moduleId)
         }
         enabled = ids
-        premSelection = store.premenstrualSelection()
+        premFamilies = store.premenstrualFamilies()
     }
 }

@@ -11,7 +11,11 @@ import SwiftUI
 /// better state reads green — 5 ("Great"/"High") green, 1 ("Very low"/"Drained")
 /// eggplant — matching every other rating spectrum in the app.
 struct MoodLogView: View {
-    let onCancel: () -> Void
+    // The leading button adapts to context: `onCancel` for the editable sheet,
+    // `onSkip` for the skippable launch gate ("Not today"), or neither (no leading
+    // button) when an entry is required — the first-run gate.
+    let onSkip: (() -> Void)?
+    let onCancel: (() -> Void)?
     let onSave: (MoodEntryDraft) -> Void
 
     @State private var mood: Int?
@@ -20,7 +24,13 @@ struct MoodLogView: View {
 
     private let today = Date()
 
-    init(initial: MoodEntryDraft?, onCancel: @escaping () -> Void, onSave: @escaping (MoodEntryDraft) -> Void) {
+    init(
+        initial: MoodEntryDraft?,
+        onSkip: (() -> Void)? = nil,
+        onCancel: (() -> Void)? = nil,
+        onSave: @escaping (MoodEntryDraft) -> Void
+    ) {
+        self.onSkip = onSkip
         self.onCancel = onCancel
         self.onSave = onSave
         _mood = State(initialValue: initial?.mood)
@@ -33,7 +43,7 @@ struct MoodLogView: View {
     var body: some View {
         VStack(spacing: 0) {
             DDNav(titleKey: "mood.title") {
-                DDNavButton(titleKey: "common.cancel", action: onCancel)
+                leadingButton
             } trailing: {
                 DDNavButton(titleKey: "common.save", isEnabled: isComplete) {
                     if let mood, let energy {
@@ -52,6 +62,16 @@ struct MoodLogView: View {
             }
         }
         .background(Color.ddLinen.ignoresSafeArea())
+    }
+
+    @ViewBuilder private var leadingButton: some View {
+        if let onCancel {
+            DDNavButton(titleKey: "common.cancel", action: onCancel)
+        } else if let onSkip {
+            DDNavButton(titleKey: "mood.skip", action: onSkip)
+        } else {
+            EmptyView()
+        }
     }
 
     private var header: some View {

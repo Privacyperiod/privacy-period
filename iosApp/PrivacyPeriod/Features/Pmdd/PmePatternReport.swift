@@ -55,7 +55,12 @@ enum PmePatternReport {
         return String(format: "%.1f", mean.doubleValue)
     }
 
-    private static func conditionText(_ id: String) -> String {
+    // The config may hold several comma-separated families (comorbidity is common).
+    private static func conditionText(_ config: String) -> String {
+        config.split(separator: ",").map { familyText(String($0)) }.joined(separator: ", ")
+    }
+
+    private static func familyText(_ id: String) -> String {
         switch id {
         case "depression": return "Depressive disorder"
         case "bipolar": return "Bipolar disorder"
