@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State private var showingDeleteConfirm = false
     @State private var deleted = false
     @State private var seeded = false
+    @State private var showingCredits = false
 
     private var appVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
@@ -42,6 +43,9 @@ struct SettingsView: View {
             }
         }
         .background(Color.ddLinen.ignoresSafeArea())
+        .sheet(isPresented: $showingCredits) {
+            CreditsView { showingCredits = false }
+        }
         .alert("settings.delete.confirm.title", isPresented: $showingDeleteConfirm) {
             Button("common.cancel", role: .cancel) {}
             Button("settings.delete.confirm.action", role: .destructive) {
@@ -116,6 +120,15 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
             }
+            Button { showingCredits = true } label: {
+                row(
+                    icon: "heart",
+                    titleKey: "settings.credits",
+                    helpKey: "settings.credits.help",
+                    tint: .ddPlumDeep
+                )
+            }
+            .buttonStyle(.plain)
             Text(String(format: NSLocalizedString("settings.version", comment: "app version"), appVersion))
                 .font(.ddSans(14))
                 .foregroundColor(.ddFg3)

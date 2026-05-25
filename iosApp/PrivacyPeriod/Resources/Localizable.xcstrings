@@ -2,6 +2,54 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "settings.credits" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Clinical research" } }
+      }
+    },
+    "settings.credits.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The published research Privacy Period's screens are built on." } }
+      }
+    },
+    "credits.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Clinical research" } }
+      }
+    },
+    "credits.intro" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period's clinical screens are built on published research. Each instrument below defines what a screen tracks; full citations and conformance reports are in the provenance registry." } }
+      }
+    },
+    "credits.section.research" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Clinical research & instruments" } }
+      }
+    },
+    "credits.section.opensource" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open source" } }
+      }
+    },
+    "credits.registry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Full citations: clinical provenance registry" } }
+      }
+    },
+    "credits.repo_license" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period is free and open source under the AGPL-3.0 license." } }
+      }
+    },
     "hmb.flow.add_another" : {
       "extractionState" : "manual",
       "localizations" : {
