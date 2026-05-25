@@ -94,8 +94,21 @@ struct SettingsView: View {
     }
 
     private var aboutSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             sectionHeader("settings.section.about")
+            // The repository is public so anyone can audit the privacy and
+            // encryption claims — "the code is the privacy policy".
+            if let repoURL = URL(string: "https://github.com/Privacyperiod/privacy-period") {
+                Link(destination: repoURL) {
+                    row(
+                        icon: "eye",
+                        titleKey: "settings.source",
+                        helpKey: "settings.source.help",
+                        tint: .ddPlumDeep
+                    )
+                }
+                .buttonStyle(.plain)
+            }
             Text(String(format: NSLocalizedString("settings.version", comment: "app version"), appVersion))
                 .font(.ddSans(14))
                 .foregroundColor(.ddFg3)

@@ -7,6 +7,7 @@ CLAUDE.md
 
 # Kotlin / Gradle / KMP
 .gradle/
+.kotlin/
 build/
 local.properties
 captures/

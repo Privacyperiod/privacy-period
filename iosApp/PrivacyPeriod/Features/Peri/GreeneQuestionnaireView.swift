@@ -44,6 +44,9 @@ struct GreeneQuestionnaireView: View {
             } trailing: {
                 DDNavButton(titleKey: "common.save", isEnabled: isComplete) { onSave(responses) }
             }
+            // The rating scale stays pinned below the nav so its meaning is visible
+            // while scrolling the 21 items, instead of scrolling away with the intro.
+            legendBar
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     disclaimer
@@ -51,7 +54,6 @@ struct GreeneQuestionnaireView: View {
                         .font(.ddSans(14))
                         .foregroundColor(.ddFg2)
                         .fixedSize(horizontal: false, vertical: true)
-                    legend
                     ForEach(sections) { section in
                         VStack(alignment: .leading, spacing: 14) {
                             sectionHeader(section.header)
@@ -78,11 +80,21 @@ struct GreeneQuestionnaireView: View {
         .background(RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddPlumDeep.opacity(0.08)))
     }
 
-    private var legend: some View {
+    // The pinned scale key. Kept to one line — it shrinks a touch on the narrowest
+    // devices (minimumScaleFactor) rather than wrapping or using a tiny base size.
+    private var legendBar: some View {
         Text("greene.legend")
-            .font(.ddMono(11))
-            .foregroundColor(.ddFg3)
-            .fixedSize(horizontal: false, vertical: true)
+            .font(.ddMono(12))
+            .foregroundColor(.ddFg2)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(Color.ddLinenDeep.opacity(0.6))
+            .overlay(alignment: .bottom) {
+                Rectangle().fill(Color.ddSand).frame(height: 1)
+            }
     }
 
     private func itemRow(_ item: Int) -> some View {

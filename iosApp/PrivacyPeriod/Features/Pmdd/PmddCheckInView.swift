@@ -15,6 +15,15 @@ struct PmddCheckInView: View {
     let onSave: ([Int: Int]) -> Void
 
     @State private var scores: [Int: Int] = [:]
+    @State private var definitionTarget: DefinitionTarget?
+
+    /// An item the user tapped to see its definition. `symptomId` selects the
+    /// (licensed) official definition; `nameKey` is the on-screen item label.
+    private struct DefinitionTarget: Identifiable {
+        let symptomId: String
+        let nameKey: String
+        var id: String { symptomId }
+    }
 
     private let today = Date()
 
@@ -35,6 +44,9 @@ struct PmddCheckInView: View {
                 // All categories must be answered before the check-in can be saved.
                 DDNavButton(titleKey: "common.save", isEnabled: isComplete) { onSave(scores) }
             }
+            // The 1–6 scale key stays pinned below the nav so its meaning is always
+            // visible across the 24 items, replacing a per-selector label on each row.
+            legendBar
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     disclaimer
@@ -47,6 +59,34 @@ struct PmddCheckInView: View {
             }
         }
         .background(Color.ddLinen.ignoresSafeArea())
+        .sheet(item: $definitionTarget) { target in
+            SymptomDefinitionSheet(
+                symptomId: target.symptomId,
+                nameKey: target.nameKey,
+                onClose: { definitionTarget = nil }
+            )
+        }
+    }
+
+    /// A tappable item label that opens the definition sheet, so a clinician (or
+    /// user) can read what a DRSP item means. Mirrors the PME check-in.
+    private func definitionTitle(_ nameKey: String, symptomId: String) -> some View {
+        Button {
+            definitionTarget = DefinitionTarget(symptomId: symptomId, nameKey: nameKey)
+        } label: {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(NSLocalizedString(nameKey, comment: "screening item name"))
+                    .font(.ddSans(15))
+                    .foregroundColor(.ddPlumDeep)
+                    .multilineTextAlignment(.leading)
+                Image(systemName: "info.circle")
+                    .font(.system(size: 13))
+                    .foregroundColor(.ddFg3)
+                Spacer(minLength: 0)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint(Text("definition.hint"))
     }
 
     private var disclaimer: some View {
@@ -92,12 +132,29 @@ struct PmddCheckInView: View {
         }
     }
 
+    // The pinned 1–6 scale key. Kept to one line — it shrinks slightly on the
+    // narrowest devices rather than wrapping or using a tiny base size.
+    private var legendBar: some View {
+        Text("pmdd.legend")
+            .font(.ddMono(11))
+            .foregroundColor(.ddFg2)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(Color.ddLinenDeep.opacity(0.6))
+            .overlay(alignment: .bottom) {
+                Rectangle().fill(Color.ddSand).frame(height: 1)
+            }
+    }
+
     private func itemRow(_ item: Int) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(itemLabel(item))
-                .font(.ddSans(15))
-                .foregroundColor(.ddPlumDeep)
-            DDLikert(selection: binding(for: item))
+            // Tappable label with the info button; the severity anchors live in the
+            // pinned key above rather than under every selector.
+            definitionTitle("pmdd.item.\(item)", symptomId: "drsp_\(item)")
+            DDLikert(selection: binding(for: item), showLabels: false)
         }
     }
 
@@ -106,12 +163,5 @@ struct PmddCheckInView: View {
             get: { scores[item] },
             set: { newValue in scores[item] = newValue }
         )
-    }
-
-    // The DRSP item labels are looked up by a dynamic key, so resolve them with
-    // NSLocalizedString rather than an interpolated LocalizedStringKey (which
-    // would be treated as a format string, not a key).
-    private func itemLabel(_ item: Int) -> String {
-        NSLocalizedString("pmdd.item.\(item)", comment: "DRSP item label")
     }
 }

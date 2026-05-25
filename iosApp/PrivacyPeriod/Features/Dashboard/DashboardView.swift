@@ -90,7 +90,7 @@ struct DashboardView: View {
         }, content: {
             PmddResultsView(
                 result: summaryResult,
-                onExplorePme: (PmeFeature.shared.isEnabled && !pmeEnrolled)
+                onExplorePme: (ClinicalGate.pme && !pmeEnrolled)
                     ? { pendingPmeEnroll = true; showingSummary = false }
                     : nil,
                 onDone: { showingSummary = false }
@@ -225,7 +225,7 @@ private extension DashboardView {
     }
 
     @ViewBuilder var clinicalEntries: some View {
-        if PmddFeature.shared.isEnabled {
+        if ClinicalGate.pmdd {
             Button("pmdd.checkin.title") { showingCheckIn = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("pmdd.results.title") {
@@ -234,11 +234,11 @@ private extension DashboardView {
             }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if EndoFeature.shared.isEnabled {
+        if ClinicalGate.endometriosis {
             Button("endo.entry") { showingEndoScreen = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         }
-        if HmbFeature.shared.isEnabled {
+        if ClinicalGate.hmb {
             Button("hmb.flow.entry") { showingFlowLog = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("hmb.results.entry") {
@@ -247,7 +247,7 @@ private extension DashboardView {
             }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if PmeFeature.shared.isEnabled {
+        if ClinicalGate.pme {
             if pmeEnrolled {
                 Button("pme.checkin.entry") { showingPmeCheckIn = true }
                     .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
@@ -261,7 +261,7 @@ private extension DashboardView {
                     .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             }
         }
-        if PeriFeature.shared.isEnabled {
+        if ClinicalGate.perimenopause {
             Button("greene.entry") { showingGreene = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("greene.results.entry") {

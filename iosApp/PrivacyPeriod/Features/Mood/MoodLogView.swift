@@ -6,8 +6,10 @@ import SwiftUI
 /// The daily mood & energy check-in — a quick 1–5 rating of each, plus an optional
 /// note. One entry per day; opening it again pre-fills today's values for editing.
 ///
-/// This is non-clinical wellbeing tracking (it never feeds clinical scoring), so
-/// the scale runs low → high with a single accent rather than the severity ramp.
+/// This is non-clinical wellbeing tracking (it never feeds clinical scoring). The
+/// selectors reuse the shared green→eggplant spectrum (`DDLikert`), flipped so the
+/// better state reads green — 5 ("Great"/"High") green, 1 ("Very low"/"Drained")
+/// eggplant — matching every other rating spectrum in the app.
 struct MoodLogView: View {
     let onCancel: () -> Void
     let onSave: (MoodEntryDraft) -> Void
@@ -17,7 +19,6 @@ struct MoodLogView: View {
     @State private var notes: String
 
     private let today = Date()
-    private let scale = Array(1...5)
 
     init(initial: MoodEntryDraft?, onCancel: @escaping () -> Void, onSave: @escaping (MoodEntryDraft) -> Void) {
         self.onCancel = onCancel
@@ -74,35 +75,16 @@ struct MoodLogView: View {
                 .font(.ddSans(13, .semibold))
                 .foregroundColor(.ddFg3)
                 .textCase(.uppercase)
-            HStack(alignment: .top, spacing: 8) {
-                ForEach(scale, id: \.self) { value in
-                    cell(value, labelPrefix: labelPrefix, selection: selection)
-                }
-            }
+            // Reuse the shared spectrum selector, flipped so the better state is
+            // green (highIsPositive): 5 = "Great"/"High" green, 1 = "Very low"/
+            // "Drained" eggplant.
+            DDLikert(
+                selection: selection,
+                range: 1...5,
+                labelKeyPrefix: labelPrefix,
+                highIsPositive: true
+            )
         }
-    }
-
-    private func cell(_ value: Int, labelPrefix: String, selection: Binding<Int?>) -> some View {
-        let isSelected = selection.wrappedValue == value
-        return Button {
-            selection.wrappedValue = value
-        } label: {
-            VStack(spacing: 5) {
-                Text("\(value)")
-                    .font(.ddMono(14))
-                    .foregroundColor(isSelected ? .ddLinen : .ddPlumDeep)
-                    .frame(width: 38, height: 38)
-                    .background(Circle().fill(isSelected ? Color.ddSun : Color.ddSun.opacity(0.12)))
-                    .overlay(Circle().strokeBorder(Color.ddSun.opacity(isSelected ? 1 : 0.3), lineWidth: 1))
-                Text(NSLocalizedString("\(labelPrefix)\(value)", comment: "mood/energy level"))
-                    .font(.ddMono(9))
-                    .foregroundColor(isSelected ? .ddPlumDeep : .ddFg3)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.plain)
     }
 
     private var notesSection: some View {
