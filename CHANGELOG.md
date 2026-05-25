@@ -164,6 +164,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   this cycle" completeness line and an inviting empty state. It shows the user's
   data, never a score, streak, or judgement. The demo seed now places the in-progress
   cycle in the late luteal phase so the rise is visible immediately.
+- Clinician-readiness on the home (iOS): a "Toward a clinician review" card shows
+  progress toward the two tracked cycles C-PASS needs to read the premenstrual
+  pattern — a pip per scored cycle and a factual "N of 2 cycles tracked" line, or a
+  "Ready to share" state once met. A clinical capability unlocking, stated without
+  pressure (no streaks). Shown when a premenstrual condition is tracked.
 
 ### Security
 

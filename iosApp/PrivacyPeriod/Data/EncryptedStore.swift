@@ -29,6 +29,14 @@ struct CycleSnapshot {
     let dayOfCycle: Int
 }
 
+/// Progress toward a clinician-ready premenstrual analysis: how many tracked cycles
+/// have enough daily data to be scored, against the number the instrument needs.
+struct PremenstrualReadiness {
+    let scoredCycles: Int
+    let requiredCycles: Int
+    var isReady: Bool { scoredCycles >= requiredCycles }
+}
+
 /// The answers to the endometriosis screening questionnaire, before scoring.
 /// VAS values are 0–10; 0 reads as "not bothered" (below every threshold).
 struct EndoScreenDraft {
