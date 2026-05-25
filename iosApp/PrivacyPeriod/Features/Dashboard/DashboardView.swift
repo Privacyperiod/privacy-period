@@ -19,11 +19,14 @@ struct DashboardView: View {
     @State private var showingHmbSummary = false
     @State private var showingPmeCheckIn = false
     @State private var showingPmeSummary = false
-    @State private var showingPmeEnroll = false
-    @State private var pmeEnrolled = false
-    // Set when the user taps the PME hint in the PMDD results; opens enrollment
-    // once the results sheet has dismissed (avoids overlapping sheet presentation).
-    @State private var pendingPmeEnroll = false
+    @State private var showingConditions = false
+    // The set of enrolled module ids; drives which clinical entries appear. Refreshed
+    // on appear and whenever the Conditions sheet closes.
+    @State private var enrolled: Set<String> = []
+    // Set when the user taps the "add an underlying condition" hint in the PMDD
+    // results; opens the Conditions sheet once the results sheet has dismissed
+    // (avoids overlapping sheet presentation).
+    @State private var pendingConditions = false
     @State private var showingGreene = false
     @State private var showingGreeneSummary = false
     @State private var summaryResult: CpassResult?
@@ -83,15 +86,15 @@ struct DashboardView: View {
             )
         }
         .sheet(isPresented: $showingSummary, onDismiss: {
-            if pendingPmeEnroll {
-                pendingPmeEnroll = false
-                showingPmeEnroll = true
+            if pendingConditions {
+                pendingConditions = false
+                showingConditions = true
             }
         }, content: {
             PmddResultsView(
                 result: summaryResult,
-                onExplorePme: (ClinicalGate.pme && !pmeEnrolled)
-                    ? { pendingPmeEnroll = true; showingSummary = false }
+                onExplorePme: enrolled.contains(EncryptedStore.pmddModuleId)
+                    ? { pendingConditions = true; showingSummary = false }
                     : nil,
                 onDone: { showingSummary = false }
             )
@@ -124,16 +127,9 @@ struct DashboardView: View {
         .sheet(isPresented: $showingPmeSummary) {
             PmeResultsView(result: pmeResult) { showingPmeSummary = false }
         }
-        .sheet(isPresented: $showingPmeEnroll) {
-            PmeEnrollmentView(
-                onCancel: { showingPmeEnroll = false },
-                onEnroll: { condition in
-                    store.enrollPme(condition: condition)
-                    pmeEnrolled = true
-                    showingPmeEnroll = false
-                }
-            )
-        }
+        .sheet(isPresented: $showingConditions, onDismiss: { enrolled = store.enabledModuleIds() }, content: {
+            ConditionsView(store: store, onClose: { showingConditions = false })
+        })
         .sheet(isPresented: $showingGreene) {
             GreeneQuestionnaireView(
                 onCancel: { showingGreene = false },
@@ -146,7 +142,7 @@ struct DashboardView: View {
         .sheet(isPresented: $showingGreeneSummary) {
             GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
         }
-        .onAppear { pmeEnrolled = store.isPmeEnrolled }
+        .onAppear { enrolled = store.enabledModuleIds() }
     }
 }
 
@@ -225,7 +221,10 @@ private extension DashboardView {
     }
 
     @ViewBuilder var clinicalEntries: some View {
-        if ClinicalGate.pmdd {
+        // The doorway to choosing what you collect data on; drives everything below.
+        Button("conditions.entry") { showingConditions = true }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+        if enrolled.contains(EncryptedStore.pmddModuleId) {
             Button("pmdd.checkin.title") { showingCheckIn = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("pmdd.results.title") {
@@ -234,11 +233,16 @@ private extension DashboardView {
             }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if ClinicalGate.endometriosis {
-            Button("endo.entry") { showingEndoScreen = true }
+        if enrolled.contains(EncryptedStore.pmeModuleId) {
+            Button("pme.checkin.entry") { showingPmeCheckIn = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            Button("pme.results.entry") {
+                pmeResult = store.pmePattern()
+                showingPmeSummary = true
+            }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if ClinicalGate.hmb {
+        if enrolled.contains("hmb") {
             Button("hmb.flow.entry") { showingFlowLog = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("hmb.results.entry") {
@@ -247,21 +251,7 @@ private extension DashboardView {
             }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if ClinicalGate.pme {
-            if pmeEnrolled {
-                Button("pme.checkin.entry") { showingPmeCheckIn = true }
-                    .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
-                Button("pme.results.entry") {
-                    pmeResult = store.pmePattern()
-                    showingPmeSummary = true
-                }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
-            } else {
-                Button("pme.enroll.entry") { showingPmeEnroll = true }
-                    .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
-            }
-        }
-        if ClinicalGate.perimenopause {
+        if enrolled.contains("perimenopause") {
             Button("greene.entry") { showingGreene = true }
                 .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
             Button("greene.results.entry") {
@@ -269,6 +259,10 @@ private extension DashboardView {
                 showingGreeneSummary = true
             }
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+        }
+        if enrolled.contains("endometriosis") {
+            Button("endo.entry") { showingEndoScreen = true }
+                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
         }
     }
 
