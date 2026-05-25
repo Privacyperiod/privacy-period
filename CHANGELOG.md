@@ -179,6 +179,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   footer is now a horizontal progress bar that fills toward the ~two cycles of data a
   clinician needs (completing only once two cycles actually score). The readiness
   pips are removed.
+- TestFlight/alpha readiness: the export-compliance declaration
+  (`ITSAppUsesNonExemptEncryption = false`, standard local-data encryption) is set and
+  the app version is single-sourced from the build settings; added `TESTING.md` with
+  the TestFlight and direct-install steps.
 
 ### Security
 
