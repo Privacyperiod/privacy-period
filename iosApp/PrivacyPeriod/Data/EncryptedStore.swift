@@ -27,6 +27,19 @@ struct FlowEventDraft {
     let measuredMl: Double?
 }
 
+/// The PME pattern result paired with the readiness needed to present it: the
+/// PMDD-vs-PME `classification`, how many cycles were scorable, and whether that
+/// meets the module's minimum.
+struct PmePatternResult {
+    let classification: PatternClassification
+    let scoredCycles: Int
+    let isReady: Bool
+    /// The user's self-reported underlying-condition family id, if enrolled.
+    let condition: String?
+
+    var pattern: CyclicityPattern { classification.pattern }
+}
+
 /// The app's gateway to the encrypted on-device database.
 ///
 /// The database is opened with SQLCipher, keyed from the iOS Keychain. Opening
@@ -149,6 +162,86 @@ final class EncryptedStore: ObservableObject {
         guard let repository else { return nil }
         let result = HmbModule.shared.runScoring(history: repository.history())
         return (result as? HmbScoringResult)?.cycles
+    }
+
+    /// Computes the PMDD-vs-PME pattern through the PME module over the universal
+    /// layer, paired with its readiness, or nil when the store is unavailable.
+    func pmePattern() -> PmePatternResult? {
+        guard let repository else { return nil }
+        let history = repository.history()
+        let readiness = PmeModule.shared.checkReadiness(history: history)
+        guard let scoring = PmeModule.shared.runScoring(history: history) as? PmeScoringResult else {
+            return nil
+        }
+        return PmePatternResult(
+            classification: scoring.classification,
+            scoredCycles: Int(readiness.scoredCycles),
+            isReady: readiness.isReady,
+            condition: repository.enrollment(moduleId: Self.pmeModuleId)?.config
+        )
+    }
+
+    /// Enrolls the user in the PME module with their self-reported underlying-
+    /// condition family. No-op when the store is unavailable.
+    func enrollPme(condition: String) {
+        guard let repository else { return }
+        repository.enroll(
+            moduleId: Self.pmeModuleId,
+            config: condition,
+            now: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+    }
+
+    /// The user's self-reported PME condition family, or nil if not enrolled.
+    func pmeCondition() -> String? {
+        repository?.enrollment(moduleId: Self.pmeModuleId)?.config
+    }
+
+    /// Whether the user has enrolled in the PME module.
+    var isPmeEnrolled: Bool { repository?.enrollment(moduleId: Self.pmeModuleId) != nil }
+
+    private static let pmeModuleId = "pme"
+
+    /// Persists a PME (MAC-PMSS) daily check-in: the DRSP items and the rated mood
+    /// items as same-day symptom entries. A "prefer not to answer" suicidal-ideation
+    /// response writes no entry (it is excluded from scoring either way). No-op when
+    /// the store is unavailable.
+    func savePmeCheckIn(date: Date, draft: PmeCheckInDraft) {
+        guard let repository else { return }
+        let dateString = Self.isoDate(date)
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        for (item, score) in draft.drsp {
+            writeSymptom(repository, "drsp_\(item)", Double(score), dateString, now)
+        }
+        for (symptomId, score) in draft.mood {
+            writeSymptom(repository, symptomId, Double(score), dateString, now)
+        }
+        if let siRating = draft.siRating {
+            writeSymptom(repository, "macpmss_suicidal_ideation", Double(siRating), dateString, now)
+        }
+    }
+
+    private func writeSymptom(
+        _ repository: ClinicalRepository,
+        _ symptomId: String,
+        _ severity: Double,
+        _ date: String,
+        _ createdAt: Int64
+    ) {
+        repository.saveSymptomEntry(
+            entry: SymptomEntry(
+                id: UUID().uuidString,
+                symptomId: symptomId,
+                date: date,
+                severity: severity,
+                cycleId: nil,
+                cyclePhase: nil,
+                cycleDay: nil,
+                sameDayLogged: true,
+                notes: nil,
+                createdAt: createdAt
+            )
+        )
     }
 
     /// Generates and stores a random, device-local identifier on first open.
