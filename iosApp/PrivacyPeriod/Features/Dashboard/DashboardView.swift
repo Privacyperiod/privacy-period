@@ -9,30 +9,33 @@ import SwiftUI
 /// Clinical-module entry points appear here only when their feature is un-gated.
 struct DashboardView: View {
     @ObservedObject var store: EncryptedStore
-    @State private var showingCycleLog = false
-    @State private var showingMoodLog = false
-    @State private var showingSettings = false
-    @State private var showingCheckIn = false
-    @State private var showingSummary = false
-    @State private var showingEndoScreen = false
-    @State private var showingFlowLog = false
-    @State private var showingHmbSummary = false
-    @State private var showingPmeCheckIn = false
-    @State private var showingPmeSummary = false
-    @State private var showingConditions = false
+    @State var showingCycleLog = false
+    @State var showingMoodLog = false
+    @State var showingSettings = false
+    @State var showingCheckIn = false
+    @State var showingSummary = false
+    @State var showingEndoScreen = false
+    @State var showingFlowLog = false
+    @State var showingHmbSummary = false
+    @State var showingPmeCheckIn = false
+    @State var showingPmeSummary = false
+    @State var showingConditions = false
     // The set of enrolled module ids; drives which clinical entries appear. Refreshed
     // on appear and whenever the Conditions sheet closes.
-    @State private var enrolled: Set<String> = []
+    @State var enrolled: Set<String> = []
     // Set when the user taps the "add an underlying condition" hint in the PMDD
     // results; opens the Conditions sheet once the results sheet has dismissed
     // (avoids overlapping sheet presentation).
-    @State private var pendingConditions = false
-    @State private var showingGreene = false
-    @State private var showingGreeneSummary = false
-    @State private var summaryResult: CpassResult?
-    @State private var pmeResult: PmePatternResult?
-    @State private var hmbCycles: [HmbCycleScore]?
-    @State private var greeneCompletions: [GreeneCompletionScore]?
+    @State var pendingConditions = false
+    @State var showingGreene = false
+    @State var showingGreeneSummary = false
+    // Whether the monthly perimenopause questionnaire is still due this month; when
+    // true it is promoted to a button under "Log period" until completed for the month.
+    @State var greeneDueThisMonth = false
+    @State var summaryResult: CpassResult?
+    @State var pmeResult: PmePatternResult?
+    @State var hmbCycles: [HmbCycleScore]?
+    @State var greeneCompletions: [GreeneCompletionScore]?
 
     var body: some View {
         ZStack {
@@ -45,6 +48,7 @@ struct DashboardView: View {
                     dailyCheckInButton
                     DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                         .padding(.top, 4)
+                    monthlyTasks
                     clinicalEntries
                 }
                 .padding(20)
@@ -129,7 +133,7 @@ struct DashboardView: View {
         .sheet(isPresented: $showingPmeSummary) {
             PmeResultsView(result: pmeResult) { showingPmeSummary = false }
         }
-        .sheet(isPresented: $showingConditions, onDismiss: { enrolled = store.enabledModuleIds() }, content: {
+        .sheet(isPresented: $showingConditions, onDismiss: { refreshState() }, content: {
             ConditionsView(store: store, onClose: { showingConditions = false })
         })
         .sheet(isPresented: $showingGreene) {
@@ -138,219 +142,13 @@ struct DashboardView: View {
                 onSave: { responses in
                     store.saveGreeneCompletion(responses)
                     showingGreene = false
+                    refreshState()
                 }
             )
         }
         .sheet(isPresented: $showingGreeneSummary) {
             GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
         }
-        .onAppear { enrolled = store.enabledModuleIds() }
-    }
-}
-
-private extension DashboardView {
-    var header: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("dashboard.today")
-                    .font(.ddSans(14, .medium))
-                    .foregroundColor(.ddFg3)
-                Text(Date(), format: .dateTime.weekday(.wide).month(.wide).day())
-                    .font(.ddDisplay(28))
-                    .foregroundColor(.ddPlumDeep)
-            }
-            Spacer()
-            Button { showingSettings = true } label: {
-                DDIcon(name: "settings", size: 22).foregroundColor(.ddFg2)
-            }
-            .accessibilityLabel(Text("settings.entry"))
-        }
-    }
-
-    var cycleCard: some View {
-        card {
-            if let snapshot = store.currentCycleSnapshot() {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(format: NSLocalizedString("dashboard.cycle.day", comment: "cycle day"),
-                                snapshot.dayOfCycle))
-                        .font(.ddDisplay(22))
-                        .foregroundColor(.ddPlumDeep)
-                    Text(String(format: NSLocalizedString("dashboard.cycle.since", comment: "period start"),
-                                Self.displayDate(snapshot.startDate)))
-                        .font(.ddSans(14))
-                        .foregroundColor(.ddFg2)
-                }
-            } else {
-                Text("dashboard.cycle.none")
-                    .font(.ddSans(15))
-                    .foregroundColor(.ddFg2)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-    }
-
-    var moodCard: some View {
-        card {
-            if let mood = store.todayMoodEntry() {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("dashboard.mood.today")
-                            .font(.ddSans(13, .semibold))
-                            .foregroundColor(.ddFg3)
-                            .textCase(.uppercase)
-                        Text(String(format: NSLocalizedString("dashboard.mood.summary", comment: "mood summary"),
-                                    moodLabel(mood.mood), energyLabel(mood.energy)))
-                            .font(.ddSans(15))
-                            .foregroundColor(.ddPlumDeep)
-                    }
-                    Spacer()
-                    Button("dashboard.mood.edit") { showingMoodLog = true }
-                        .font(.ddSans(14, .medium))
-                        .foregroundColor(.ddSun)
-                }
-            } else {
-                HStack {
-                    Text("dashboard.mood.prompt")
-                        .font(.ddSans(15))
-                        .foregroundColor(.ddFg2)
-                    Spacer()
-                    Button("mood.entry") { showingMoodLog = true }
-                        .font(.ddSans(14, .medium))
-                        .foregroundColor(.ddSun)
-                }
-            }
-        }
-    }
-
-    // The daily premenstrual log, raised to a prominent top-level action (like "Log
-    // period") because it is the main daily task: the PME mood & symptom check-in when
-    // a underlying condition is recorded, otherwise the DRSP daily check-in.
-    @ViewBuilder var dailyCheckInButton: some View {
-        if enrolled.contains(EncryptedStore.pmeModuleId) {
-            DDPrimaryButton(titleKey: "pme.checkin.entry") { showingPmeCheckIn = true }
-                .padding(.top, 4)
-        } else if enrolled.contains(EncryptedStore.pmddModuleId) {
-            DDPrimaryButton(titleKey: "pmdd.checkin.title") { showingCheckIn = true }
-                .padding(.top, 4)
-        }
-    }
-
-    @ViewBuilder var clinicalEntries: some View {
-        if hasTrackingEntries {
-            DDCollapsibleSection(titleKey: "home.section.tracking") { trackingRows }
-                .padding(.top, 8)
-        }
-        if enrolled.contains("endometriosis") {
-            DDCollapsibleSection(titleKey: "home.section.screening") {
-                trackingLink("endo.entry", cadenceKey: "condition.cadence.occasional") {
-                    showingEndoScreen = true
-                }
-            }
-            .padding(.top, 4)
-        }
-        // The doorway to choosing what you collect data on; drives everything above.
-        Button("conditions.entry") { showingConditions = true }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 12)
-    }
-
-    var hasTrackingEntries: Bool {
-        enrolled.contains(EncryptedStore.pmddModuleId)
-            || enrolled.contains(EncryptedStore.pmeModuleId)
-            || enrolled.contains("hmb")
-            || enrolled.contains("perimenopause")
-    }
-
-    // The ongoing tracking tasks (cadence-tagged logging actions) and the result
-    // views, grouped under the Tracking section. The daily premenstrual log itself is
-    // a top-level button (`dailyCheckInButton`), not repeated here.
-    @ViewBuilder var trackingRows: some View {
-        if enrolled.contains("hmb") {
-            trackingLink("hmb.flow.entry", cadenceKey: "condition.cadence.perevent") {
-                showingFlowLog = true
-            }
-        }
-        if enrolled.contains("perimenopause") {
-            trackingLink("greene.entry", cadenceKey: "condition.cadence.monthly") {
-                showingGreene = true
-            }
-        }
-        if enrolled.contains(EncryptedStore.pmeModuleId) {
-            trackingLink("pme.results.entry") {
-                pmeResult = store.pmePattern()
-                showingPmeSummary = true
-            }
-        } else if enrolled.contains(EncryptedStore.pmddModuleId) {
-            trackingLink("pmdd.results.title") {
-                summaryResult = store.cpassResult()
-                showingSummary = true
-            }
-        }
-        if enrolled.contains("hmb") {
-            trackingLink("hmb.results.entry") {
-                hmbCycles = store.hmbCycleScores()
-                showingHmbSummary = true
-            }
-        }
-        if enrolled.contains("perimenopause") {
-            trackingLink("greene.results.entry") {
-                greeneCompletions = store.greeneCompletions()
-                showingGreeneSummary = true
-            }
-        }
-    }
-
-    func trackingLink(
-        _ titleKey: LocalizedStringKey,
-        cadenceKey: LocalizedStringKey? = nil,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
-                Text(titleKey).font(.ddSans(15, .medium)).foregroundColor(.ddSun)
-                Spacer(minLength: 0)
-                if let cadenceKey {
-                    Text(cadenceKey)
-                        .font(.ddMono(10))
-                        .foregroundColor(.ddFg2)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 2)
-                        .background(Capsule().fill(Color.ddLinenDeep.opacity(0.7)))
-                }
-            }
-        }
-        .buttonStyle(.plain)
-    }
-
-    // Demo-only sample-data action; nil (so the Settings button hides) otherwise.
-    var seedAction: (() -> Void)? {
-        #if DEMO
-        return {
-            store.seedSampleData()
-            enrolled = store.enabledModuleIds()
-        }
-        #else
-        return nil
-        #endif
-    }
-
-    func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        content()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(18)
-            .background(RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddLinenDeep.opacity(0.5)))
-    }
-
-    func moodLabel(_ value: Int) -> String { NSLocalizedString("mood.mood.\(value)", comment: "mood level") }
-
-    func energyLabel(_ value: Int) -> String { NSLocalizedString("mood.energy.\(value)", comment: "energy level") }
-
-    static func displayDate(_ iso: String) -> String {
-        let parser = DateFormatter()
-        parser.locale = Locale(identifier: "en_US_POSIX")
-        parser.dateFormat = "yyyy-MM-dd"
-        guard let date = parser.date(from: iso) else { return iso }
-        let out = DateFormatter()
-        out.dateStyle = .medium
-        return out.string(from: date)
+        .onAppear { refreshState() }
     }
 }
