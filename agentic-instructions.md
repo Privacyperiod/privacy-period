@@ -380,7 +380,7 @@ networking is ever added.
 | Document | Purpose |
 |---|---|
 | `privacy-period-project-plan.md` | Phased project plan, milestones, tech stack |
-| `docs/architecture.md` | System design and data flow *(to be created)* |
+| `docs/architecture.md` | System design and data flow |
 | `docs/privacy-model.md` | Detailed privacy guarantees *(to be created)* |
 | `docs/encryption.md` | Encryption implementation details |
 | `docs/clinical-provenance.md` | Instrument → item provenance registry (auditable) |
