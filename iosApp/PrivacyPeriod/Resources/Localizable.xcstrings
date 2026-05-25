@@ -2,6 +2,24 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "pmdd.legend" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "1 None · 2 Minimal · 3 Mild · 4 Moderate · 5 Severe · 6 Extreme" } }
+      }
+    },
+    "settings.source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Source code on GitHub" } }
+      }
+    },
+    "settings.source.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Period is open source. Read the code, verify the privacy and encryption claims, or contribute." } }
+      }
+    },
     "app.name" : {
       "comment" : "The product name. Title Case; not translated.",
       "extractionState" : "manual",

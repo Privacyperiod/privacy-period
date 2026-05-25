@@ -71,6 +71,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rising further (PME), plus ongoing-condition and no-pattern cases. Thresholds
   are the documented starting values pending clinical confirmation; the module is
   gated and never renders a diagnosis.
+- Heavy menstrual bleeding (iOS, gated): a flow-logging form (product, saturation,
+  clots, flooding, or a measured-volume cup/disc reading) and a non-diagnostic
+  per-cycle summary scored with the Pictorial Blood loss Assessment Chart (PBAC) on
+  the universal layer. Behind the `HmbFeature` gate until clinical sign-off.
+- Perimenopause (iOS, gated): the Greene Climacteric Scale — a 21-item questionnaire
+  grouped by domain (anxiety, depression, somatic, vasomotor, sexual) with domain
+  and total scores and a clinician-shareable summary. The scale is permission-free;
+  its rating-scale key stays pinned at the top of the screen while the items scroll.
+  Behind the `PeriFeature` gate.
+- Endometriosis screening (iOS, gated): a short risk questionnaire scored with the
+  published eClinicalMedicine (Chauvet et al., 2021) screening score, reported as a
+  non-diagnostic risk band to share with a clinician, plus a gate scaffold for the
+  separately-licensed EHP-30. Behind the `EndoFeature` gate.
+- Daily mood & energy check-in (iOS): a quick once-a-day rating of overall mood and
+  energy with an optional note — non-clinical wellbeing data, never part of clinical
+  scoring. Both rate on the app's shared green→eggplant spectrum, oriented so the
+  better end ("Great" / "High") reads green.
+- Settings (iOS): the user's control over their own data — export a plain-text copy
+  (share sheet) and permanently delete everything (with confirmation) — plus a
+  privacy note and a link to the open-source repository on GitHub so the privacy and
+  encryption claims can be audited.
+- Dashboard (iOS): the real home screen — today's date, the current cycle day (from
+  the latest logged period; factual, no prediction), today's mood check-in or a
+  prompt to add it, the primary "Log period" action, and entry points to whichever
+  clinical modules are revealed.
+- Demo build configuration (iOS): a third Xcode build configuration ("Demo", a
+  release build carrying a `DEMO` compilation flag) and matching scheme that reveal
+  the gated clinical modules for TestFlight and clinician review through a single
+  `ClinicalGate`, without un-gating the App Store ("Release") build. Each module
+  still ships hidden behind its own feature flag until its own clinical sign-off.
 
 ### Security
 

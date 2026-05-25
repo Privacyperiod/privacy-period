@@ -41,6 +41,13 @@ kotlin {
             version = "~> 4.5"
             linkOnly = true
         }
+        // The iOS app adds a third Xcode configuration, "Demo" (a release build
+        // that reveals the gated clinical modules for TestFlight / clinician
+        // review — see iosApp/project.yml). The cocoapods plugin only maps the
+        // stock Debug/Release names on its own, so tell it Demo links the release
+        // framework; otherwise the sync script fails to pick a build type.
+        xcodeConfigurationToNativeBuildType["Demo"] =
+            org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType.RELEASE
     }
 
     sourceSets {

@@ -11,6 +11,15 @@ options:
     iOS: "16.0"
   createIntermediateGroups: true
 
+# Three build configurations:
+#   Debug   — local development (DEMO on: all clinical modules visible for testing)
+#   Demo    — release-optimised build for TestFlight / clinician review (DEMO on)
+#   Release — App Store build (DEMO off: clinical modules stay gated until sign-off)
+configs:
+  Debug: debug
+  Demo: release
+  Release: release
+
 settings:
   base:
     SWIFT_VERSION: "5.0"
@@ -38,6 +47,13 @@ targets:
         # The shared Kotlin framework and SQLCipher are supplied by CocoaPods
         # (see iosApp/Podfile). The shared pod's own script phase builds the
         # framework via Gradle, so no manual embed step is needed here.
+      configs:
+        # DEMO reveals the gated clinical modules (see ClinicalGate.swift). On for
+        # local dev and the TestFlight Demo build; off for the App Store Release.
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG DEMO
+        Demo:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEMO
     info:
       path: PrivacyPeriod/Info.plist
       properties:
@@ -63,3 +79,13 @@ schemes:
         PrivacyPeriod: all
     run:
       config: Debug
+    archive:
+      config: Release
+  PrivacyPeriod (Demo):
+    build:
+      targets:
+        PrivacyPeriod: all
+    run:
+      config: Demo
+    archive:
+      config: Demo

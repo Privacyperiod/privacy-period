@@ -16,7 +16,23 @@ struct DDLikert: View {
     /// Defaults to the DRSP severity anchors; pass another set (e.g. functional
     /// impairment: none → unable) where a different construct needs its own words.
     var labelKeyPrefix: String = "pmdd.level."
+    /// Whether a higher number is the *better* state, which flips the gradient so
+    /// the top of the scale is green and the bottom eggplant. Severity scales (the
+    /// default) leave this off: low is green, high is eggplant. Wellbeing scales
+    /// (mood, energy — where 5 is "Great") set it so the good end reads green.
+    var highIsPositive: Bool = false
+    /// Whether to show the per-level anchor word beneath each selector. Turn off
+    /// where a single pinned scale key carries the meaning instead (so a long list
+    /// of items isn't repeated under every row). The number and the color remain;
+    /// the accessibility label still reads the full anchor either way.
+    var showLabels: Bool = true
     private var values: [Int] { Array(range) }
+
+    /// Maps a value to its position on the green→eggplant ramp. Identity for
+    /// severity scales; mirrored within the range when a higher number is better.
+    private func colorPosition(_ value: Int) -> Int {
+        highIsPositive ? (range.lowerBound + range.upperBound - value) : value
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 4) {
@@ -28,14 +44,15 @@ struct DDLikert: View {
 
     private func cell(_ value: Int) -> some View {
         let isSelected = selection == value
-        let color = Self.severityColor(value)
+        let position = colorPosition(value)
+        let color = Self.severityColor(position)
         return Button {
             selection = value
         } label: {
             VStack(spacing: 5) {
                 Text("\(value)")
                     .font(.ddMono(14))
-                    .foregroundColor(isSelected ? Self.selectedTextColor(value) : color)
+                    .foregroundColor(isSelected ? Self.selectedTextColor(position) : color)
                     .frame(width: 38, height: 38)
                     .background(Circle().fill(isSelected ? color : color.opacity(0.16)))
                     .overlay(
@@ -44,11 +61,13 @@ struct DDLikert: View {
                             lineWidth: isSelected ? 2 : 1
                         )
                     )
-                Text(levelLabel(value))
-                    .font(.ddMono(9))
-                    .foregroundColor(isSelected ? color : .ddFg3)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+                if showLabels {
+                    Text(levelLabel(value))
+                        .font(.ddMono(9))
+                        .foregroundColor(isSelected ? color : .ddFg3)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                }
             }
             .frame(maxWidth: .infinity)
         }
@@ -71,9 +90,10 @@ struct DDLikert: View {
     }
 
     // Dark text reads better on the lighter fills (green through red-orange);
-    // white only on the genuinely dark ones (red, eggplant).
-    private static func selectedTextColor(_ value: Int) -> Color {
-        value <= 4 ? .ddPlumDeep : .white
+    // white only on the genuinely dark ones (red, eggplant). Keyed on the ramp
+    // position, so it stays correct when the gradient is flipped.
+    private static func selectedTextColor(_ position: Int) -> Color {
+        position <= 4 ? .ddPlumDeep : .white
     }
 
     private func levelLabel(_ value: Int) -> String {
