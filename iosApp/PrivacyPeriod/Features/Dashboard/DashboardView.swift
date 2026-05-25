@@ -236,45 +236,89 @@ private extension DashboardView {
     }
 
     @ViewBuilder var clinicalEntries: some View {
-        // The doorway to choosing what you collect data on; drives everything below.
-        Button("conditions.entry") { showingConditions = true }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
-        if enrolled.contains(EncryptedStore.pmddModuleId) {
-            Button("pmdd.results.title") {
-                summaryResult = store.cpassResult()
-                showingSummary = true
+        if hasTrackingEntries {
+            DDCollapsibleSection(titleKey: "home.section.tracking") { trackingRows }
+                .padding(.top, 8)
+        }
+        if enrolled.contains("endometriosis") {
+            DDCollapsibleSection(titleKey: "home.section.screening") {
+                trackingLink("endo.entry", cadenceKey: "condition.cadence.occasional") {
+                    showingEndoScreen = true
+                }
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+            .padding(.top, 4)
+        }
+        // The doorway to choosing what you collect data on; drives everything above.
+        Button("conditions.entry") { showingConditions = true }
+            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 12)
+    }
+
+    var hasTrackingEntries: Bool {
+        enrolled.contains(EncryptedStore.pmddModuleId)
+            || enrolled.contains(EncryptedStore.pmeModuleId)
+            || enrolled.contains("hmb")
+            || enrolled.contains("perimenopause")
+    }
+
+    // The ongoing tracking tasks (cadence-tagged logging actions) and the result
+    // views, grouped under the Tracking section. The daily premenstrual log itself is
+    // a top-level button (`dailyCheckInButton`), not repeated here.
+    @ViewBuilder var trackingRows: some View {
+        if enrolled.contains("hmb") {
+            trackingLink("hmb.flow.entry", cadenceKey: "condition.cadence.perevent") {
+                showingFlowLog = true
+            }
+        }
+        if enrolled.contains("perimenopause") {
+            trackingLink("greene.entry", cadenceKey: "condition.cadence.monthly") {
+                showingGreene = true
+            }
         }
         if enrolled.contains(EncryptedStore.pmeModuleId) {
-            Button("pme.results.entry") {
+            trackingLink("pme.results.entry") {
                 pmeResult = store.pmePattern()
                 showingPmeSummary = true
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+        } else if enrolled.contains(EncryptedStore.pmddModuleId) {
+            trackingLink("pmdd.results.title") {
+                summaryResult = store.cpassResult()
+                showingSummary = true
+            }
         }
         if enrolled.contains("hmb") {
-            Button("hmb.flow.entry") { showingFlowLog = true }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
-            Button("hmb.results.entry") {
+            trackingLink("hmb.results.entry") {
                 hmbCycles = store.hmbCycleScores()
                 showingHmbSummary = true
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
         if enrolled.contains("perimenopause") {
-            Button("greene.entry") { showingGreene = true }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
-            Button("greene.results.entry") {
+            trackingLink("greene.results.entry") {
                 greeneCompletions = store.greeneCompletions()
                 showingGreeneSummary = true
             }
-            .font(.ddSans(15, .medium)).foregroundColor(.ddSun)
         }
-        if enrolled.contains("endometriosis") {
-            Button("endo.entry") { showingEndoScreen = true }
-                .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 4)
+    }
+
+    func trackingLink(
+        _ titleKey: LocalizedStringKey,
+        cadenceKey: LocalizedStringKey? = nil,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Text(titleKey).font(.ddSans(15, .medium)).foregroundColor(.ddSun)
+                Spacer(minLength: 0)
+                if let cadenceKey {
+                    Text(cadenceKey)
+                        .font(.ddMono(10))
+                        .foregroundColor(.ddFg2)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 2)
+                        .background(Capsule().fill(Color.ddLinenDeep.opacity(0.7)))
+                }
+            }
         }
+        .buttonStyle(.plain)
     }
 
     // Demo-only sample-data action; nil (so the Settings button hides) otherwise.
