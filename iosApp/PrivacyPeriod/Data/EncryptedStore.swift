@@ -241,7 +241,7 @@ final class EncryptedStore: ObservableObject {
     }
 
     /// Whole days from one ISO-8601 date to another (0 if either can't be parsed).
-    private static func daysBetween(_ startISO: String, _ endISO: String) -> Int {
+    static func daysBetween(_ startISO: String, _ endISO: String) -> Int {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone.current

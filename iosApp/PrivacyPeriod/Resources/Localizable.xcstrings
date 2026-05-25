@@ -2,6 +2,18 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "reveal.completeness" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$d of %2$d days logged this cycle" } }
+      }
+    },
+    "reveal.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your cycle fills in here as you log. Start with today’s check-in." } }
+      }
+    },
     "settings.credits" : {
       "extractionState" : "manual",
       "localizations" : {
