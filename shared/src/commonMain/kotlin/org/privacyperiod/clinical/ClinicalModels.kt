@@ -54,4 +54,26 @@ interface ClinicalHistory {
 
     /** As [symptomEntries] but only same-day (prospective) entries. */
     fun sameDaySymptomEntries(symptomIds: Set<String>): List<SymptomEntry>
+
+    /** Completions of a periodic instrument (e.g. the Greene scale), oldest first. */
+    fun instrumentCompletions(instrumentType: String): List<InstrumentCompletion>
 }
+
+/**
+ * A completed periodic instrument (Greene Climacteric Scale, EHP-30, …). The item
+ * responses are stored as JSON because these forms have fixed item sets that do
+ * not decompose to the symptom catalogue; each module parses its own shape.
+ *
+ * @property instrumentType Instrument id, e.g. "greene_climacteric".
+ * @property itemResponsesJson Map of item id → response value, as JSON.
+ * @property computedScoresJson Scores computed at save time, as JSON, or null.
+ */
+data class InstrumentCompletion(
+    val id: String,
+    val instrumentType: String,
+    val startDate: String,
+    val endDate: String,
+    val itemResponsesJson: String,
+    val computedScoresJson: String?,
+    val createdAt: Long,
+)
