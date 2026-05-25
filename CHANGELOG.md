@@ -154,6 +154,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   another", saving the current PBAC event and resetting the form so several product
   changes, clots, or floods can be logged in one sitting (with a running "N logged so
   far" count). "Save" still saves the current event and closes.
+- About → Clinical research (iOS): a Settings entry listing the published clinical
+  instruments each screen implements, with citations and a link to the provenance
+  registry. Third-party open-source attributions live in the repository's CREDITS.md
+  (added), not in the app UI.
 
 ### Security
 
