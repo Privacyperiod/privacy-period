@@ -58,6 +58,15 @@ targets:
       path: PrivacyPeriod/Info.plist
       properties:
         CFBundleDisplayName: Privacy Period
+        # Single-source the version from the build settings above, so bumping
+        # MARKETING_VERSION / CURRENT_PROJECT_VERSION is the only place to change it.
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # The only encryption is SQLCipher protecting the user's own data at rest
+        # (standard AES) — exempt from export self-classification. Declaring it here
+        # stops App Store Connect prompting on every TestFlight upload. Confirm this
+        # declaration still holds before any public App Store release.
+        ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
