@@ -381,7 +381,7 @@ networking is ever added.
 |---|---|
 | `privacy-period-project-plan.md` | Phased project plan, milestones, tech stack |
 | `docs/architecture.md` | System design and data flow |
-| `docs/privacy-model.md` | Detailed privacy guarantees *(to be created)* |
+| `docs/privacy-model.md` | Detailed privacy guarantees |
 | `docs/encryption.md` | Encryption implementation details |
 | `docs/clinical-provenance.md` | Instrument → item provenance registry (auditable) |
 | `docs/cpass-conformance.md` | C-PASS conformance report vs `lasy/cpass` |
