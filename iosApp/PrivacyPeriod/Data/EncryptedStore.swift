@@ -14,6 +14,19 @@ struct CycleDraft {
     let notes: String
 }
 
+/// The answers to the endometriosis screening questionnaire, before scoring.
+/// VAS values are 0–10; 0 reads as "not bothered" (below every threshold).
+struct EndoScreenDraft {
+    let familyHistory: Bool
+    let primaryInfertility: Bool
+    let bmiUnder22: Bool
+    let cyclesUnder28: Bool
+    let vasDysmenorrhea: Int
+    let vasDeepDyspareunia: Int
+    let vasGiSymptoms: Int
+    let vasUrinarySymptoms: Int
+}
+
 /// A draft menstrual-flow event collected from the flow-logging form, before it
 /// is persisted against the current cycle.
 struct FlowEventDraft {
@@ -126,6 +139,24 @@ final class EncryptedStore: ObservableObject {
         guard let repository else { return nil }
         let result = PmddModule.shared.runScoring(history: repository.history())
         return (result as? PmddScoringResult)?.result
+    }
+
+    /// Computes the endometriosis screening result from the questionnaire answers.
+    /// A pure, stateless calculation (no persistence) — the result is a screening
+    /// estimate to share with a clinician, never a diagnosis.
+    func scoreEndoScreen(_ draft: EndoScreenDraft) -> EndoScreenResult {
+        EndoScreenScorer.shared.score(
+            inputs: EndoScreenInputs(
+                familyHistory: draft.familyHistory,
+                primaryInfertility: draft.primaryInfertility,
+                bmiUnder22: draft.bmiUnder22,
+                cyclesUnder28: draft.cyclesUnder28,
+                vasDysmenorrhea: KotlinInt(value: Int32(draft.vasDysmenorrhea)),
+                vasDeepDyspareunia: KotlinInt(value: Int32(draft.vasDeepDyspareunia)),
+                vasGiSymptoms: KotlinInt(value: Int32(draft.vasGiSymptoms)),
+                vasUrinarySymptoms: KotlinInt(value: Int32(draft.vasUrinarySymptoms))
+            )
+        )
     }
 
     /// Persists a completed Greene Climacteric Scale questionnaire as an instrument

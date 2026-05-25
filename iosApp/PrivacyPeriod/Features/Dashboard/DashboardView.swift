@@ -11,6 +11,7 @@ struct DashboardView: View {
     @State private var showingCycleLog = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
+    @State private var showingEndoScreen = false
     @State private var showingFlowLog = false
     @State private var showingHmbSummary = false
     @State private var showingPmeCheckIn = false
@@ -53,6 +54,14 @@ struct DashboardView: View {
                     }
                     .font(.ddSans(15, .medium))
                     .foregroundColor(.ddSun)
+                }
+                // The endometriosis screening entry stays hidden until the feature
+                // is clinically signed off (see EndoFeature / clinical-disclaimer).
+                if EndoFeature.shared.isEnabled {
+                    Button("endo.entry") { showingEndoScreen = true }
+                        .font(.ddSans(15, .medium))
+                        .foregroundColor(.ddSun)
+                        .padding(.top, 4)
                 }
                 // The HMB entry points stay hidden until the feature is clinically
                 // signed off (see HmbFeature / clinical-disclaimer).
@@ -147,6 +156,9 @@ struct DashboardView: View {
                     showingPmeCheckIn = false
                 }
             )
+        }
+        .sheet(isPresented: $showingEndoScreen) {
+            EndoScreenView(score: { store.scoreEndoScreen($0) }, onClose: { showingEndoScreen = false })
         }
         .sheet(isPresented: $showingFlowLog) {
             FlowLogView(
