@@ -54,4 +54,52 @@ interface ClinicalHistory {
 
     /** As [symptomEntries] but only same-day (prospective) entries. */
     fun sameDaySymptomEntries(symptomIds: Set<String>): List<SymptomEntry>
+
+    /** Completions of a periodic instrument (e.g. the Greene scale), oldest first. */
+    fun instrumentCompletions(instrumentType: String): List<InstrumentCompletion>
+
+    /** All logged menstrual-flow events (for PBAC / heavy-bleeding scoring). */
+    fun flowEvents(): List<FlowEvent>
 }
+
+/**
+ * A completed periodic instrument (Greene Climacteric Scale, EHP-30, …). The item
+ * responses are stored as JSON because these forms have fixed item sets that do
+ * not decompose to the symptom catalogue; each module parses its own shape.
+ *
+ * @property instrumentType Instrument id, e.g. "greene_climacteric".
+ * @property itemResponsesJson Map of item id → response value, as JSON.
+ * @property computedScoresJson Scores computed at save time, as JSON, or null.
+ */
+data class InstrumentCompletion(
+    val id: String,
+    val instrumentType: String,
+    val startDate: String,
+    val endDate: String,
+    val itemResponsesJson: String,
+    val computedScoresJson: String?,
+    val createdAt: Long,
+)
+
+/**
+ * A single menstrual-flow event — a product change, clot, or flooding episode —
+ * consumed by the Heavy Menstrual Bleeding module's PBAC scoring.
+ *
+ * @property flowType pad, tampon, cup, disc, period_underwear, clot, or flooding.
+ * @property saturation Product saturation (light/moderate/heavy/soaked) or null.
+ * @property clotSize Clot size (small/large) or null.
+ * @property measuredMl Directly measured volume in millilitres (cups/discs) or null.
+ * @property pbacPoints Precomputed PBAC points, or null to score from the fields.
+ */
+data class FlowEvent(
+    val id: String,
+    val cycleId: String,
+    val eventDate: String,
+    val eventTime: String?,
+    val flowType: String,
+    val saturation: String?,
+    val clotSize: String?,
+    val measuredMl: Double?,
+    val pbacPoints: Int?,
+    val createdAt: Long,
+)

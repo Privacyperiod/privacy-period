@@ -13,11 +13,16 @@ import SwiftUI
 /// feature (see `PmddFeature`).
 struct PmddResultsView: View {
     let result: CpassResult?
+    /// Called when the user chooses to explore PME tracking from the PME-pattern
+    /// hint. Supplied (non-nil) only when the PME feature is available and the user
+    /// is not already enrolled; otherwise the hint is hidden.
+    var onExplorePme: (() -> Void)?
     let onDone: () -> Void
 
     private var subject: SubjectResult? { result?.subjects.first }
     private var scoredCycles: Int { Int(subject?.nCyclesIncluded ?? 0) }
     private var isReady: Bool { scoredCycles >= 2 && subject?.classification != nil }
+    private var isPmePattern: Bool { isReady && subject?.classification == SubjectClassification.pme }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -30,6 +35,9 @@ struct PmddResultsView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     disclaimer
                     summaryCard
+                    if isPmePattern, let onExplorePme {
+                        pmeHint(onExplorePme)
+                    }
                     shareNote
                     if let result, !result.cycles.isEmpty {
                         exportButton(for: result)
@@ -73,6 +81,27 @@ struct PmddResultsView: View {
         .background(
             RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddLinenDeep.opacity(0.5))
         )
+    }
+
+    // Shown only when the screening pattern is PME, not PMDD: a gentle, factual
+    // pointer to the PME module, which is built for premenstrual exacerbation of an
+    // ongoing condition. Never diagnostic; the user chooses whether to follow it.
+    private func pmeHint(_ action: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("pmdd.results.pme_hint")
+                .font(.ddSans(14))
+                .foregroundColor(.ddFg2)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(action: action) {
+                Text("pmdd.results.pme_hint_action")
+                    .font(.ddSans(15, .semibold))
+                    .foregroundColor(.ddSunDeep)
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddSun.opacity(0.10)))
     }
 
     private var shareNote: some View {

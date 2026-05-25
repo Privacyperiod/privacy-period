@@ -41,6 +41,11 @@ shared/shared.podspec
 # notes). As above: the published audit lives in docs/; this folder stays local.
 /fertility awareness/
 
+# Local engagement/adherence design material (the no-gamification standard,
+# CLAUDE drafts). The binding rules are mirrored into agentic-instructions.md;
+# this folder stays a local working reference.
+/user engagement/
+
 # IDE
 .idea/
 *.iml
