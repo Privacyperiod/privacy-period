@@ -9,6 +9,7 @@ import SwiftUI
 struct DashboardView: View {
     @StateObject private var store = EncryptedStore()
     @State private var showingCycleLog = false
+    @State private var showingMoodLog = false
     @State private var showingCheckIn = false
     @State private var showingSummary = false
     @State private var showingEndoScreen = false
@@ -41,6 +42,10 @@ struct DashboardView: View {
                 DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                     .padding(.horizontal, 40)
                     .padding(.top, 8)
+                Button("mood.entry") { showingMoodLog = true }
+                    .font(.ddSans(15, .medium))
+                    .foregroundColor(.ddSun)
+                    .padding(.top, 4)
                 // The PMDD screening entry points stay hidden until the feature
                 // is clinically signed off (see PmddFeature / clinical-disclaimer).
                 if PmddFeature.shared.isEnabled {
@@ -122,6 +127,16 @@ struct DashboardView: View {
                 onSave: { draft in
                     store.save(draft)
                     showingCycleLog = false
+                }
+            )
+        }
+        .sheet(isPresented: $showingMoodLog) {
+            MoodLogView(
+                initial: store.todayMoodEntry(),
+                onCancel: { showingMoodLog = false },
+                onSave: { draft in
+                    store.saveMoodEntry(draft)
+                    showingMoodLog = false
                 }
             )
         }

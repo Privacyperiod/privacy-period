@@ -14,6 +14,14 @@ struct CycleDraft {
     let notes: String
 }
 
+/// A daily mood and energy check-in, before it is persisted (one per day).
+/// `mood` and `energy` are 1–5 on the app's scale.
+struct MoodEntryDraft {
+    let mood: Int
+    let energy: Int
+    let notes: String
+}
+
 /// The answers to the endometriosis screening questionnaire, before scoring.
 /// VAS values are 0–10; 0 reads as "not bothered" (below every threshold).
 struct EndoScreenDraft {
@@ -107,6 +115,31 @@ final class EncryptedStore: ObservableObject {
             predicted_next: nil,
             created_at: Int64(Date().timeIntervalSince1970 * 1000)
         )
+    }
+
+    /// Persists today's mood & energy check-in, replacing any earlier entry for
+    /// the same day. This is non-clinical wellbeing data, never part of clinical
+    /// scoring. No-op when the store is unavailable.
+    func saveMoodEntry(_ draft: MoodEntryDraft) {
+        guard let database else { return }
+        let trimmed = draft.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        database.moodEntriesQueries.upsertMoodEntry(
+            date: Self.isoDate(Date()),
+            mood_score: Int64(draft.mood),
+            energy_score: Int64(draft.energy),
+            notes: trimmed.isEmpty ? nil : trimmed,
+            created_at: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+    }
+
+    /// Today's mood & energy entry, or nil if none has been logged today.
+    func todayMoodEntry() -> MoodEntryDraft? {
+        guard let database else { return nil }
+        let row = database.moodEntriesQueries
+            .selectMoodEntryForDate(date: Self.isoDate(Date()))
+            .executeAsOneOrNull()
+        guard let row else { return nil }
+        return MoodEntryDraft(mood: Int(row.mood_score), energy: Int(row.energy_score), notes: row.notes ?? "")
     }
 
     /// Persists a DRSP daily check-in as same-day symptom entries on the universal
