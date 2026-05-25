@@ -53,7 +53,40 @@ class ClinicalRepository(private val database: PrivacyPeriodDatabase) {
 
     /** Returns a read-only snapshot of the user's clinical data for scoring. */
     fun history(): ClinicalHistory = DatabaseClinicalHistory(database)
+
+    /**
+     * Enrolls the user in a module and records its configuration. For PME, [config]
+     * is the underlying-condition family id, stored directly in `config_json`.
+     * Re-enrolling updates the config and last-active time without disturbing the
+     * original enrolled-at. [now] is epoch milliseconds, supplied by the caller.
+     */
+    fun enroll(moduleId: String, config: String?, now: Long) {
+        val queries = database.moduleEnrollmentsQueries
+        queries.insertEnrollment(module_id = moduleId, enrolled_at = now, config_json = config, last_active_at = now)
+        queries.updateEnrollment(config_json = config, last_active_at = now, module_id = moduleId)
+    }
+
+    /** The user's enrollment in [moduleId], or null if not enrolled. */
+    fun enrollment(moduleId: String): ModuleEnrollment? =
+        database.moduleEnrollmentsQueries
+            .selectEnrollment(moduleId)
+            .executeAsOneOrNull()
+            ?.let { ModuleEnrollment(moduleId = it.module_id, config = it.config_json, enrolledAt = it.enrolled_at) }
+
+    /** Removes the user's enrollment in [moduleId]. Logged data is left intact. */
+    fun unenroll(moduleId: String) {
+        database.moduleEnrollmentsQueries.deleteEnrollment(moduleId)
+    }
 }
+
+/**
+ * A user's opt-in to a clinical module, with its module-specific configuration.
+ *
+ * @property moduleId The module's stable id (e.g. "pme").
+ * @property config Module-specific config; for PME, the underlying-condition family id.
+ * @property enrolledAt Epoch milliseconds when the user enrolled.
+ */
+data class ModuleEnrollment(val moduleId: String, val config: String?, val enrolledAt: Long)
 
 /** [ClinicalHistory] backed by the database; reads are lazy and cached per instance. */
 private class DatabaseClinicalHistory(
