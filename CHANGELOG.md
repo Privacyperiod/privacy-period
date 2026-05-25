@@ -146,6 +146,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   always-available "Quick Daily Check-in".
 - The heavy-menstrual-bleeding flow log is renamed "Heavy bleeding tracker" to
   distinguish it from the period's overall flow intensity logged with "Log period".
+- The heavy bleeding tracker is now reached from the "Log period" screen via an
+  additional "Save & log heavy bleeding" step (shown only when heavy menstrual
+  bleeding is a tracked condition), so its events attach to the cycle, and is removed
+  from the home Tracking menu (the Bleeding summary stays).
 
 ### Security
 

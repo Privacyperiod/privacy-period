@@ -2,6 +2,12 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "cyclelog.also_bleeding" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save & log heavy bleeding" } }
+      }
+    },
     "tracking.quick_checkin" : {
       "extractionState" : "manual",
       "localizations" : {
