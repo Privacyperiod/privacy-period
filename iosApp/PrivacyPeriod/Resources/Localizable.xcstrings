@@ -2,6 +2,12 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "tracking.quick_checkin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick Daily Check-in" } }
+      }
+    },
     "checkin.premenstrual.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -343,7 +349,7 @@
     },
     "pmdd.checkin.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mental + Physical Daily Data" } } }
     },
     "pmdd.checkin.today" : {
       "extractionState" : "manual",
@@ -979,7 +985,7 @@
     },
     "pme.checkin.title" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mental + Physical Daily Data" } } }
     },
     "pme.checkin.disclaimer" : {
       "extractionState" : "manual",
@@ -991,7 +997,7 @@
     },
     "pme.checkin.entry" : {
       "extractionState" : "manual",
-      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Premenstrual check-in" } } }
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Mental + Physical Daily Data" } } }
     },
     "pme.enroll.entry" : {
       "extractionState" : "manual",

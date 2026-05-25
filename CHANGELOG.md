@@ -140,6 +140,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   mood) and "Perimenopause check-in" (Monthly · this month's symptoms); the quick
   "Mood & energy" check stays distinct. The perimenopause entry never appears twice
   (promoted monthly button vs the Tracking list).
+- Home declutter (iOS): the premenstrual check-in is renamed "Mental + Physical Daily
+  Data" (its subtitle removed). The mood & energy prompt is removed from the home — it
+  is offered by the launch gate on open — and now lives in the Tracking section as an
+  always-available "Quick Daily Check-in".
 
 ### Security
 

@@ -47,60 +47,18 @@ extension DashboardView {
         }
     }
 
-    var moodCard: some View {
-        card {
-            if let mood = store.todayMoodEntry() {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("dashboard.mood.today")
-                            .font(.ddSans(13, .semibold))
-                            .foregroundColor(.ddFg3)
-                            .textCase(.uppercase)
-                        Text(String(format: NSLocalizedString("dashboard.mood.summary", comment: "mood summary"),
-                                    moodLabel(mood.mood), energyLabel(mood.energy)))
-                            .font(.ddSans(15))
-                            .foregroundColor(.ddPlumDeep)
-                    }
-                    Spacer()
-                    Button("dashboard.mood.edit") { showingMoodLog = true }
-                        .font(.ddSans(14, .medium))
-                        .foregroundColor(.ddSun)
-                }
-            } else {
-                HStack {
-                    Text("dashboard.mood.prompt")
-                        .font(.ddSans(15))
-                        .foregroundColor(.ddFg2)
-                    Spacer()
-                    Button("mood.entry") { showingMoodLog = true }
-                        .font(.ddSans(14, .medium))
-                        .foregroundColor(.ddSun)
-                }
-            }
-        }
-    }
-
-    // The daily premenstrual log, raised to a prominent top-level action (like "Log
-    // period") because it is the main daily task. Named for the condition and given a
-    // purpose line so it reads distinctly from the quick "Mood & energy" wellbeing
-    // pulse. Routes to the PME mood-chart check-in when an underlying condition is
-    // recorded, otherwise the DRSP-only check-in.
+    // The daily premenstrual log ("Mental + Physical Daily Data"), raised to a
+    // prominent top-level action like "Log period" because it is the main daily task.
+    // Routes to the PME mood-chart check-in when an underlying condition is recorded,
+    // otherwise the DRSP-only check-in.
     @ViewBuilder var dailyCheckInButton: some View {
         if enrolled.contains(EncryptedStore.pmeModuleId) {
-            premenstrualCheckInButton { showingPmeCheckIn = true }
+            DDPrimaryButton(titleKey: "pme.checkin.entry") { showingPmeCheckIn = true }
+                .padding(.top, 4)
         } else if enrolled.contains(EncryptedStore.pmddModuleId) {
-            premenstrualCheckInButton { showingCheckIn = true }
+            DDPrimaryButton(titleKey: "pme.checkin.entry") { showingCheckIn = true }
+                .padding(.top, 4)
         }
-    }
-
-    func premenstrualCheckInButton(action: @escaping () -> Void) -> some View {
-        VStack(spacing: 5) {
-            DDPrimaryButton(titleKey: "pme.checkin.entry", action: action)
-            Text("checkin.premenstrual.subtitle")
-                .font(.ddSans(12))
-                .foregroundColor(.ddFg3)
-        }
-        .padding(.top, 4)
     }
 
     // Periodic tasks that are currently due, promoted to a prominent button under
@@ -150,10 +108,10 @@ extension DashboardView {
     }
 
     @ViewBuilder var clinicalEntries: some View {
-        if hasTrackingEntries {
-            DDCollapsibleSection(titleKey: "home.section.tracking") { trackingRows }
-                .padding(.top, 8)
-        }
+        // Always shown: it holds the always-available Quick Daily Check-in plus any
+        // enrolled tracking tasks.
+        DDCollapsibleSection(titleKey: "home.section.tracking") { trackingRows }
+            .padding(.top, 8)
         if enrolled.contains("endometriosis") {
             DDCollapsibleSection(titleKey: "home.section.screening") {
                 trackingLink("endo.entry", cadenceKey: "condition.cadence.occasional") {
@@ -167,17 +125,12 @@ extension DashboardView {
             .font(.ddSans(15, .medium)).foregroundColor(.ddSun).padding(.top, 12)
     }
 
-    var hasTrackingEntries: Bool {
-        enrolled.contains(EncryptedStore.pmddModuleId)
-            || enrolled.contains(EncryptedStore.pmeModuleId)
-            || enrolled.contains("hmb")
-            || enrolled.contains("perimenopause")
-    }
-
     // The ongoing tracking tasks (cadence-tagged logging actions) and the result
-    // views, grouped under the Tracking section. The daily premenstrual log itself is
-    // a top-level button (`dailyCheckInButton`), not repeated here.
+    // views, grouped under the Tracking section. Leads with the always-available
+    // Quick Daily Check-in (mood & energy); the daily premenstrual log itself is a
+    // top-level button (`dailyCheckInButton`), not repeated here.
     @ViewBuilder var trackingRows: some View {
+        trackingLink("tracking.quick_checkin") { showingMoodLog = true }
         if enrolled.contains("hmb") {
             trackingLink("hmb.flow.entry", cadenceKey: "condition.cadence.perevent") {
                 showingFlowLog = true
@@ -255,10 +208,6 @@ extension DashboardView {
             .padding(18)
             .background(RoundedRectangle(cornerRadius: DDRadius.lg).fill(Color.ddLinenDeep.opacity(0.5)))
     }
-
-    func moodLabel(_ value: Int) -> String { NSLocalizedString("mood.mood.\(value)", comment: "mood level") }
-
-    func energyLabel(_ value: Int) -> String { NSLocalizedString("mood.energy.\(value)", comment: "energy level") }
 
     static func displayDate(_ iso: String) -> String {
         let parser = DateFormatter()
