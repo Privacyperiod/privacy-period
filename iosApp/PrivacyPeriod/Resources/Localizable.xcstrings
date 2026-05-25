@@ -2,6 +2,30 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
+    "readiness.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Toward a clinician review" } }
+      }
+    },
+    "readiness.progress" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$d of %2$d cycles tracked" } }
+      }
+    },
+    "readiness.ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to share — your tracked symptoms now cover the two cycles a clinician needs to read the pattern." } }
+      }
+    },
+    "readiness.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A clinician needs about two completed cycles of daily logs to read your premenstrual pattern. Keep logging each day." } }
+      }
+    },
     "reveal.completeness" : {
       "extractionState" : "manual",
       "localizations" : {

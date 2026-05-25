@@ -52,6 +52,45 @@ extension DashboardView {
         }
     }
 
+    // Progress toward a clinician-ready premenstrual analysis (C-PASS needs two
+    // tracked cycles). A factual milestone, stated without pressure — a clinical
+    // capability unlocking, never a streak.
+    @ViewBuilder var readinessCard: some View {
+        if enrolled.contains(EncryptedStore.pmddModuleId) || enrolled.contains(EncryptedStore.pmeModuleId),
+           let readiness = store.premenstrualReadiness() {
+            card {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("readiness.title")
+                        .font(.ddSans(13, .semibold))
+                        .foregroundColor(.ddFg3)
+                        .textCase(.uppercase)
+                    HStack(spacing: 6) {
+                        ForEach(0..<readiness.requiredCycles, id: \.self) { index in
+                            Circle()
+                                .fill(index < readiness.scoredCycles ? Color.ddSun : Color.ddSand)
+                                .frame(width: 12, height: 12)
+                        }
+                    }
+                    if readiness.isReady {
+                        Text("readiness.ready")
+                            .font(.ddSans(15, .medium))
+                            .foregroundColor(.ddPlumDeep)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        Text(String(format: NSLocalizedString("readiness.progress", comment: "cycles tracked"),
+                                    readiness.scoredCycles, readiness.requiredCycles))
+                            .font(.ddSans(15, .medium))
+                            .foregroundColor(.ddPlumDeep)
+                        Text("readiness.help")
+                            .font(.ddSans(13))
+                            .foregroundColor(.ddFg3)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+        }
+    }
+
     @ViewBuilder var reveal: some View {
         if let reveal = store.currentCycleReveal(), reveal.daysLogged > 0 {
             VStack(alignment: .leading, spacing: 6) {

@@ -47,6 +47,7 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     header
                     cycleCard
+                    readinessCard
                     dailyCheckInButton
                     DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                         .padding(.top, 4)

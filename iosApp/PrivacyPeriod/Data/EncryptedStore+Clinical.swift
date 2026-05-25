@@ -147,6 +147,30 @@ extension EncryptedStore {
         return (result as? GreeneScoringResult)?.completions
     }
 
+    /// Progress toward a clinician-ready premenstrual analysis: how many cycles have
+    /// enough prospective daily data to be scored, and how many the instrument needs
+    /// (C-PASS requires two). Reflects whichever premenstrual form is enrolled (the
+    /// DRSP-only PMDD check-in or the PME check-in). Nil when neither is enrolled.
+    func premenstrualReadiness() -> PremenstrualReadiness? {
+        guard let repository else { return nil }
+        let history = repository.history()
+        if isEnrolled(moduleId: Self.pmeModuleId) {
+            let result = PmeModule.shared.checkReadiness(history: history)
+            return PremenstrualReadiness(
+                scoredCycles: Int(result.scoredCycles),
+                requiredCycles: Int(PmeModule.shared.minimumCyclesForScoring)
+            )
+        }
+        if isEnrolled(moduleId: Self.pmddModuleId) {
+            let result = PmddModule.shared.checkReadiness(history: history)
+            return PremenstrualReadiness(
+                scoredCycles: Int(result.scoredCycles),
+                requiredCycles: Int(PmddModule.shared.minimumCyclesForScoring)
+            )
+        }
+        return nil
+    }
+
     /// The current cycle's daily symptom picture for the landing-page reveal: the mean
     /// DRSP severity logged on each cycle day so far (nil on days not yet logged, so
     /// the chart visibly fills in), plus how many of those days have any entry.
