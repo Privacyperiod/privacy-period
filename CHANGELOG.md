@@ -134,6 +134,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The premenstrual mood & symptom check-in now pins the 1–6 rating scale to its
   header (the DRSP items drop their per-selector labels; the mood-chart items keep
   their own 1–5 anchors), matching the daily check-in.
+- Clearer logging-surface names (iOS): the two clinical logs are anchored to their
+  condition with a one-line purpose, so they no longer read as vague duplicates of
+  the quick wellbeing pulse — "Premenstrual check-in" (Daily · today's symptoms &
+  mood) and "Perimenopause check-in" (Monthly · this month's symptoms); the quick
+  "Mood & energy" check stays distinct. The perimenopause entry never appears twice
+  (promoted monthly button vs the Tracking list).
 
 ### Security
 

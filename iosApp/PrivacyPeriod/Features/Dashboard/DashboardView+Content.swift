@@ -81,40 +81,54 @@ extension DashboardView {
     }
 
     // The daily premenstrual log, raised to a prominent top-level action (like "Log
-    // period") because it is the main daily task: the PME mood & symptom check-in when
-    // a underlying condition is recorded, otherwise the DRSP daily check-in.
+    // period") because it is the main daily task. Named for the condition and given a
+    // purpose line so it reads distinctly from the quick "Mood & energy" wellbeing
+    // pulse. Routes to the PME mood-chart check-in when an underlying condition is
+    // recorded, otherwise the DRSP-only check-in.
     @ViewBuilder var dailyCheckInButton: some View {
         if enrolled.contains(EncryptedStore.pmeModuleId) {
-            DDPrimaryButton(titleKey: "pme.checkin.entry") { showingPmeCheckIn = true }
-                .padding(.top, 4)
+            premenstrualCheckInButton { showingPmeCheckIn = true }
         } else if enrolled.contains(EncryptedStore.pmddModuleId) {
-            DDPrimaryButton(titleKey: "pmdd.checkin.title") { showingCheckIn = true }
-                .padding(.top, 4)
+            premenstrualCheckInButton { showingCheckIn = true }
         }
+    }
+
+    func premenstrualCheckInButton(action: @escaping () -> Void) -> some View {
+        VStack(spacing: 5) {
+            DDPrimaryButton(titleKey: "pme.checkin.entry", action: action)
+            Text("checkin.premenstrual.subtitle")
+                .font(.ddSans(12))
+                .foregroundColor(.ddFg3)
+        }
+        .padding(.top, 4)
     }
 
     // Periodic tasks that are currently due, promoted to a prominent button under
-    // "Log period" until completed for their period. The perimenopause questionnaire
-    // is monthly; once answered this month the button disappears until next month.
+    // "Log period" until completed for their period. The perimenopause check-in is
+    // monthly; once answered this month the button disappears until next month.
     @ViewBuilder var monthlyTasks: some View {
         if enrolled.contains("perimenopause"), greeneDueThisMonth {
-            monthlyTaskButton(titleKey: "greene.entry") { showingGreene = true }
+            monthlyTaskButton(
+                titleKey: "greene.entry",
+                subtitleKey: "checkin.perimenopause.subtitle"
+            ) { showingGreene = true }
                 .padding(.top, 4)
         }
     }
 
-    func monthlyTaskButton(titleKey: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+    func monthlyTaskButton(
+        titleKey: LocalizedStringKey,
+        subtitleKey: LocalizedStringKey,
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             HStack(spacing: 10) {
                 DDIcon(name: "calendar", size: 18).foregroundColor(.ddSun)
-                Text(titleKey).font(.ddSans(16, .semibold)).foregroundColor(.ddSun)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(titleKey).font(.ddSans(16, .semibold)).foregroundColor(.ddSun)
+                    Text(subtitleKey).font(.ddSans(12)).foregroundColor(.ddFg3)
+                }
                 Spacer(minLength: 0)
-                Text("condition.cadence.monthly")
-                    .font(.ddMono(10))
-                    .foregroundColor(.ddSun)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 2)
-                    .background(Capsule().fill(Color.ddSun.opacity(0.15)))
             }
             .padding(.vertical, 14)
             .padding(.horizontal, 16)
@@ -169,7 +183,9 @@ extension DashboardView {
                 showingFlowLog = true
             }
         }
-        if enrolled.contains("perimenopause") {
+        // Only list the questionnaire here when it isn't already promoted as the
+        // monthly button above, so "Perimenopause check-in" never appears twice.
+        if enrolled.contains("perimenopause"), !greeneDueThisMonth {
             trackingLink("greene.entry", cadenceKey: "condition.cadence.monthly") {
                 showingGreene = true
             }
