@@ -230,7 +230,7 @@ No “clever” code without an explanatory comment. Prefer readable over terse.
   - Establish key naming convention: `feature.component.description` (e.g., `onboarding.welcome.title`)
   - Add English as base language; scaffold structure for additional languages
 - [ ] Set minimum iOS deployment target (iOS 16 recommended — SwiftUI maturity, broad device support)
-- [ ] Configure app bundle ID: `org.privacyperiod.app`
+- [ ] Configure app bundle ID: `org.privacyperiod.ios`
 - [ ] Set up DocC documentation target
 - [ ] Add GitHub Actions workflow: `ios-ci.yml`
   - Triggers: push to `main`, all PRs
