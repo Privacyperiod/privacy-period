@@ -13,10 +13,17 @@ processing. Needs a paid Apple Developer Program membership.
 
 ### One-time setup
 
-1. **Signing team.** Either open `iosApp/PrivacyPeriod.xcworkspace` in Xcode → target
-   *PrivacyPeriod* → *Signing & Capabilities* → select your Team (Automatic signing),
-   or add `DEVELOPMENT_TEAM: <YOUR_TEAM_ID>` under `targets.PrivacyPeriod.settings.base`
-   in `iosApp/project.yml` and re-run `xcodegen generate`.
+1. **Signing team.** Your Apple Developer **Team ID** is injected from the
+   `PRIVACYPERIOD_TEAM` environment variable at generate time, so it never lands in the
+   repo. Set it once in your shell profile (e.g. `~/.zshrc`):
+   ```sh
+   export PRIVACYPERIOD_TEAM=XXXXXXXXXX   # 10-char Team ID (developer.apple.com → Membership)
+   ```
+   then, from `iosApp/`, run `xcodegen generate && pod install`. Without it (CI, fresh
+   clones) the project still builds for the simulator; device builds and TestFlight
+   need it. Find your Team ID at developer.apple.com → Membership details.
+   - You must register at least one device first (connect an iPhone, or
+     developer.apple.com → Devices), or automatic signing reports "no devices".
 2. **App Store Connect record.** Create a new app: bundle id `org.privacyperiod.app`,
    name "Privacy Period", primary language English.
 3. Export-compliance and the version are already handled in `project.yml`

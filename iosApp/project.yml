@@ -27,6 +27,11 @@ settings:
     # must write outside the per-script sandbox.
     ENABLE_USER_SCRIPT_SANDBOXING: "NO"
     CODE_SIGN_STYLE: Automatic
+    # Apple Developer Team ID for device / TestFlight signing, injected from the
+    # PRIVACYPERIOD_TEAM environment variable at generate time so it stays out of the
+    # public repo. Unset (CI, fresh clones) → empty, which is fine for simulator builds.
+    # Set it once in your shell: export PRIVACYPERIOD_TEAM=XXXXXXXXXX (see TESTING.md).
+    DEVELOPMENT_TEAM: ${PRIVACYPERIOD_TEAM}
 
 targets:
   PrivacyPeriod:
