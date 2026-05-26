@@ -24,7 +24,7 @@ processing. Needs a paid Apple Developer Program membership.
    need it. Find your Team ID at developer.apple.com → Membership details.
    - You must register at least one device first (connect an iPhone, or
      developer.apple.com → Devices), or automatic signing reports "no devices".
-2. **App Store Connect record.** Create a new app: bundle id `org.privacyperiod.app`,
+2. **App Store Connect record.** Create a new app: bundle id `org.privacyperiod.ios`,
    name "Privacy Period", primary language English.
 3. Export-compliance and the version are already handled in `project.yml`
    (`ITSAppUsesNonExemptEncryption = false`; version single-sourced from

@@ -42,7 +42,7 @@ targets:
       - path: PrivacyPeriod
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.privacyperiod.app
+        PRODUCT_BUNDLE_IDENTIFIER: org.privacyperiod.ios
         PRODUCT_NAME: PrivacyPeriod
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
