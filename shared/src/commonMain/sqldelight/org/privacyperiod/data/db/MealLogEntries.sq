@@ -24,8 +24,10 @@ CREATE TABLE meal_log_entries (
     -- breakfast | lunch | dinner | snack | other. The category implies the rough
     -- time of day; meal_time is an optional, more precise addition.
     meal_type TEXT NOT NULL,
-    -- Optional short free-text description of what was eaten.
-    description TEXT,
+    -- Optional short free-text note of what was eaten. (Named `note` rather than
+    -- `description` so the SQLDelight-generated type doesn't collide with the
+    -- universal Swift/ObjC `description` property when bridged to iOS.)
+    note TEXT,
     -- Epoch milliseconds when this row was created.
     created_at INTEGER NOT NULL
 );
@@ -44,5 +46,5 @@ WHERE meal_date = ?
 ORDER BY meal_time;
 
 insertMealLogEntry:
-INSERT INTO meal_log_entries(id, meal_date, meal_time, meal_type, description, created_at)
+INSERT INTO meal_log_entries(id, meal_date, meal_time, meal_type, note, created_at)
 VALUES (?, ?, ?, ?, ?, ?);

@@ -346,7 +346,7 @@ extension EncryptedStore {
                     meal_date: dateString,
                     meal_time: sample.time,
                     meal_type: sample.type,
-                    description: sample.what,
+                    note: sample.what,
                     created_at: now
                 )
             }

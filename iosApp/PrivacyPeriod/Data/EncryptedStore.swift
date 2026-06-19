@@ -195,7 +195,7 @@ final class EncryptedStore: ObservableObject {
             meal_date: Self.isoDate(Date()),
             meal_time: draft.time.map(Self.isoTime),
             meal_type: draft.mealType,
-            description: trimmed.isEmpty ? nil : trimmed,
+            note: trimmed.isEmpty ? nil : trimmed,
             created_at: Int64(Date().timeIntervalSince1970 * 1000)
         )
     }
@@ -207,7 +207,7 @@ final class EncryptedStore: ObservableObject {
         return database.mealLogEntriesQueries
             .selectMealLogEntriesForDate(meal_date: Self.isoDate(date))
             .executeAsList()
-            .map { MealLogEntry(id: $0.id, mealType: $0.meal_type, time: $0.meal_time, description: $0.description) }
+            .map { MealLogEntry(id: $0.id, mealType: $0.meal_type, time: $0.meal_time, description: $0.note) }
     }
 
     /// The current cycle snapshot (latest period start + today's day-of-cycle), or
@@ -246,7 +246,7 @@ final class EncryptedStore: ObservableObject {
         lines.append("Meals (\(meals.count)):")
         for meal in meals {
             let time = meal.meal_time.map { " \($0)" } ?? ""
-            let what = meal.description.map { " · \($0)" } ?? ""
+            let what = meal.note.map { " · \($0)" } ?? ""
             lines.append("  \(meal.meal_date)\(time): \(meal.meal_type)\(what)")
         }
         return lines.joined(separator: "\n")

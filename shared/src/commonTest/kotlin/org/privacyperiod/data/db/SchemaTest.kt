@@ -136,7 +136,7 @@ class SchemaTest {
             meal_date = "2026-05-23",
             meal_time = "08:15",
             meal_type = "breakfast",
-            description = "oatmeal and coffee",
+            note = "oatmeal and coffee",
             created_at = 1_700_000_000_000L,
         )
         // A second meal on the same day must coexist with the first.
@@ -145,7 +145,7 @@ class SchemaTest {
             meal_date = "2026-05-23",
             meal_time = null,
             meal_type = "snack",
-            description = null,
+            note = null,
             created_at = 1_700_000_001_000L,
         )
 
@@ -156,12 +156,12 @@ class SchemaTest {
         assertEquals("2026-05-23", first.meal_date)
         assertEquals("08:15", first.meal_time)
         assertEquals("breakfast", first.meal_type)
-        assertEquals("oatmeal and coffee", first.description)
+        assertEquals("oatmeal and coffee", first.note)
         assertEquals(1_700_000_000_000L, first.created_at)
 
         val snack = sameDay.first { it.id == "meal-2" }
         assertEquals(null, snack.meal_time)
         assertEquals("snack", snack.meal_type)
-        assertEquals(null, snack.description)
+        assertEquals(null, snack.note)
     }
 }
