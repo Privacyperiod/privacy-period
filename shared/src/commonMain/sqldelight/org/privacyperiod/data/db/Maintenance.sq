@@ -14,6 +14,9 @@ DELETE FROM symptom_entries;
 deleteAllMoodEntries:
 DELETE FROM mood_entries;
 
+deleteAllMealLogEntries:
+DELETE FROM meal_log_entries;
+
 deleteAllFlowEvents:
 DELETE FROM flow_events;
 

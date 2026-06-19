@@ -1,0 +1,48 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Copyright (C) 2026 Privacy Period Contributors
+
+/**
+ * A lightweight note of a meal: roughly when it was eaten and, optionally, the
+ * basics of what it was.
+ *
+ * This is deliberately NOT a diet or nutrition log — it records no calories,
+ * portions, macros, or any "healthy/unhealthy" judgement. It exists only to give
+ * everyday context to mood and symptom tracking. Like mood_entries, it is
+ * non-clinical wellbeing data and sits outside the universal clinical layer; it
+ * never feeds clinical scoring.
+ *
+ * Several meals are expected per calendar day, so (unlike mood_entries) there is
+ * no per-day uniqueness — each meal is its own row.
+ */
+CREATE TABLE meal_log_entries (
+    -- UUID primary key.
+    id TEXT PRIMARY KEY NOT NULL,
+    -- ISO-8601 date (YYYY-MM-DD) the meal was eaten.
+    meal_date TEXT NOT NULL,
+    -- ISO-8601 local time (HH:mm) the meal was eaten, or NULL when left unset.
+    meal_time TEXT,
+    -- breakfast | lunch | dinner | snack | other. The category implies the rough
+    -- time of day; meal_time is an optional, more precise addition.
+    meal_type TEXT NOT NULL,
+    -- Optional short free-text description of what was eaten.
+    description TEXT,
+    -- Epoch milliseconds when this row was created.
+    created_at INTEGER NOT NULL
+);
+
+CREATE INDEX meal_log_entries_by_date ON meal_log_entries(meal_date);
+
+selectAllMealLogEntries:
+SELECT *
+FROM meal_log_entries
+ORDER BY meal_date, meal_time;
+
+selectMealLogEntriesForDate:
+SELECT *
+FROM meal_log_entries
+WHERE meal_date = ?
+ORDER BY meal_time;
+
+insertMealLogEntry:
+INSERT INTO meal_log_entries(id, meal_date, meal_time, meal_type, description, created_at)
+VALUES (?, ?, ?, ?, ?, ?);

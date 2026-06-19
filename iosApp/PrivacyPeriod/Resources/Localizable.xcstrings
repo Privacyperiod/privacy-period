@@ -116,6 +116,90 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick Daily Check-in" } }
       }
     },
+    "tracking.meal_log" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meal log" } }
+      }
+    },
+    "meal.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meal log" } }
+      }
+    },
+    "meal.intro" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A quick note of when you ate and, if you like, what it was — everyday context for your mood and symptoms. This isn’t a diet log." } }
+      }
+    },
+    "meal.type" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meal" } }
+      }
+    },
+    "meal.type.breakfast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Breakfast" } }
+      }
+    },
+    "meal.type.lunch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lunch" } }
+      }
+    },
+    "meal.type.dinner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dinner" } }
+      }
+    },
+    "meal.type.snack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Snack" } }
+      }
+    },
+    "meal.type.other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } }
+      }
+    },
+    "meal.time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add a time" } }
+      }
+    },
+    "meal.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What it was (optional)" } }
+      }
+    },
+    "meal.description.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "e.g. pasta and salad" } }
+      }
+    },
+    "meal.add_another" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save & add another" } }
+      }
+    },
+    "meal.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today’s meals" } }
+      }
+    },
     "checkin.premenstrual.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {

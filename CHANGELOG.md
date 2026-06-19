@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Meal log: a lightweight note of roughly when a meal was eaten and, optionally,
+  what it was. Deliberately not a diet or nutrition tool — no calories, portions,
+  or judgement — it exists only to give everyday context to mood and symptom
+  tracking. Stored in a new non-clinical `meal_log_entries` table outside the
+  universal clinical layer (alongside `mood_entries`), included in data export and
+  delete-all, and surfaced as subtle baseline markers on the daily-data tracker.
 - Repository bootstrap: project plan, agentic-instructions, AGPL-3.0 license,
   README, contributing guide, code of conduct, security policy, and issue/PR
   templates.
