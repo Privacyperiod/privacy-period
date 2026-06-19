@@ -19,6 +19,10 @@ struct DailyAggregate: Identifiable {
 struct DailyAggregateSeries {
     let bars: [DailyAggregate]
     let cycleStarts: [Date]
+    /// Days within the window on which at least one meal was logged. Drawn as subtle
+    /// markers along the baseline so meals read as everyday context for the mood and
+    /// symptom pattern above them — never a clinical signal of their own.
+    let mealDays: [Date]
     let windowStart: Date
     let windowEnd: Date
 }
@@ -46,6 +50,17 @@ struct CycleRevealChart: View {
                 )
                 .cornerRadius(1)
                 .foregroundStyle(DDLikert.severityColor(bar.severityLevel))
+            }
+            // Meals sit as small dots on the baseline — everyday context beneath the
+            // mood/symptom bars, deliberately muted so they never compete with them.
+            ForEach(series.mealDays, id: \.self) { day in
+                PointMark(
+                    x: .value("Date", day, unit: .day),
+                    y: .value("Symptom load", 0)
+                )
+                .symbol(.circle)
+                .symbolSize(10)
+                .foregroundStyle(Color.ddSun.opacity(0.5))
             }
         }
         .chartXScale(domain: series.windowStart...series.windowEnd)

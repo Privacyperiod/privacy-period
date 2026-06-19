@@ -41,6 +41,7 @@ class SchemaTest {
     fun allTablesExistAndStartEmpty() {
         assertTrue(database.cycleEntriesQueries.selectAllCycleEntries().executeAsList().isEmpty())
         assertTrue(database.moodEntriesQueries.selectAllMoodEntries().executeAsList().isEmpty())
+        assertTrue(database.mealLogEntriesQueries.selectAllMealLogEntries().executeAsList().isEmpty())
         assertTrue(database.symptomEntriesQueries.selectAllSymptomEntries().executeAsList().isEmpty())
         assertTrue(database.symptomDefinitionsQueries.selectAllActiveSymptomDefinitions().executeAsList().isEmpty())
         assertTrue(database.birthControlEntriesQueries.selectAllBirthControlEntries().executeAsList().isEmpty())
@@ -124,5 +125,43 @@ class SchemaTest {
         assertEquals(1, entries.size)
         assertEquals(6.0, entries.first().severity)
         assertEquals("drsp_depressed_mood", entries.first().symptom_id)
+    }
+
+    /** Meal-log entries round-trip, and several meals can be logged on one day
+     *  (no per-day uniqueness, unlike mood). The optional time may be null. */
+    @Test
+    fun mealLogEntriesRoundTripAndAllowSeveralPerDay() {
+        database.mealLogEntriesQueries.insertMealLogEntry(
+            id = "meal-1",
+            meal_date = "2026-05-23",
+            meal_time = "08:15",
+            meal_type = "breakfast",
+            note = "oatmeal and coffee",
+            created_at = 1_700_000_000_000L,
+        )
+        // A second meal on the same day must coexist with the first.
+        database.mealLogEntriesQueries.insertMealLogEntry(
+            id = "meal-2",
+            meal_date = "2026-05-23",
+            meal_time = null,
+            meal_type = "snack",
+            note = null,
+            created_at = 1_700_000_001_000L,
+        )
+
+        val sameDay = database.mealLogEntriesQueries.selectMealLogEntriesForDate("2026-05-23").executeAsList()
+        assertEquals(2, sameDay.size)
+
+        val first = sameDay.first { it.id == "meal-1" }
+        assertEquals("2026-05-23", first.meal_date)
+        assertEquals("08:15", first.meal_time)
+        assertEquals("breakfast", first.meal_type)
+        assertEquals("oatmeal and coffee", first.note)
+        assertEquals(1_700_000_000_000L, first.created_at)
+
+        val snack = sameDay.first { it.id == "meal-2" }
+        assertEquals(null, snack.meal_time)
+        assertEquals("snack", snack.meal_type)
+        assertEquals(null, snack.note)
     }
 }

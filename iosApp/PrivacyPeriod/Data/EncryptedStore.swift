@@ -22,6 +22,27 @@ struct MoodEntryDraft {
     let notes: String
 }
 
+/// A meal note before it is persisted: its type, an optional time, and an optional
+/// short description of what it was. Deliberately not a diet log — no calories,
+/// portions, or judgement; it gives everyday context to mood tracking.
+struct MealLogDraft {
+    /// breakfast, lunch, dinner, snack, or other.
+    let mealType: String
+    /// The time the meal was eaten, or nil when left unset.
+    let time: Date?
+    /// A short free-text description of what was eaten, or empty.
+    let description: String
+}
+
+/// A persisted meal note, as read back for display: its id, type, optional time
+/// (as a local `HH:mm` string), and optional description.
+struct MealLogEntry: Identifiable {
+    let id: String
+    let mealType: String
+    let time: String?
+    let description: String?
+}
+
 /// A factual snapshot of the current cycle for the dashboard: the latest logged
 /// period's start date and how many days into the cycle today is. No prediction.
 struct CycleSnapshot {
@@ -163,6 +184,32 @@ final class EncryptedStore: ObservableObject {
         return MoodEntryDraft(mood: Int(row.mood_score), energy: Int(row.energy_score), notes: row.notes ?? "")
     }
 
+    /// Records a meal note for today. Several meals can be logged per day, so each
+    /// call inserts a new row (no per-day replacement). This is non-clinical context
+    /// for mood tracking, never part of clinical scoring. No-op when unavailable.
+    func saveMealLogEntry(_ draft: MealLogDraft) {
+        guard let database else { return }
+        let trimmed = draft.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        database.mealLogEntriesQueries.insertMealLogEntry(
+            id: UUID().uuidString,
+            meal_date: Self.isoDate(Date()),
+            meal_time: draft.time.map(Self.isoTime),
+            meal_type: draft.mealType,
+            note: trimmed.isEmpty ? nil : trimmed,
+            created_at: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+    }
+
+    /// The meals logged on the given day, ordered by time, for the "today's meals"
+    /// list. Empty when none are logged or the store is unavailable.
+    func mealEntries(forDate date: Date) -> [MealLogEntry] {
+        guard let database else { return [] }
+        return database.mealLogEntriesQueries
+            .selectMealLogEntriesForDate(meal_date: Self.isoDate(date))
+            .executeAsList()
+            .map { MealLogEntry(id: $0.id, mealType: $0.meal_type, time: $0.meal_time, description: $0.note) }
+    }
+
     /// The current cycle snapshot (latest period start + today's day-of-cycle), or
     /// nil if no period has been logged. Factual only — no prediction.
     func currentCycleSnapshot() -> CycleSnapshot? {
@@ -194,6 +241,14 @@ final class EncryptedStore: ObservableObject {
         for mood in moods {
             lines.append("  \(mood.date): mood \(mood.mood_score)/5, energy \(mood.energy_score)/5")
         }
+        lines.append("")
+        let meals = database.mealLogEntriesQueries.selectAllMealLogEntries().executeAsList()
+        lines.append("Meals (\(meals.count)):")
+        for meal in meals {
+            let time = meal.meal_time.map { " \($0)" } ?? ""
+            let what = meal.note.map { " · \($0)" } ?? ""
+            lines.append("  \(meal.meal_date)\(time): \(meal.meal_type)\(what)")
+        }
         return lines.joined(separator: "\n")
     }
 
@@ -206,6 +261,7 @@ final class EncryptedStore: ObservableObject {
         queries.deleteAllCycleEntries()
         queries.deleteAllSymptomEntries()
         queries.deleteAllMoodEntries()
+        queries.deleteAllMealLogEntries()
         queries.deleteAllFlowEvents()
         queries.deleteAllInstrumentCompletions()
         queries.deleteAllModuleEnrollments()
@@ -245,6 +301,15 @@ final class EncryptedStore: ObservableObject {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone.current
         formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+
+    /// Formats a local `HH:mm` time string (24-hour, locale-independent) for storage.
+    static func isoTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "HH:mm"
         return formatter.string(from: date)
     }
 

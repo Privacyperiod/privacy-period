@@ -204,9 +204,17 @@ extension EncryptedStore {
         let cycleStarts = database.cycleEntriesQueries.selectAllCycleEntries().executeAsList()
             .compactMap { Self.date(fromISO: $0.start_date) }
             .filter { $0 >= windowStart }
+        // Distinct days in the window with at least one meal logged — non-clinical
+        // context drawn along the chart baseline.
+        let mealDays = Set(
+            database.mealLogEntriesQueries.selectAllMealLogEntries().executeAsList()
+                .compactMap { Self.date(fromISO: $0.meal_date) }
+                .filter { $0 >= windowStart }
+        ).sorted()
         return DailyAggregateSeries(
             bars: bars,
             cycleStarts: cycleStarts,
+            mealDays: mealDays,
             windowStart: windowStart,
             windowEnd: today
         )
@@ -305,6 +313,42 @@ extension EncryptedStore {
             let score = cycleDay >= lutealStart ? min(6, baseSeverity + (cycleDay - lutealStart + 1)) : baseSeverity
             for item in 1...24 {
                 writeSymptom(repository, "drsp_\(item)", Double(score), dateString, now)
+            }
+        }
+        seedSampleMeals(calendar: calendar, today: today, now: now)
+    }
+
+    /// A meal to seed in the demo: a type, a time, and an optional neutral note.
+    private struct MealSample {
+        let type: String
+        let time: String
+        let what: String?
+    }
+
+    /// Seeds a sprinkling of meals across the recent window so the baseline meal
+    /// markers (everyday context for the mood pattern) are visible in the demo.
+    /// Neutral notes only — never calories, portions, or judgement.
+    private func seedSampleMeals(calendar: Calendar, today: Date, now: Int64) {
+        guard let database else { return }
+        let samples = [
+            MealSample(type: "breakfast", time: "08:00", what: "oatmeal and coffee"),
+            MealSample(type: "lunch", time: "12:30", what: "sandwich and fruit"),
+            MealSample(type: "dinner", time: "19:00", what: nil)
+        ]
+        // Most days carry a couple of meals; the gaps keep it realistic, not a streak.
+        for daysAgo in 0...30 where daysAgo % 3 != 2 {
+            guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { continue }
+            let dateString = Self.isoDate(date)
+            // Vary which meals appear per day so the markers aren't a uniform block.
+            for (index, sample) in samples.enumerated() where (daysAgo + index) % 2 == 0 {
+                database.mealLogEntriesQueries.insertMealLogEntry(
+                    id: UUID().uuidString,
+                    meal_date: dateString,
+                    meal_time: sample.time,
+                    meal_type: sample.type,
+                    note: sample.what,
+                    created_at: now
+                )
             }
         }
     }

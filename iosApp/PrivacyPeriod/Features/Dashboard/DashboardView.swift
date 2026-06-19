@@ -11,6 +11,7 @@ struct DashboardView: View {
     @ObservedObject var store: EncryptedStore
     @State var showingCycleLog = false
     @State var showingMoodLog = false
+    @State var showingMealLog = false
     @State var showingSettings = false
     @State var showingCheckIn = false
     @State var showingSummary = false
@@ -85,6 +86,17 @@ struct DashboardView: View {
                     store.saveMoodEntry(draft)
                     showingMoodLog = false
                 }
+            )
+        }
+        .sheet(isPresented: $showingMealLog) {
+            MealLogView(
+                loadToday: { store.mealEntries(forDate: Date()) },
+                onCancel: { showingMealLog = false },
+                onSave: { draft in
+                    store.saveMealLogEntry(draft)
+                    showingMealLog = false
+                },
+                onSaveAnother: { draft in store.saveMealLogEntry(draft) }
             )
         }
         .sheet(isPresented: $showingSettings) {
