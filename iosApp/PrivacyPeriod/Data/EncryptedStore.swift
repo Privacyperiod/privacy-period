@@ -43,6 +43,30 @@ struct MealLogEntry: Identifiable {
     let description: String?
 }
 
+/// A per-day summary of the three main meals (breakfast, lunch, dinner) for the
+/// data-visualization overlay.
+///
+/// `mainMealCount` is 0–3: the number of distinct main-meal types logged on this
+/// calendar day. Snacks and "other" entries are excluded because they don't carry
+/// the same regularity signal. Only days with at least one main-meal entry appear
+/// in the data layer's series methods; callers interpret the absence of a date as
+/// zero main meals for that day.
+struct MealDaySummary: Identifiable {
+    let date: Date
+    /// How many of {breakfast, lunch, dinner} were logged this day (0–3).
+    let mainMealCount: Int
+    var id: Date { date }
+}
+
+/// A per-day summary of mood and energy from the daily check-in, for the
+/// data-visualization overlay. Scores are 1–5 on the app's shared scale.
+struct MoodDaySummary: Identifiable {
+    let date: Date
+    let moodScore: Int
+    let energyScore: Int
+    var id: Date { date }
+}
+
 /// A factual snapshot of the current cycle for the dashboard: the latest logged
 /// period's start date and how many days into the cycle today is. No prediction.
 struct CycleSnapshot {

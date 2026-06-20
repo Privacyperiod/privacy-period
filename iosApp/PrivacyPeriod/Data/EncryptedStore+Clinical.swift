@@ -220,6 +220,49 @@ extension EncryptedStore {
         )
     }
 
+    /// Per-day counts of the three main meals (breakfast, lunch, dinner) over a
+    /// rolling `days`-day window ending today.
+    ///
+    /// Only days where at least one main-meal entry exists appear in the result;
+    /// callers should treat absent dates as zero main meals logged. Snacks and
+    /// "other" entries are excluded — they don't carry the same regularity signal.
+    func mealDaySummaries(days: Int) -> [MealDaySummary] {
+        guard let database else { return [] }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
+        let mainTypes: Set<String> = ["breakfast", "lunch", "dinner"]
+        var countByDate: [String: Int] = [:]
+        for entry in database.mealLogEntriesQueries.selectAllMealLogEntries().executeAsList() {
+            guard mainTypes.contains(entry.meal_type) else { continue }
+            guard let date = Self.date(fromISO: entry.meal_date), date >= windowStart else { continue }
+            countByDate[entry.meal_date, default: 0] += 1
+        }
+        return countByDate.compactMap { key, count in
+            guard let date = Self.date(fromISO: key) else { return nil }
+            return MealDaySummary(date: date, mainMealCount: min(count, 3))
+        }.sorted { $0.date < $1.date }
+    }
+
+    /// Per-day mood and energy summaries from the daily check-in, over a rolling
+    /// `days`-day window ending today. One entry per logged day.
+    func moodDaySummaries(days: Int) -> [MoodDaySummary] {
+        guard let database else { return [] }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
+        return database.moodEntriesQueries.selectAllMoodEntries().executeAsList()
+            .compactMap { row -> MoodDaySummary? in
+                guard let date = Self.date(fromISO: row.date), date >= windowStart else { return nil }
+                return MoodDaySummary(
+                    date: date,
+                    moodScore: Int(row.mood_score),
+                    energyScore: Int(row.energy_score)
+                )
+            }
+            .sorted { $0.date < $1.date }
+    }
+
     /// Whether the given periodic instrument (e.g. the Greene Climacteric Scale) has
     /// a completion dated in the current calendar month. Used to promote a monthly
     /// task only until it has been done for the month.

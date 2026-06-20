@@ -156,6 +156,26 @@ extension DashboardView {
         .buttonStyle(.plain)
     }
 
+    /// A first-class action button for logging a meal — always visible, always at the
+    /// same visual level as "Log period" since meal logging is a daily tracking task.
+    var mealLogButton: some View {
+        monthlyTaskButton(
+            titleKey: "tracking.meal_log",
+            subtitleKey: "meal.button.subtitle"
+        ) { showingMealLog = true }
+    }
+
+    /// The compact home-screen data-visualization card: a sparkline preview that
+    /// opens the full `DataVizView` modal on tap.
+    var dataVizCard: some View {
+        DataVizCard(
+            moodSeries: store.moodDaySummaries(days: 14),
+            mealSeries: store.mealDaySummaries(days: 14),
+            isPremenstrualTracked: isPremenstrualTracked,
+            onOpen: { showingDataViz = true }
+        )
+    }
+
     // Refreshes the derived home state: which conditions are enrolled, and whether the
     // monthly perimenopause questionnaire is still due this month.
     func refreshState() {
@@ -188,9 +208,6 @@ extension DashboardView {
     // top-level button (`dailyCheckInButton`), not repeated here.
     @ViewBuilder var trackingRows: some View {
         trackingLink("tracking.quick_checkin") { showingMoodLog = true }
-        // Always available: a quick meal note for everyday context to mood — not a
-        // diet tool. Not gated and not tied to any condition enrollment.
-        trackingLink("tracking.meal_log") { showingMealLog = true }
         // The heavy bleeding tracker is reached from the "Log period" screen (it logs
         // events against a cycle), not listed here.
         // Only list the questionnaire here when it isn't already promoted as the
