@@ -18,6 +18,7 @@ struct SettingsView: View {
     @State private var deleted = false
     @State private var seeded = false
     @State private var showingCredits = false
+    @State private var showingNotifications = false
 
     private var appVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
@@ -33,6 +34,7 @@ struct SettingsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     dataSection
+                    remindersSection
                     privacySection
                     aboutSection
                     if let onSeed {
@@ -45,6 +47,9 @@ struct SettingsView: View {
         .background(Color.ddLinen.ignoresSafeArea())
         .sheet(isPresented: $showingCredits) {
             CreditsView { showingCredits = false }
+        }
+        .sheet(isPresented: $showingNotifications) {
+            NotificationsView { showingNotifications = false }
         }
         .alert("settings.delete.confirm.title", isPresented: $showingDeleteConfirm) {
             Button("common.cancel", role: .cancel) {}
@@ -85,6 +90,21 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
             }
+        }
+    }
+
+    private var remindersSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionHeader("settings.section.reminders")
+            Button { showingNotifications = true } label: {
+                row(
+                    icon: "bell",
+                    titleKey: "settings.notifications",
+                    helpKey: "settings.notifications.help",
+                    tint: .ddPlumDeep
+                )
+            }
+            .buttonStyle(.plain)
         }
     }
 
