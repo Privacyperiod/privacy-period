@@ -44,8 +44,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.privacyperiod.ios
         PRODUCT_NAME: PrivacyPeriod
+        TARGETED_DEVICE_FAMILY: "1"
         MARKETING_VERSION: "0.1.0"
-        CURRENT_PROJECT_VERSION: "1"
+        CURRENT_PROJECT_VERSION: "2"
         # Emit localized-string keys so the String Catalog stays the single
         # source of truth for user-facing text.
         SWIFT_EMIT_LOC_STRINGS: "YES"
@@ -59,6 +60,9 @@ targets:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG DEMO
         Demo:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEMO
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: PrivacyPeriod AppStore
     info:
       path: PrivacyPeriod/Info.plist
       properties:
