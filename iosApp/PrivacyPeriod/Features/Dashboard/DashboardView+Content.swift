@@ -165,15 +165,10 @@ extension DashboardView {
         ) { showingMealLog = true }
     }
 
-    /// The compact home-screen data-visualization card: a sparkline preview that
-    /// opens the full `DataVizView` modal on tap.
+    /// Entry point to the data-visualization dashboard — a plain tracking link
+    /// at the same visual level as the other section entries.
     var dataVizCard: some View {
-        DataVizCard(
-            moodSeries: store.moodDaySummaries(days: 14),
-            mealSeries: store.mealDaySummaries(days: 14),
-            isPremenstrualTracked: isPremenstrualTracked,
-            onOpen: { showingDataViz = true }
-        )
+        trackingLink("viz.card.title") { showingDataViz = true }
     }
 
     // Refreshes the derived home state: which conditions are enrolled, and whether the

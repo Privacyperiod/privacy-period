@@ -93,16 +93,22 @@ struct DataVizChart: View {
                     .foregroundStyle(Color.ddFg3.opacity(0.4))
                 }
             }
-            // Symptom load bars (normalized by the window maximum).
+            // Symptom load line (normalized by the window maximum). Drawn as a
+            // line rather than bars so it doesn't stack with the meal bars.
             if enabledStreams.contains(.symptomLoad) {
                 ForEach(data.symptomBars) { bar in
-                    BarMark(
+                    LineMark(
                         x: .value("Date", bar.date, unit: .day),
-                        y: .value("Symptom load", bar.score / maxSymptom),
-                        width: .fixed(3)
+                        y: .value("Symptom load", bar.score / maxSymptom)
                     )
-                    .cornerRadius(1)
-                    .foregroundStyle(Color.ddPlumDeep.opacity(0.75))
+                    .foregroundStyle(Color.ddPlumDeep)
+                    .lineStyle(StrokeStyle(lineWidth: 1.5))
+                    PointMark(
+                        x: .value("Date", bar.date, unit: .day),
+                        y: .value("Symptom load", bar.score / maxSymptom)
+                    )
+                    .symbolSize(18)
+                    .foregroundStyle(Color.ddPlumDeep)
                 }
             }
             // Mood line (1–5 scale → 0–1).

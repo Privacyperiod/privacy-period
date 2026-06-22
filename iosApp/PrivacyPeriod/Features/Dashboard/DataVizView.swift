@@ -96,7 +96,7 @@ struct DataVizView: View {
                     .frame(width: 7, height: 7)
                 Text(stream.labelKey)
                     .font(.ddSans(13, active ? .semibold : .regular))
-                    .foregroundColor(active ? .ddFg1 : .ddFg3)
+                    .foregroundColor(active ? .ddFg2 : .ddFg3)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
