@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Local push notifications: reminder settings in the Settings screen for meal-log
+  reminders (once a day or three times a day at individually chosen times for
+  breakfast, lunch, and dinner) and a daily mood-and-physical check-in reminder at
+  a chosen time. Preferences are stored in `UserDefaults` (not the encrypted health
+  database) and scheduled via `UNUserNotificationCenter` — fully local, no data
+  leaves the device. Permission is requested on first enable; if denied the toggle
+  reverts and a prompt links the user to iOS Settings.
 - Meal log: a lightweight note of roughly when a meal was eaten and, optionally,
   what it was. Deliberately not a diet or nutrition tool — no calories, portions,
   or judgement — it exists only to give everyday context to mood and symptom
