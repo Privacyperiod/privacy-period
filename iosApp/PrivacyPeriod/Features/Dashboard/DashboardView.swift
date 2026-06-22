@@ -21,6 +21,7 @@ struct DashboardView: View {
     @State var showingPmeCheckIn = false
     @State var showingPmeSummary = false
     @State var showingConditions = false
+    @State var showingDataViz = false
     // The set of enrolled module ids; drives which clinical entries appear. Refreshed
     // on appear and whenever the Conditions sheet closes.
     @State var enrolled: Set<String> = []
@@ -51,7 +52,9 @@ struct DashboardView: View {
                     dailyCheckInButton
                     DDPrimaryButton(titleKey: "dashboard.log_period") { showingCycleLog = true }
                         .padding(.top, 4)
+                    mealLogButton
                     monthlyTasks
+                    dataVizCard
                     clinicalEntries
                 }
                 .padding(20)
@@ -174,6 +177,13 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingGreeneSummary) {
             GreeneResultsView(completions: greeneCompletions) { showingGreeneSummary = false }
+        }
+        .sheet(isPresented: $showingDataViz) {
+            DataVizView(
+                store: store,
+                isPremenstrualTracked: isPremenstrualTracked,
+                onClose: { showingDataViz = false }
+            )
         }
         .onAppear { refreshState() }
     }

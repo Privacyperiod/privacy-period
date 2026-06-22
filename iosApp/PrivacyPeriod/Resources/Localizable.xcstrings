@@ -1660,6 +1660,78 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Your daily data is here when you're ready." } }
       }
+    },
+    "meal.button.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick note — not a diet log" } }
+      }
+    },
+    "viz.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your data" } }
+      }
+    },
+    "viz.card.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your data" } }
+      }
+    },
+    "viz.card.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start logging to see a pattern preview here." } }
+      }
+    },
+    "viz.stream.symptoms" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Symptom load" } }
+      }
+    },
+    "viz.stream.mood" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mood" } }
+      }
+    },
+    "viz.stream.meals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meals per day" } }
+      }
+    },
+    "viz.window.30" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "30 days" } }
+      }
+    },
+    "viz.window.60" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "60 days" } }
+      }
+    },
+    "viz.window.90" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "90 days" } }
+      }
+    },
+    "viz.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Log your first check-in or meal to see your data here." } }
+      }
+    },
+    "viz.legend.partial_meals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Day with fewer than 3 main meals logged" } }
+      }
     }
   }
 }

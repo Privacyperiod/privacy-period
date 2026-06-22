@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Meal Log promoted to a first-class button on the home screen, at the same visual
+  level as "Log period" (a persistent outlined pill button, always visible). Removed
+  from the collapsible Tracking section where it was previously buried.
+- Data visualization dashboard: a "Your data" link on the home screen opens a
+  full-screen modal where any combination of symptom load, mood score, and daily
+  main-meal count can be overlaid on one normalized chart across a 30, 60, or 90-day
+  window. Symptom load and mood are drawn as lines; meals as bars — no stacking.
+  Past days where fewer than 3 of the three main meals (breakfast, lunch, dinner)
+  were logged receive a subtle background tint — neutral context, no pressure
+  language. Data streams are toggled with chip selectors; symptom load only appears
+  when a premenstrual condition is enrolled. All data stays on-device; the chart
+  never produces a clinical verdict.
 - Local push notifications: reminder settings in the Settings screen for meal-log
   reminders (once a day or three times a day at individually chosen times for
   breakfast, lunch, and dinner) and a daily mood-and-physical check-in reminder at
