@@ -46,7 +46,7 @@ targets:
         PRODUCT_NAME: PrivacyPeriod
         TARGETED_DEVICE_FAMILY: "1"
         MARKETING_VERSION: "0.1.0"
-        CURRENT_PROJECT_VERSION: "2"
+        CURRENT_PROJECT_VERSION: "3"
         # Emit localized-string keys so the String Catalog stays the single
         # source of truth for user-facing text.
         SWIFT_EMIT_LOC_STRINGS: "YES"
