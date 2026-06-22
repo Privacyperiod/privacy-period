@@ -226,7 +226,7 @@ struct NotificationsView: View {
         HStack {
             Text(label)
                 .font(.ddSans(15))
-                .foregroundColor(.ddFg1)
+                .foregroundColor(.ddFg2)
             Spacer()
             DatePicker("", selection: dateBinding, displayedComponents: .hourAndMinute)
                 .labelsHidden()
