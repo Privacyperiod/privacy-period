@@ -32,6 +32,9 @@ settings:
     # public repo. Unset (CI, fresh clones) → empty, which is fine for simulator builds.
     # Set it once in your shell: export PRIVACYPERIOD_TEAM=XXXXXXXXXX (see TESTING.md).
     DEVELOPMENT_TEAM: ${PRIVACYPERIOD_TEAM}
+    # Explicit platform declaration required by Xcode 26 CLI for archive action.
+    SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+    SDKROOT: iphoneos
 
 targets:
   PrivacyPeriod:
@@ -63,6 +66,8 @@ targets:
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: Apple Distribution
           PROVISIONING_PROFILE_SPECIFIER: PrivacyPeriod AppStore
+          SDKROOT: iphoneos
+          SUPPORTED_PLATFORMS: iphoneos
     info:
       path: PrivacyPeriod/Info.plist
       properties:
