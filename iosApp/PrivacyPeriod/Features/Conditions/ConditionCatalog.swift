@@ -36,6 +36,14 @@ struct ConditionInfo: Identifiable {
     /// Every condition, in display order. `isAvailable` is resolved from the gate.
     static let all: [ConditionInfo] = [
         ConditionInfo(
+            id: "cycle_prediction",
+            nameKey: "condition.cycle_prediction.name",
+            blurbKey: "condition.cycle_prediction.blurb",
+            kind: .tracking,
+            cadenceKey: "condition.cadence.automatic",
+            isAvailable: ClinicalGate.cyclePrediction
+        ),
+        ConditionInfo(
             id: premenstrualId,
             nameKey: "condition.premenstrual.name",
             blurbKey: "condition.premenstrual.blurb",

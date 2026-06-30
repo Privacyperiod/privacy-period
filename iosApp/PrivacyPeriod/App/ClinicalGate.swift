@@ -31,4 +31,6 @@ enum ClinicalGate {
     static var hmb: Bool { HmbFeature.shared.isEnabled || AppConfig.revealGatedModules }
     static var perimenopause: Bool { PeriFeature.shared.isEnabled || AppConfig.revealGatedModules }
     static var endometriosis: Bool { EndoFeature.shared.isEnabled || AppConfig.revealGatedModules }
+    // Period timing prediction is a utility feature with no clinical sign-off requirement.
+    static var cyclePrediction: Bool { CyclePredictionFeature.shared.isEnabled }
 }

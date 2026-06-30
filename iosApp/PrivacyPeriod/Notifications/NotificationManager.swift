@@ -49,6 +49,20 @@ struct MoodNotifConfig {
     var minute: Int
 }
 
+/// Configuration for the period-due-tomorrow notification.
+///
+/// Unlike meal and mood reminders, this is a one-time notification on a specific
+/// date (the evening before the predicted period start), not a repeating daily one.
+/// Passed to `NotificationManager.reschedulePeriodPrediction(_:predictedDate:)`.
+struct PeriodPredictionNotifConfig {
+    /// Whether the period reminder is enabled.
+    var enabled: Bool
+    /// Hour component (0–23) for the notification. Defaults to 20 (8 PM).
+    var hour: Int
+    /// Minute component (0–59) for the notification.
+    var minute: Int
+}
+
 /// Schedules and cancels the app's local push notifications.
 ///
 /// All notifications are local — no data leaves the device. Each fires on a
@@ -152,6 +166,39 @@ final class NotificationManager {
     /// Removes the pending mood-and-physical notification request.
     func cancelMood() {
         center.removePendingNotificationRequests(withIdentifiers: ["mood.daily"])
+    }
+
+    // MARK: - Period prediction
+
+    /// Cancels any pending period-prediction notification and schedules a new one for
+    /// the evening before `predictedDate` at the time in `config`.
+    ///
+    /// When `config.enabled` is false, or `predictedDate` is nil, or the fire time
+    /// has already passed, this only cancels — no new request is added.
+    func reschedulePeriodPrediction(_ config: PeriodPredictionNotifConfig, predictedDate: Date?) {
+        cancelPeriodPrediction()
+        guard config.enabled, let predictedDate else { return }
+        let calendar = Calendar.current
+        guard let dayBefore = calendar.date(byAdding: .day, value: -1, to: predictedDate) else { return }
+        var dc = calendar.dateComponents([.year, .month, .day], from: dayBefore)
+        dc.hour = config.hour
+        dc.minute = config.minute
+        guard let fireDate = calendar.date(from: dc), fireDate > Date() else { return }
+        let content = UNMutableNotificationContent()
+        content.title = NSLocalizedString("notif.period.title", comment: "")
+        content.body = NSLocalizedString("notif.period.body", comment: "")
+        content.sound = .default
+        // repeats: false — this is a one-time notification for a specific predicted date.
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dc, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: "period.prediction", content: content, trigger: trigger
+        )
+        center.add(request)
+    }
+
+    /// Removes any pending period-prediction notification request.
+    func cancelPeriodPrediction() {
+        center.removePendingNotificationRequests(withIdentifiers: ["period.prediction"])
     }
 
     // MARK: - Private

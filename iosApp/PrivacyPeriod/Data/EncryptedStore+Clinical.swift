@@ -177,7 +177,7 @@ extension EncryptedStore {
     /// no entry produce no bar, so the picture grows as logging continues. Also returns
     /// the menses-onset dates in the window so the chart can mark cycle boundaries —
     /// making the "collect two cycles" goal visible. `days` spans roughly two cycles.
-    func dailyAggregateSeries(days: Int = 64) -> DailyAggregateSeries? {
+    func dailyAggregateSeries(days: Int = 64, includePrediction: Bool = false) -> DailyAggregateSeries? {
         guard let database, let repository else { return nil }
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -211,12 +211,16 @@ extension EncryptedStore {
                 .compactMap { Self.date(fromISO: $0.meal_date) }
                 .filter { $0 >= windowStart }
         ).sorted()
+        let predictedDate: Date? = includePrediction
+            ? nextPeriodPrediction()?.predictedDate.flatMap { Self.date(fromISO: $0) }
+            : nil
         return DailyAggregateSeries(
             bars: bars,
             cycleStarts: cycleStarts,
             mealDays: mealDays,
             windowStart: windowStart,
-            windowEnd: today
+            windowEnd: today,
+            predictedPeriodStart: predictedDate
         )
     }
 
@@ -315,6 +319,46 @@ extension EncryptedStore {
     }
 
     static let pmeModuleId = "pme"
+
+    // MARK: - Period timing prediction
+
+    /// Computes the next-period prediction from all logged cycles.
+    ///
+    /// Returns nil when the store is unavailable. Returns a result with
+    /// `isReady = false` when fewer than three periods have been logged.
+    func nextPeriodPrediction() -> CyclePredictionResult? {
+        guard let repository else { return nil }
+        return CyclePredictionEngine.shared.predict(history: repository.history())
+    }
+
+    /// Schedules or cancels the "period due tomorrow" notification based on the
+    /// current prediction and the user's notification preferences.
+    ///
+    /// Called after every new cycle is saved and when prediction enrollment changes.
+    /// No-op when the store is unavailable or the user is not enrolled.
+    func reschedulePeriodPredictionNotification() {
+        guard isEnrolled(moduleId: Self.cyclePredictionModuleId) else {
+            NotificationManager.shared.cancelPeriodPrediction()
+            return
+        }
+        guard let prediction = nextPeriodPrediction(),
+              prediction.isReady,
+              let predictedDateStr = prediction.predictedDate,
+              let predictedDate = Self.date(fromISO: predictedDateStr) else {
+            NotificationManager.shared.cancelPeriodPrediction()
+            return
+        }
+        let defaults = UserDefaults.standard
+        let enabled = defaults.bool(forKey: "notif.period.enabled")
+        // Default hour is 20 (8 PM) when the key has never been set.
+        let hour = defaults.object(forKey: "notif.period.h") != nil
+            ? defaults.integer(forKey: "notif.period.h") : 20
+        let minute = defaults.integer(forKey: "notif.period.m")
+        NotificationManager.shared.reschedulePeriodPrediction(
+            PeriodPredictionNotifConfig(enabled: enabled, hour: hour, minute: minute),
+            predictedDate: predictedDate
+        )
+    }
 
     #if DEMO
     /// Replaces all user data with two cycles of sample DRSP entries (a clear luteal

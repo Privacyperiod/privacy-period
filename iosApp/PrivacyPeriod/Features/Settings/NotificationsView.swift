@@ -36,6 +36,16 @@ struct NotificationsView: View {
     @AppStorage("notif.mood.h") private var moodHour = 20
     @AppStorage("notif.mood.m") private var moodMinute = 0
 
+    // MARK: Period prediction preferences
+
+    @AppStorage("notif.period.enabled") private var periodEnabled = false
+    @AppStorage("notif.period.h") private var periodHour = 20
+    @AppStorage("notif.period.m") private var periodMinute = 0
+
+    /// Called when period notification preferences change so the store can
+    /// recompute the scheduled notification against the current prediction.
+    var onReschedulePeriodPrediction: (() -> Void)?
+
     @State private var showingPermissionAlert = false
 
     var body: some View {
@@ -47,6 +57,7 @@ struct NotificationsView: View {
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    periodSection
                     mealSection
                     moodSection
                 }
@@ -62,6 +73,36 @@ struct NotificationsView: View {
     }
 
     // MARK: Sections
+
+    private var periodSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionHeader("notifications.section.period")
+            toggleRow(
+                icon: "bell",
+                titleKey: "notifications.period.enabled",
+                helpKey: "notifications.period.enabled.help",
+                isOn: $periodEnabled
+            )
+            .onChange(of: periodEnabled) { enabled in
+                handleToggle(
+                    enabled: enabled,
+                    reschedule: reschedulePeriod,
+                    cancel: NotificationManager.shared.cancelPeriodPrediction,
+                    revert: { periodEnabled = false }
+                )
+            }
+            if periodEnabled {
+                timePickerRow(
+                    label: "notifications.period.time",
+                    hour: $periodHour,
+                    minute: $periodMinute,
+                    onReschedule: reschedulePeriod
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: periodEnabled)
+    }
 
     private var mealSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -293,5 +334,10 @@ struct NotificationsView: View {
             hour: moodHour,
             minute: moodMinute
         ))
+    }
+
+    private func reschedulePeriod() {
+        // Delegate to the store so it can recompute the prediction against live cycle data.
+        onReschedulePeriodPrediction?()
     }
 }

@@ -72,6 +72,8 @@ extension EncryptedStore {
 
     /// The module id for the DRSP-only premenstrual form (PMDD). (PME is `pmeModuleId`.)
     static let pmddModuleId = "pmdd"
+    /// The module id for period timing prediction.
+    static let cyclePredictionModuleId = "cycle_prediction"
     /// The module ids the home screen checks to decide what to surface.
-    static let knownModuleIds = ["pmdd", "pme", "hmb", "perimenopause", "endometriosis"]
+    static let knownModuleIds = ["pmdd", "pme", "hmb", "perimenopause", "endometriosis", "cycle_prediction"]
 }

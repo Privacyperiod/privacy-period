@@ -161,6 +161,11 @@ struct ConditionsView: View {
             enabled.insert(condition.id)
             persist(condition, on: true)
         }
+        // When prediction enrollment changes, recompute and reschedule any pending
+        // period notification against the current cycle history.
+        if condition.id == EncryptedStore.cyclePredictionModuleId {
+            store.reschedulePeriodPredictionNotification()
+        }
     }
 
     private func persist(_ condition: ConditionInfo, on: Bool) {
@@ -179,7 +184,8 @@ struct ConditionsView: View {
     private func load() {
         var ids: Set<String> = []
         if store.isPremenstrualEnabled { ids.insert(ConditionInfo.premenstrualId) }
-        for moduleId in ["hmb", "perimenopause", "endometriosis"] where store.isEnrolled(moduleId: moduleId) {
+        for moduleId in ["hmb", "perimenopause", "endometriosis", "cycle_prediction"]
+            where store.isEnrolled(moduleId: moduleId) {
             ids.insert(moduleId)
         }
         enabled = ids

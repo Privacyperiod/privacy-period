@@ -177,6 +177,8 @@ final class EncryptedStore: ObservableObject {
             predicted_next: nil,
             created_at: Int64(Date().timeIntervalSince1970 * 1000)
         )
+        // Recompute next-period prediction and update the scheduled notification.
+        reschedulePeriodPredictionNotification()
     }
 
     /// Persists today's mood & energy check-in, replacing any earlier entry for

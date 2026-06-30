@@ -13,6 +13,9 @@ struct SettingsView: View {
     /// demo builds.
     var onSeed: (() -> Void)?
     let onClose: () -> Void
+    /// Called when the user changes period-prediction notification settings so that
+    /// the next fire date can be recomputed against the current prediction.
+    var onReschedulePeriodPrediction: (() -> Void)?
 
     @State private var showingDeleteConfirm = false
     @State private var deleted = false
@@ -49,7 +52,10 @@ struct SettingsView: View {
             CreditsView { showingCredits = false }
         }
         .sheet(isPresented: $showingNotifications) {
-            NotificationsView { showingNotifications = false }
+            NotificationsView(
+                onClose: { showingNotifications = false },
+                onReschedulePeriodPrediction: onReschedulePeriodPrediction
+            )
         }
         .alert("settings.delete.confirm.title", isPresented: $showingDeleteConfirm) {
             Button("common.cancel", role: .cancel) {}
