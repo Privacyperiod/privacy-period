@@ -34,6 +34,9 @@ extension DashboardView {
             if let snapshot = store.currentCycleSnapshot() {
                 VStack(alignment: .leading, spacing: 12) {
                     cycleHeader(snapshot)
+                    if enrolled.contains(EncryptedStore.cyclePredictionModuleId) {
+                        predictionRow
+                    }
                     if isPremenstrualTracked {
                         dailyDataTracker
                     }
@@ -49,6 +52,33 @@ extension DashboardView {
 
     var isPremenstrualTracked: Bool {
         enrolled.contains(EncryptedStore.pmddModuleId) || enrolled.contains(EncryptedStore.pmeModuleId)
+    }
+
+    /// A row in the cycle card showing the predicted next period date, or a message
+    /// explaining how many more cycles are needed before prediction is available.
+    @ViewBuilder var predictionRow: some View {
+        if let prediction = store.nextPeriodPrediction() {
+            if prediction.isReady, let dateStr = prediction.predictedDate {
+                HStack(spacing: 6) {
+                    DDIcon(name: "calendar", size: 14).foregroundColor(.ddSun)
+                    Text(String(
+                        format: NSLocalizedString("dashboard.prediction.date", comment: "predicted period date"),
+                        Self.displayDate(dateStr)
+                    ))
+                    .font(.ddSans(14))
+                    .foregroundColor(.ddFg2)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+            } else if prediction.cyclesNeeded > 0 {
+                Text(String(
+                    format: NSLocalizedString("dashboard.prediction.collecting", comment: "still collecting"),
+                    prediction.cyclesNeeded
+                ))
+                .font(.ddSans(13))
+                .foregroundColor(.ddFg3)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 
     private func cycleHeader(_ snapshot: CycleSnapshot) -> some View {
@@ -73,7 +103,8 @@ extension DashboardView {
                 .font(.ddSans(13, .semibold))
                 .foregroundColor(.ddFg3)
                 .textCase(.uppercase)
-            if let series = store.dailyAggregateSeries(), !series.bars.isEmpty {
+            let showPrediction = enrolled.contains(EncryptedStore.cyclePredictionModuleId)
+            if let series = store.dailyAggregateSeries(includePrediction: showPrediction), !series.bars.isEmpty {
                 CycleRevealChart(series: series)
                 clinicianProgress(daysLogged: series.bars.count)
             } else {

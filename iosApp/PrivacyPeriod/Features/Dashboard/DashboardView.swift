@@ -107,7 +107,8 @@ struct DashboardView: View {
                 exportText: { store.exportData() },
                 onDeleteAll: { store.deleteAllData() },
                 onSeed: seedAction,
-                onClose: { showingSettings = false }
+                onClose: { showingSettings = false },
+                onReschedulePeriodPrediction: { store.reschedulePeriodPredictionNotification() }
             )
         }
         .sheet(isPresented: $showingCheckIn) {

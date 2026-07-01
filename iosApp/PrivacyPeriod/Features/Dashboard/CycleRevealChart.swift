@@ -25,6 +25,10 @@ struct DailyAggregateSeries {
     let mealDays: [Date]
     let windowStart: Date
     let windowEnd: Date
+    /// Predicted start date of the next period, or nil if there is insufficient
+    /// history or the user hasn't opted into period timing prediction. When set and
+    /// within the chart window, drawn as a distinct dotted rule.
+    var predictedPeriodStart: Date?
 }
 
 /// The landing-page hero chart: a time series of the user's daily Mental + Physical
@@ -41,6 +45,11 @@ struct CycleRevealChart: View {
                 RuleMark(x: .value("Period start", start, unit: .day))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
                     .foregroundStyle(Color.ddPlumDeep.opacity(0.25))
+            }
+            if let predicted = series.predictedPeriodStart {
+                RuleMark(x: .value("Predicted period", predicted, unit: .day))
+                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+                    .foregroundStyle(Color.ddSun.opacity(0.7))
             }
             ForEach(series.bars) { bar in
                 BarMark(
@@ -63,7 +72,12 @@ struct CycleRevealChart: View {
                 .foregroundStyle(Color.ddSun.opacity(0.5))
             }
         }
-        .chartXScale(domain: series.windowStart...series.windowEnd)
+        .chartXScale(
+            domain: series.windowStart...max(
+                series.windowEnd,
+                series.predictedPeriodStart ?? series.windowEnd
+            )
+        )
         .chartYAxis(.hidden)
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: 14)) { _ in
