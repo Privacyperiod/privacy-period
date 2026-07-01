@@ -28,7 +28,7 @@ struct DailyAggregateSeries {
     /// Predicted start date of the next period, or nil if there is insufficient
     /// history or the user hasn't opted into period timing prediction. When set and
     /// within the chart window, drawn as a distinct dotted rule.
-    var predictedPeriodStart: Date? = nil
+    var predictedPeriodStart: Date?
 }
 
 /// The landing-page hero chart: a time series of the user's daily Mental + Physical
@@ -72,7 +72,12 @@ struct CycleRevealChart: View {
                 .foregroundStyle(Color.ddSun.opacity(0.5))
             }
         }
-        .chartXScale(domain: series.windowStart...max(series.windowEnd, series.predictedPeriodStart ?? series.windowEnd))
+        .chartXScale(
+            domain: series.windowStart...max(
+                series.windowEnd,
+                series.predictedPeriodStart ?? series.windowEnd
+            )
+        )
         .chartYAxis(.hidden)
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: 14)) { _ in

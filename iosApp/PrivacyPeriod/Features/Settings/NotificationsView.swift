@@ -3,8 +3,8 @@
 
 import SwiftUI
 
-/// Lets the user configure reminder notifications for meal logging and the daily
-/// mood-and-physical check-in.
+/// Lets the user configure reminder notifications for meal logging, the daily
+/// mood-and-physical check-in, and the period timing prediction.
 ///
 /// Preferences are stored in `UserDefaults` via `@AppStorage` — not in the
 /// encrypted health database — because notification timing is device configuration,
@@ -19,34 +19,34 @@ struct NotificationsView: View {
 
     // MARK: Meal preferences
 
-    @AppStorage("notif.meal.enabled") private var mealEnabled = false
-    @AppStorage("notif.meal.freq") private var mealFreqRaw = MealNotifConfig.Frequency.once.rawValue
-    @AppStorage("notif.meal.once.h") private var mealOnceHour = 12
-    @AppStorage("notif.meal.once.m") private var mealOnceMinute = 0
-    @AppStorage("notif.meal.bkfst.h") private var breakfastHour = 8
-    @AppStorage("notif.meal.bkfst.m") private var breakfastMinute = 0
-    @AppStorage("notif.meal.lunch.h") private var lunchHour = 12
-    @AppStorage("notif.meal.lunch.m") private var lunchMinute = 0
-    @AppStorage("notif.meal.dinner.h") private var dinnerHour = 18
-    @AppStorage("notif.meal.dinner.m") private var dinnerMinute = 0
+    @AppStorage("notif.meal.enabled") var mealEnabled = false
+    @AppStorage("notif.meal.freq") var mealFreqRaw = MealNotifConfig.Frequency.once.rawValue
+    @AppStorage("notif.meal.once.h") var mealOnceHour = 12
+    @AppStorage("notif.meal.once.m") var mealOnceMinute = 0
+    @AppStorage("notif.meal.bkfst.h") var breakfastHour = 8
+    @AppStorage("notif.meal.bkfst.m") var breakfastMinute = 0
+    @AppStorage("notif.meal.lunch.h") var lunchHour = 12
+    @AppStorage("notif.meal.lunch.m") var lunchMinute = 0
+    @AppStorage("notif.meal.dinner.h") var dinnerHour = 18
+    @AppStorage("notif.meal.dinner.m") var dinnerMinute = 0
 
     // MARK: Mood preferences
 
-    @AppStorage("notif.mood.enabled") private var moodEnabled = false
-    @AppStorage("notif.mood.h") private var moodHour = 20
-    @AppStorage("notif.mood.m") private var moodMinute = 0
+    @AppStorage("notif.mood.enabled") var moodEnabled = false
+    @AppStorage("notif.mood.h") var moodHour = 20
+    @AppStorage("notif.mood.m") var moodMinute = 0
 
     // MARK: Period prediction preferences
 
-    @AppStorage("notif.period.enabled") private var periodEnabled = false
-    @AppStorage("notif.period.h") private var periodHour = 20
-    @AppStorage("notif.period.m") private var periodMinute = 0
+    @AppStorage("notif.period.enabled") var periodEnabled = false
+    @AppStorage("notif.period.h") var periodHour = 20
+    @AppStorage("notif.period.m") var periodMinute = 0
 
     /// Called when period notification preferences change so the store can
     /// recompute the scheduled notification against the current prediction.
     var onReschedulePeriodPrediction: (() -> Void)?
 
-    @State private var showingPermissionAlert = false
+    @State var showingPermissionAlert = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -71,10 +71,12 @@ struct NotificationsView: View {
             Text("notifications.permission.denied.body")
         }
     }
+}
 
-    // MARK: Sections
+// MARK: - Section views
 
-    private var periodSection: some View {
+private extension NotificationsView {
+    var periodSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeader("notifications.section.period")
             toggleRow(
@@ -104,7 +106,7 @@ struct NotificationsView: View {
         .animation(.easeInOut(duration: 0.2), value: periodEnabled)
     }
 
-    private var mealSection: some View {
+    var mealSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeader("notifications.section.meal")
             toggleRow(
@@ -130,7 +132,7 @@ struct NotificationsView: View {
     }
 
     @ViewBuilder
-    private var mealControls: some View {
+    var mealControls: some View {
         let freqBinding = Binding<MealNotifConfig.Frequency>(
             get: { MealNotifConfig.Frequency(rawValue: mealFreqRaw) ?? .once },
             set: { mealFreqRaw = $0.rawValue; rescheduleMeal() }
@@ -175,7 +177,7 @@ struct NotificationsView: View {
         .animation(.easeInOut(duration: 0.2), value: mealFreqRaw)
     }
 
-    private var moodSection: some View {
+    var moodSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeader("notifications.section.mood")
             toggleRow(
@@ -204,12 +206,14 @@ struct NotificationsView: View {
         }
         .animation(.easeInOut(duration: 0.2), value: moodEnabled)
     }
+}
 
-    // MARK: Reusable rows
+// MARK: - Reusable rows
 
+private extension NotificationsView {
     /// A card row containing a label, help text, and a toggle on the trailing edge.
     @ViewBuilder
-    private func toggleRow(
+    func toggleRow(
         icon: String,
         titleKey: LocalizedStringKey,
         helpKey: LocalizedStringKey,
@@ -246,7 +250,7 @@ struct NotificationsView: View {
     /// Writing to `hour` or `minute` automatically calls `onReschedule` so that
     /// pending notifications update immediately.
     @ViewBuilder
-    private func timePickerRow(
+    func timePickerRow(
         label: LocalizedStringKey,
         hour: Binding<Int>,
         minute: Binding<Int>,
@@ -281,18 +285,20 @@ struct NotificationsView: View {
         )
     }
 
-    private func sectionHeader(_ key: LocalizedStringKey) -> some View {
+    func sectionHeader(_ key: LocalizedStringKey) -> some View {
         Text(key)
             .font(.ddSans(13, .semibold))
             .foregroundColor(.ddFg3)
             .textCase(.uppercase)
     }
+}
 
-    // MARK: Permission + scheduling
+// MARK: - Permission + scheduling
 
+private extension NotificationsView {
     /// Requests permission when a toggle turns on, schedules if granted, or reverts
     /// and shows an alert if the user has denied notifications.
-    private func handleToggle(
+    func handleToggle(
         enabled: Bool,
         reschedule: @escaping () -> Void,
         cancel: @escaping () -> Void,
@@ -313,7 +319,7 @@ struct NotificationsView: View {
         }
     }
 
-    private func rescheduleMeal() {
+    func rescheduleMeal() {
         NotificationManager.shared.rescheduleMeal(MealNotifConfig(
             enabled: mealEnabled,
             frequency: MealNotifConfig.Frequency(rawValue: mealFreqRaw) ?? .once,
@@ -328,7 +334,7 @@ struct NotificationsView: View {
         ))
     }
 
-    private func rescheduleMood() {
+    func rescheduleMood() {
         NotificationManager.shared.rescheduleMood(MoodNotifConfig(
             enabled: moodEnabled,
             hour: moodHour,
@@ -336,8 +342,7 @@ struct NotificationsView: View {
         ))
     }
 
-    private func reschedulePeriod() {
-        // Delegate to the store so it can recompute the prediction against live cycle data.
+    func reschedulePeriod() {
         onReschedulePeriodPrediction?()
     }
 }
